@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
 # Create your models here.
@@ -8,14 +9,38 @@ class countries(models.Model):
 class acting_type(models.Model):
     type = models.CharField(max_length=255)
 
-class user(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField()
-    password = models.CharField(max_length=255)
+class CustomUserManager(BaseUserManager):
+    def create_User(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)  # Hash the password
+        user.save(using=self._db)
+        return user
+
+    def create_superUser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_User(email, password, **extra_fields)
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
     role = models.CharField(max_length=255)
     phone_number = models.IntegerField()
     landline_number = models.IntegerField()
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)# Example additional field
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'  # Use email as the unique identifier
+    REQUIRED_FIELDS = ['first_name','last_name','role','phone_number','landline_number']  # Add any other required fields here
+
+    def __str__(self):
+        return self.email
 
 class role_type(models.Model):
     role_type = models.CharField(max_length=255)
@@ -26,27 +51,22 @@ class building_style(models.Model):
 class building_type(models.Model):
     building_type = models.CharField(max_length=255)
 
-class actor(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField()
-    password = models.CharField(max_length=255)
-    phone_number = models.IntegerField()
-    landline_number = models.IntegerField()
+class actor_additional_info(models.Model):
+    actor = models.ForeignKey(User,on_delete=models.CASCADE)
     current_country = models.ForeignKey(countries,on_delete=models.CASCADE)
     available = models.BooleanField()
     approved = models.BooleanField()
 
 class official_document(models.Model):
     document = models.CharField(max_length=255)
-    actor = models.ForeignKey(actor,on_delete=models.CASCADE)
+    actor = models.ForeignKey(User,on_delete=models.CASCADE)
 
 class actor_acting_types(models.Model):
-    actor = models.ForeignKey(actor,on_delete=models.CASCADE)
+    actor = models.ForeignKey(User,on_delete=models.CASCADE)
     acting_type= models.ForeignKey(acting_type,on_delete=models.CASCADE)
 
 class artwork_gallery(models.Model):
-    actor = models.ForeignKey(actor,on_delete=models.CASCADE)
+    actor = models.ForeignKey(User,on_delete=models.CASCADE)
     artwork_name = models.CharField(max_length=255)
     poster = models.CharField(max_length=255)
     character_name = models.CharField(max_length=255)
@@ -55,11 +75,11 @@ class artwork_gallery(models.Model):
 class artwork(models.Model):
     title = models.CharField(max_length=255)
     poster = models.CharField(max_length=255)
-    director = models.ForeignKey(user,on_delete=models.CASCADE)
+    director = models.ForeignKey(User,on_delete=models.CASCADE)
     done = models.BooleanField()
 
 class artwork_actors(models.Model):
-    actor = models.ForeignKey(actor,on_delete=models.CASCADE)
+    actor = models.ForeignKey(User,on_delete=models.CASCADE)
     artwork = models.ForeignKey(artwork,on_delete=models.CASCADE)
     role_type = models.ForeignKey(role_type,on_delete=models.CASCADE)
     approved = models.BooleanField()
@@ -70,7 +90,7 @@ class filming_location(models.Model):
     desc = models.CharField(max_length=255)
     building_style = models.ForeignKey(building_style,on_delete=models.CASCADE)
     building_type = models.ForeignKey(building_type,on_delete=models.CASCADE)
-    building_owner = models.ForeignKey(user,on_delete=models.CASCADE)
+    building_owner = models.ForeignKey(User,on_delete=models.CASCADE)
     
 class booking_dates(models.Model):
     location = models.ForeignKey(filming_location,on_delete=models.CASCADE)
@@ -87,7 +107,7 @@ class location_videos(models.Model):
 
 class favoraites(models.Model):
     location = models.ForeignKey(filming_location,on_delete=models.CASCADE)
-    user = models.ForeignKey(user,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     
 class scenes(models.Model):
     scene_number = models.IntegerField()
@@ -100,7 +120,7 @@ class scenes(models.Model):
 
 class scene_actors(models.Model):
     scene = models.ForeignKey(scenes,on_delete=models.CASCADE)
-    actor = models.ForeignKey(actor,on_delete=models.CASCADE)
+    actor = models.ForeignKey(User,on_delete=models.CASCADE)
     
 
 
