@@ -76,7 +76,7 @@ class artwork(models.Model):
     title = models.CharField(max_length=255)
     poster = models.CharField(max_length=255)
     director = models.ForeignKey(User,on_delete=models.CASCADE)
-    done = models.BooleanField()
+    done = models.BooleanField(default=False)
 
 class artwork_actors(models.Model):
     actor = models.ForeignKey(User,on_delete=models.CASCADE)

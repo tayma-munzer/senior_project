@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view ,permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .models import *
 from .serializers import *
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -39,3 +40,83 @@ def login(request):
         return Response({'token': token.key}, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid email or password','user':user,'email':email,'password':password}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated,])
+def artwork_list(request):
+    if request.method == 'GET':
+        artworks = artwork.objects.all()
+        serializer = ArtworkSerializer(artworks, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ArtworkSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated,])
+def artwork_detail(request, pk):
+    try:
+        artwork_detail = artwork.objects.get(pk=pk)
+    except artwork.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ArtworkSerializer(artwork_detail)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = ArtworkSerializer(artwork_detail, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        artwork_detail.delete()
+        return Response(status=status.HTTP_200_OK)
+    
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated,])
+# def artwork_scenes(request, pk):
+#     try:
+#         artwork_detail = artwork.objects.get(pk=pk)
+#     except artwork.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated,])
+# def add_scene(request):
+#     serializer = ArtworkSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view(['GET', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated,])
+# def scene_detail(request, pk):
+#     try:
+#         artwork_detail = artwork.objects.get(pk=pk)
+#     except artwork.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     if request.method == 'GET':
+#         serializer = ArtworkSerializer(artwork_detail)
+#         return Response(serializer.data)
+
+#     elif request.method == 'PUT':
+#         serializer = ArtworkSerializer(artwork_detail, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     elif request.method == 'DELETE':
+#         artwork_detail.delete()
+#         return Response(status=status.HTTP_200_OK)
+    
