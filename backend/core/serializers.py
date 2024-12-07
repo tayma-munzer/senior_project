@@ -66,3 +66,15 @@ class FilmingLocationSerializer(serializers.ModelSerializer):
     
     def get_building_type(self,obj):
         return obj.building_type.building_type
+    
+class SceneSerializer(serializers.ModelSerializer):
+    artwork_id = serializers.IntegerField(write_only=True)
+    location_id = serializers.IntegerField(write_only=True,required=False)
+    artwork = ArtworkSerializer(read_only=True)
+    location = FilmingLocationSerializer(read_only=True)
+    class Meta:
+        model = scenes
+        fields = ['id','title','start_date','end_date','scene_number','done','artwork','location','artwork_id','location_id']
+
+    
+

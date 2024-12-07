@@ -81,46 +81,61 @@ def artwork_detail(request, pk):
         artwork_detail.delete()
         return Response(status=status.HTTP_200_OK)
     
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated,])
-# def artwork_scenes(request, pk):
-#     try:
-#         artwork_detail = artwork.objects.get(pk=pk)
-#     except artwork.DoesNotExist:
-#         return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated,])
+def artwork_scenes(request, pk):
+    try:
+        artwork_instance = artwork.objects.get(id=pk)
+        artwork_scenes = scenes.objects.filter(artwork=artwork_instance).order_by('-scene_number')
+        serializer = SceneSerializer(artwork_scenes, many=True)
+        return Response(serializer.data)
+    except artwork_instance.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated,])
-# def add_scene(request):
-#     serializer = ArtworkSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def add_scene(request):
 
-# @api_view(['GET', 'PUT', 'DELETE'])
-# @permission_classes([IsAuthenticated,])
-# def scene_detail(request, pk):
-#     try:
-#         artwork_detail = artwork.objects.get(pk=pk)
-#     except artwork.DoesNotExist:
-#         return Response(status=status.HTTP_404_NOT_FOUND)
+    data = request.data 
+    try:
+        artwork_instance = artwork.objects.get(id=data['artwork_id'])
+        last_scene = scenes.objects.filter(artwork=artwork_instance).order_by('-scene_number').first()
+        if last_scene:
+            new_scene_number = last_scene.scene_number + 1
+        else:
+            new_scene_number = 1
+        data['scene_number'] = new_scene_number
+        serializer = SceneSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save() 
+            return Response(serializer.data, status=status.HTTP_201_CREATED) 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+    except artwork.DoesNotExist:
+        return Response({'error': 'Artwork not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-#     if request.method == 'GET':
-#         serializer = ArtworkSerializer(artwork_detail)
-#         return Response(serializer.data)
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated,])
+def scene_detail(request, pk):
+    try:
+        scene_detail = scenes.objects.get(pk=pk)
+    except scene_detail.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-#     elif request.method == 'PUT':
-#         serializer = ArtworkSerializer(artwork_detail, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'GET':
+        serializer = SceneSerializer(scene_detail)
+        return Response(serializer.data)
 
-#     elif request.method == 'DELETE':
-#         artwork_detail.delete()
-#         return Response(status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        serializer = SceneSerializer(scene_detail, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        scene_detail.delete()
+        return Response(status=status.HTTP_200_OK)
     
 
 @api_view(['GET', 'POST'])
@@ -170,3 +185,25 @@ def owner_filming_locations(request):
     filming_locations = filming_location.objects.filter(building_owner=user)
     serializer = FilmingLocationSerializer(filming_locations, many=True) 
     return Response(serializer.data,status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated,])
+def artwork_done(request,pk):
+    try:
+        artwork_instance = artwork.objects.get(id=pk)
+        artwork_instance.done = True
+        artwork_instance.save()
+        return Response({'message': 'scene updated successfully.'}, status=status.HTTP_200_OK)
+    except artwork.DoesNotExist:
+        return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated,])
+def scene_done(request,pk):
+    try:
+        scene_instance = scenes.objects.get(id=pk)
+        scene_instance.done = True
+        scene_instance.save()
+        return Response({'message': 'scene updated successfully.'}, status=status.HTTP_200_OK)
+    except artwork.DoesNotExist:
+        return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)

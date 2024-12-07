@@ -120,9 +120,9 @@ class scenes(models.Model):
     title = models.CharField(max_length=255)
     start_date = models.DateField()
     end_date = models.DateField()
-    done = models.BooleanField()
+    done = models.BooleanField(default=False)
     artwork = models.ForeignKey(artwork,on_delete=models.CASCADE)
-    location = models.ForeignKey(filming_location,on_delete=models.CASCADE)
+    location = models.ForeignKey(filming_location,on_delete=models.CASCADE,null=True)
 
 class scene_actors(models.Model):
     scene = models.ForeignKey(scenes,on_delete=models.CASCADE)
