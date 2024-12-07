@@ -8,22 +8,22 @@ class CountriesSerializer(serializers.Serializer):
 
 class ActingTypeSerializer(serializers.Serializer):
     class Meta:
-        model = acting_type
+        model = ActingType
         fields = ['id','type']
 
 class RoleTypeSerializer(serializers.Serializer):
     class Meta:
-        model = role_type
+        model = RoleType
         fields = ['id','role_type']
 
 class BuildingStyleSerializer(serializers.Serializer):
     class Meta:
-        model = building_style
+        model = BuildingStyle
         fields = ['id','building_style']
 
 class BuildingTypeSerializer(serializers.Serializer):
     class Meta:
-        model = building_type
+        model = BuildingType
         fields = ['id','building_type']
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,14 +51,18 @@ class ArtworkSerializer(serializers.ModelSerializer):
         fields = ['id','title','poster','director','done','director_id']
 
 class FilmingLocationSerializer(serializers.ModelSerializer):
-    building_style = UserSerializer(read_only = True)
+    building_style = serializers.SerializerMethodField()  
     building_style_id = serializers.IntegerField(write_only=True)
-    building_type = UserSerializer(read_only = True)
+    building_type = serializers.SerializerMethodField()  
     building_type_id = serializers.IntegerField(write_only=True)
     building_owner = UserSerializer(read_only = True)
     building_owner_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = filming_location
-        fields = ['id','location','detailed_address','desc','building_style','building_type','building_owner','building_style_id','building_type_id','building_owner_id']
+        fields = ['id','location','detailed_address','desc','building_style','building_type','building_owner','building_owner_id','building_type_id','building_style_id']
 
-
+    def get_building_style(self,obj):
+        return obj.building_style.building_style 
+    
+    def get_building_type(self,obj):
+        return obj.building_type.building_type

@@ -50,7 +50,9 @@ def artwork_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = ArtworkSerializer(data=request.data)
+        data = request.data
+        data['director_id']= request.user.id
+        serializer = ArtworkSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -120,3 +122,51 @@ def artwork_detail(request, pk):
 #         artwork_detail.delete()
 #         return Response(status=status.HTTP_200_OK)
     
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated,])
+def filming_location_list(request):
+    if request.method == 'GET':
+        locations = filming_location.objects.all()
+        serializer = FilmingLocationSerializer(locations, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        data = request.data
+        data['building_owner_id']=request.user.id
+        serializer = FilmingLocationSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated,])
+def filming_location_detail(request, pk):
+    try:
+        location = filming_location.objects.get(pk=pk)
+    except artwork.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = FilmingLocationSerializer(location)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = FilmingLocationSerializer(location, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        location.delete()
+        return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated,])
+def owner_filming_locations(request):
+    user = request.user
+    filming_locations = filming_location.objects.filter(building_owner=user)
+    serializer = FilmingLocationSerializer(filming_locations, many=True) 
+    return Response(serializer.data,status=status.HTTP_200_OK)

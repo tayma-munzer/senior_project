@@ -6,7 +6,7 @@ from django.db import models
 class countries(models.Model):
     contry = models.CharField(max_length=255)
 
-class acting_type(models.Model):
+class ActingType(models.Model):
     type = models.CharField(max_length=255)
 
 class CustomUserManager(BaseUserManager):
@@ -36,26 +36,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'  # Use email as the unique identifier
+    USERNAME_FIELD = 'email' 
     REQUIRED_FIELDS = ['first_name','last_name','role','phone_number','landline_number']  # Add any other required fields here
 
     def __str__(self):
         return self.email
 
-class role_type(models.Model):
+class RoleType(models.Model):
     role_type = models.CharField(max_length=255)
 
-class building_style(models.Model):
+class BuildingStyle(models.Model):
     building_style = models.CharField(max_length=255)
 
-class building_type(models.Model):
+    def __str__(self):
+        return self.building_style
+
+class BuildingType(models.Model):
     building_type = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.building_type
 
 class actor_additional_info(models.Model):
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
     current_country = models.ForeignKey(countries,on_delete=models.CASCADE)
-    available = models.BooleanField()
-    approved = models.BooleanField()
+    available = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
 
 class official_document(models.Model):
     document = models.CharField(max_length=255)
@@ -63,14 +69,14 @@ class official_document(models.Model):
 
 class actor_acting_types(models.Model):
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
-    acting_type= models.ForeignKey(acting_type,on_delete=models.CASCADE)
+    acting_type= models.ForeignKey(ActingType,on_delete=models.CASCADE)
 
 class artwork_gallery(models.Model):
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
     artwork_name = models.CharField(max_length=255)
     poster = models.CharField(max_length=255)
     character_name = models.CharField(max_length=255)
-    role_type = models.ForeignKey(role_type,on_delete=models.CASCADE)
+    role_type = models.ForeignKey(RoleType,on_delete=models.CASCADE)
 
 class artwork(models.Model):
     title = models.CharField(max_length=255)
@@ -81,15 +87,15 @@ class artwork(models.Model):
 class artwork_actors(models.Model):
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
     artwork = models.ForeignKey(artwork,on_delete=models.CASCADE)
-    role_type = models.ForeignKey(role_type,on_delete=models.CASCADE)
-    approved = models.BooleanField()
+    role_type = models.ForeignKey(RoleType,on_delete=models.CASCADE)
+    approved = models.BooleanField(default=False)
 
 class filming_location(models.Model):
     location = models.CharField(max_length=255)
     detailed_address = models.CharField(max_length=255)
     desc = models.CharField(max_length=255)
-    building_style = models.ForeignKey(building_style,on_delete=models.CASCADE)
-    building_type = models.ForeignKey(building_type,on_delete=models.CASCADE)
+    building_style = models.ForeignKey(BuildingStyle,on_delete=models.CASCADE)
+    building_type = models.ForeignKey(BuildingType,on_delete=models.CASCADE)
     building_owner = models.ForeignKey(User,on_delete=models.CASCADE)
     
 class booking_dates(models.Model):
