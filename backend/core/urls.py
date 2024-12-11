@@ -14,4 +14,9 @@ urlpatterns = [
     path('my_filming_locations',views.owner_filming_locations),
     path('artwork/<int:pk>/done',views.artwork_done),
     path('scene/<int:pk>/done',views.scene_done),
+    path('scene/<int:pk>/location',views.scene_location),
+    path('artwork/<int:pk>/actors',views.artworkactors),
+    path('scene/<int:pk>/actors',views.sceneactors),
+    path('favoraites',views.owner_favoraites),
+    path('favoraites/<int:pk>',views.favoraite_location),
 ]

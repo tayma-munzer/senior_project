@@ -7,6 +7,7 @@ from .serializers import *
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
+import json
 
 # Create your views here.
 
@@ -160,7 +161,7 @@ def filming_location_list(request):
 def filming_location_detail(request, pk):
     try:
         location = filming_location.objects.get(pk=pk)
-    except artwork.DoesNotExist:
+    except filming_location.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
@@ -207,3 +208,109 @@ def scene_done(request,pk):
         return Response({'message': 'scene updated successfully.'}, status=status.HTTP_200_OK)
     except artwork.DoesNotExist:
         return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated,])
+def scene_location(request,pk):
+    try:
+        scene_instance = scenes.objects.get(id=pk)
+        try:
+            data = json.loads(request.body)
+            location_id = data.get("location_id")
+            location_instance = filming_location.objects.get(pk=location_id)
+            scene_instance.location_id = location_instance.id
+            scene_instance.save()
+            return Response({'message': 'scene updated successfully.'}, status=status.HTTP_200_OK)
+        except filming_location.DoesNotExist:
+            return Response({'error': 'location not found.'}, status=status.HTTP_404_NOT_FOUND)
+    except artwork.DoesNotExist:
+        return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['POST','GET'])
+@permission_classes([IsAuthenticated])
+def artworkactors(request, pk):
+    if request.method == 'POST':
+        try:
+            artwork_instance = artwork.objects.get(id=pk)
+            actors = request.data.get('actors', [])
+            for actor in actors:
+                actor['artwork_id'] = artwork_instance.id
+                serializer = ArtworkActorsSerializer(data=actor)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({'message': 'actors added successfully.'}, status=status.HTTP_201_CREATED)
+        except artwork.DoesNotExist:
+            return Response({'error': 'artwork not found.'}, status=status.HTTP_404_NOT_FOUND)
+    elif request.method == 'GET':
+        try:
+            artwork_instance = artwork.objects.get(id=pk)
+            actors = artwork_actors.objects.filter(artwork=artwork_instance)
+            serializer = ArtworkActorsSerializer(actors,many=True)
+            return Response(serializer.data)
+        except artwork.DoesNotExist:
+            return Response({'error': 'artwork not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['POST','GET'])
+@permission_classes([IsAuthenticated])
+def sceneactors(request, pk):
+    if request.method == 'POST':
+        try:
+            scene_instance = scenes.objects.get(id=pk)
+            actors = request.data.get('actors', [])
+            for actor in actors:
+                actor['scene_id'] = scene_instance.id
+                serializer = SceneActorsSerializer(data=actor)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({'message': 'actors added successfully to scene.'}, status=status.HTTP_201_CREATED)
+        except scenes.DoesNotExist:
+            return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)
+    elif request.method == 'GET':
+        try:
+            scene_instance = scenes.objects.get(id=pk)
+            actors = scene_actors.objects.filter(scene=scene_instance)
+            serializer = SceneActorsSerializer(actors,many=True)
+            return Response(serializer.data)
+        except scenes.DoesNotExist:
+            return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['GET'])
+@permission_classes([IsAuthenticated,])
+def owner_favoraites(request):
+    user = request.user
+    user_favoraites = favoraites.objects.filter(user=user)
+    serializer = favoraitesSerializer(user_favoraites, many=True) 
+    return Response(serializer.data,status=status.HTTP_200_OK)
+
+@api_view(['POST','DELETE'])
+@permission_classes([IsAuthenticated,])
+def favoraite_location(request,pk):
+    if request.method == 'POST':
+        try:
+            location = filming_location.objects.get(pk=pk)
+        except filming_location.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        user = request.user
+        fav={}
+        fav['user_id']=user.id
+        fav['location_id']=pk
+        serializer = favoraitesSerializer(data=fav)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        user = request.user
+        try:
+            location = favoraites.objects.get(location_id=pk,user=user)
+            location.delete()
+            return Response({'message': 'location deleted from favorates.'}, status=status.HTTP_200_OK)
+        except favoraites.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    

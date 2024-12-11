@@ -76,5 +76,35 @@ class SceneSerializer(serializers.ModelSerializer):
         model = scenes
         fields = ['id','title','start_date','end_date','scene_number','done','artwork','location','artwork_id','location_id']
 
-    
+class ArtworkActorsSerializer(serializers.ModelSerializer):
+    approved = serializers.BooleanField(read_only=True)
+    actor_id = serializers.IntegerField(write_only=True)
+    role_type_id = serializers.IntegerField(write_only=True,required=False)
+    actor = UserSerializer(read_only=True)
+    role_type =serializers.SerializerMethodField() 
+    artwork=ArtworkSerializer(read_only=True)
+    artwork_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = artwork_actors
+        fields = ['id','actor', 'role_type', 'approved','actor_id','role_type_id','artwork','artwork_id']   
 
+    def get_role_type(self,obj):
+        return obj.role_type.role_type 
+
+class SceneActorsSerializer(serializers.ModelSerializer):
+    actor_id = serializers.IntegerField(write_only=True)
+    actor = UserSerializer(read_only=True)
+    scene=SceneSerializer(read_only=True)
+    scene_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = scene_actors
+        fields = ['id','actor','actor_id','scene','scene_id']   
+
+class favoraitesSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(write_only=True)
+    user = UserSerializer(read_only=True)
+    location=FilmingLocationSerializer(read_only=True)
+    location_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = favoraites
+        fields = ['id','user','user_id','location','location_id'] 
