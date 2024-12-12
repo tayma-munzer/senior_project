@@ -19,4 +19,6 @@ urlpatterns = [
     path('scene/<int:pk>/actors',views.sceneactors),
     path('favoraites',views.owner_favoraites),
     path('favoraites/<int:pk>',views.favoraite_location),
+    path('profile',views.user_profile),
+    path('additional_info',views.additional_info),
 ]

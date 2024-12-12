@@ -313,4 +313,36 @@ def favoraite_location(request,pk):
             return Response({'message': 'location deleted from favorates.'}, status=status.HTTP_200_OK)
         except favoraites.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['PUT','GET'])
+@permission_classes([IsAuthenticated,])
+def user_profile(request):
+    user=request.user
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = UserSerializer(user, data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated,])
+def additional_info(request):
+    user=request.user
+    try:
+        info = actor_additional_info.objects.get(actor=user)
+    except actor_additional_info.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = AdditionalinfoSerializer(info, data=request.data,partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
     
