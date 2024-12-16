@@ -79,50 +79,55 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
   }
 
   Widget _buildCard() {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 16.0, 8.0, 16.0),
-        child: Row(
-          children: [
-            Container(
-              width: 200,
-              height: 80,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/login.png'),
-                  fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/artworkDetails');
+      },
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 16.0, 8.0, 16.0),
+          child: Row(
+            children: [
+              Container(
+                width: 200,
+                height: 80,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/login.png'),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                borderRadius: BorderRadius.circular(8),
               ),
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CustomText(
-                    text: "عنوان",
-                    fontSize: 20,
-                    alignment: Alignment.centerRight,
-                  ),
-                  SizedBox(height: 8),
-                  CustomText(
-                    text: "تفاصيل",
-                    fontSize: 18,
-                    alignment: Alignment.centerRight,
-                  ),
-                  SizedBox(height: 8),
-                  CustomText(
-                    text: "منتهي",
-                    fontSize: 18,
-                    alignment: Alignment.centerRight,
-                    color: redColor,
-                  ),
-                ],
+              SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CustomText(
+                      text: "عنوان",
+                      fontSize: 20,
+                      alignment: Alignment.centerRight,
+                    ),
+                    SizedBox(height: 8),
+                    CustomText(
+                      text: "تفاصيل",
+                      fontSize: 18,
+                      alignment: Alignment.centerRight,
+                    ),
+                    SizedBox(height: 8),
+                    CustomText(
+                      text: "منتهي",
+                      fontSize: 18,
+                      alignment: Alignment.centerRight,
+                      color: redColor,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

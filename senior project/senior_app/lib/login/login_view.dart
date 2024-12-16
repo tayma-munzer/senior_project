@@ -42,17 +42,16 @@ class LoginView extends StatelessWidget {
                         text: "LOGIN", fontSize: 24, color: Colors.black),
                     SizedBox(height: 10),
                     CustomText(
-                        text: "please sign in to continue", color: grayColor),
+                        text: "Please sign in to continue", color: grayColor),
                     SizedBox(height: 10),
+                    CustomText(text: "Phone number or Email"),
                     CustomTextFormField(
-                      text: "Phone number or Email",
                       hint: "Phone number or Email",
                       onSave: (value) => controller.emailOrPhone = value,
                       validator: controller.validateEmailOrPhone,
                     ),
                     SizedBox(height: 10),
                     CustomTextFormField(
-                      text: "Password",
                       hint: "Password",
                       onSave: (value) => controller.password = value,
                       validator: controller.validatePassword,
@@ -64,20 +63,12 @@ class LoginView extends StatelessWidget {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
 
-                          try {
-                            //  backend authentication succeeds, navigate to Director Home Page
-                            bool isAuthenticated = await authenticateUser(
-                                controller.emailOrPhone, controller.password);
+                          bool isAuthenticated = await controller.login();
 
-                            if (isAuthenticated) {
-                              Get.offNamed('/directorHome');
-                            } else {
-                              Get.snackbar("Error",
-                                  "Invalid credentials, please try again");
-                            }
-                          } catch (e) {
-                            Get.snackbar(
-                                "Error", "An error occurred: ${e.toString()}");
+                          if (isAuthenticated) {
+                            Get.offNamed('/directorHome');
+                          } else {
+                            Get.snackbar("Error", "Invalid credentials");
                           }
                         }
                       },
@@ -85,20 +76,15 @@ class LoginView extends StatelessWidget {
                     TextButton(
                       onPressed: () {},
                       child: CustomText(
-                        text: "Forgot password?",
-                        color: grayColor,
-                        alignment: Alignment.center,
-                      ),
+                          text: "Forgot password?", color: grayColor),
                     ),
                     TextButton(
                       onPressed: () {
                         Get.toNamed('/signup');
                       },
                       child: CustomText(
-                        text: "Don't have an account? Sign Up",
-                        color: grayColor,
-                        alignment: Alignment.center,
-                      ),
+                          text: "Don't have an account? Sign Up",
+                          color: grayColor),
                     ),
                   ],
                 ),
@@ -108,15 +94,5 @@ class LoginView extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<bool> authenticateUser(String? emailOrPhone, String? password) async {
-    print(
-        "Authenticating user with Email/Phone: $emailOrPhone and Password: $password");
-
-    if (emailOrPhone == "test@example.com" && password == "password") {
-      return true;
-    }
-    return false;
   }
 }

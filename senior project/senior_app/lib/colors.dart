@@ -7,3 +7,5 @@ const Color backgroundColor = Color.fromARGB(255, 224, 224, 224);
 const Color grayColor = Color.fromARGB(255, 185, 179, 179);
 const Color redColor = Color.fromARGB(255, 185, 36, 36);
 const Color greenColor = Color.fromARGB(255, 71, 185, 36);
+const Color lightblue = Color.fromARGB(255, 174, 198, 218);
+const Color darkgray = Color.fromARGB(255, 180, 173, 166);
