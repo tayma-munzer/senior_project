@@ -343,6 +343,51 @@ def additional_info(request):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET','POST'])
+@permission_classes([IsAuthenticated,])
+def artworkGallary(request):
+    user=request.user
+    if request.method == 'POST':
+        data = request.data
+        data['actor_id'] = user.id
+        serializer = artworkGallerySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save() 
+            return Response(serializer.data, status=status.HTTP_201_CREATED) 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+    elif request.method == 'GET':
+        try:
+            gallary = artwork_gallery.objects.filter(actor = user)
+            serializer = artworkGallerySerializer(gallary, many=True) 
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        except artwork_gallery.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET','PUT','DELETE'])
+@permission_classes([IsAuthenticated,])
+def artwork_from_artworkGallary(request,pk):   
+    user = request.user 
+    try:
+        artwork = artwork_gallery.objects.get(pk=pk)
+    except artwork_gallery.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = artworkGallerySerializer(artwork)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        data = request.data 
+        data['actor_id']=user.id
+        serializer = artworkGallerySerializer(artwork, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        artwork.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
     

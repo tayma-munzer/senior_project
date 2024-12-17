@@ -21,4 +21,6 @@ urlpatterns = [
     path('favoraites/<int:pk>',views.favoraite_location),
     path('profile',views.user_profile),
     path('additional_info',views.additional_info),
+    path('artwork_gallary',views.artworkGallary),
+    path('artwork_gallary/artwork/<int:pk>',views.artwork_from_artworkGallary),
 ]

@@ -124,3 +124,13 @@ class favoraitesSerializer(serializers.ModelSerializer):
     class Meta:
         model = favoraites
         fields = ['id','user','user_id','location','location_id'] 
+
+
+class artworkGallerySerializer(serializers.ModelSerializer):
+    actor_id = serializers.IntegerField(write_only=True)
+    actor = UserSerializer(read_only=True)
+    role_type=RoleTypeSerializer(read_only=True)
+    role_type_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = artwork_gallery
+        fields = ['id','actor','artwork_name','poster','character_name','role_type','role_type_id','actor_id'] 
