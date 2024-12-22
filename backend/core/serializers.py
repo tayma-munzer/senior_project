@@ -4,7 +4,7 @@ from .models import *
 class CountriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = countries
-        fields = ['id','country']
+        fields = ['id','contry']
 
 class ActingTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,7 +25,7 @@ class BuildingTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BuildingType
         fields = ['id','building_type']
-        
+
 class UserSerializer(serializers.ModelSerializer):
     current_country = serializers.SerializerMethodField()
     available = serializers.SerializerMethodField()

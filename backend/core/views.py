@@ -420,45 +420,33 @@ def deleteActorActingType(request,pk):
     actingType.delete()
     return Response(status=status.HTTP_200_OK)  
 
-@api_view(['GET', 'POST'])
-def actor_acting_types_list(request, actor_id):
-    try:
-        actor = User.objects.get(id=actor_id)  # Fetch the actor by ID
-        if request.method == 'GET':
-            acting_types = actor_acting_types.objects.filter(actor=actor)  # Filter for the actor
-            serializer = actorActingTypeSerializer(acting_types, many=True)  # Serialize the query
-            return Response(serializer.data)  # Return the serialized data
-        elif request.method == 'POST':
-            serializer = actorActingTypeSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save(actor=actor)  # Associate the actor with the new entry
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except User.DoesNotExist:
-        return Response({'error': 'Actor not found'}, status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def actor_acting_type_detail(request, pk):
-    try:
-        acting_type = actor_acting_types.objects.get(pk=pk)
-        if request.method == 'GET':
-            serializer = actorActingTypeSerializer(acting_type)
-            return Response(serializer.data)
-        elif request.method == 'PUT':
-            serializer = actorActingTypeSerializer(acting_type, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        elif request.method == 'DELETE':
-            acting_type.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-    except actor_acting_types.DoesNotExist:
-        return Response({'error': 'Acting type not found'}, status=status.HTTP_404_NOT_FOUND)
-    
-
 @api_view(['GET'])
 def acting_type_list(request):
     acting_types = ActingType.objects.all()
     serializer = ActingTypeSerializer(acting_types, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def countries_list(request):
+    country_list = countries.objects.all()
+    serializer = CountriesSerializer(country_list, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def role_type_list(request):
+    role_types = RoleType.objects.all()
+    serializer = RoleTypeSerializer(role_types, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def building_style_list(request):
+    building_styles = BuildingStyle.objects.all()
+    serializer = BuildingStyleSerializer(building_styles, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def building_type_list(request):
+    building_types = BuildingType.objects.all()
+    serializer = BuildingTypeSerializer(building_types, many=True)
+    return Response(serializer.data)
+

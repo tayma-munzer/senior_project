@@ -25,7 +25,9 @@ urlpatterns = [
     path('artwork_gallary/artwork/<int:pk>',views.artwork_from_artworkGallary),
     path('actor_acting_types',views.actorActingTypes),
     path('actor_acting_types/<int:pk>',views.deleteActorActingType),
-    path('actor/<int:actor_id>/acting-types/', views.actor_acting_types_list),
-    path('actor/acting-type/<int:pk>/', views.actor_acting_type_detail),
     path('acting_types',views.acting_type_list),
+    path('countries',views.countries_list),
+    path('role_types',views.role_type_list),
+    path('building_styles',views.building_style_list),
+    path('building_types',views.building_type_list),
 ]
