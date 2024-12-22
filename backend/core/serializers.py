@@ -1,30 +1,31 @@
 from rest_framework import serializers
 from .models import *
 
-class CountriesSerializer(serializers.Serializer):
+class CountriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = countries
         fields = ['id','country']
 
-class ActingTypeSerializer(serializers.Serializer):
+class ActingTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActingType
         fields = ['id','type']
 
-class RoleTypeSerializer(serializers.Serializer):
+class RoleTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoleType
         fields = ['id','role_type']
 
-class BuildingStyleSerializer(serializers.Serializer):
+class BuildingStyleSerializer(serializers.ModelSerializer):
     class Meta:
         model = BuildingStyle
         fields = ['id','building_style']
 
-class BuildingTypeSerializer(serializers.Serializer):
+class BuildingTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BuildingType
         fields = ['id','building_type']
+        
 class UserSerializer(serializers.ModelSerializer):
     current_country = serializers.SerializerMethodField()
     available = serializers.SerializerMethodField()
@@ -67,9 +68,9 @@ class ArtworkSerializer(serializers.ModelSerializer):
         fields = ['id','title','poster','director','done','director_id']
 
 class FilmingLocationSerializer(serializers.ModelSerializer):
-    building_style = serializers.SerializerMethodField()  
+    building_style = BuildingStyleSerializer(read_only=True)  
     building_style_id = serializers.IntegerField(write_only=True)
-    building_type = serializers.SerializerMethodField()  
+    building_type = BuildingTypeSerializer(read_only=True)
     building_type_id = serializers.IntegerField(write_only=True)
     building_owner = UserSerializer(read_only = True)
     building_owner_id = serializers.IntegerField(write_only=True)
@@ -77,12 +78,6 @@ class FilmingLocationSerializer(serializers.ModelSerializer):
         model = filming_location
         fields = ['id','location','detailed_address','desc','building_style','building_type','building_owner','building_owner_id','building_type_id','building_style_id']
 
-    def get_building_style(self,obj):
-        return obj.building_style.building_style 
-    
-    def get_building_type(self,obj):
-        return obj.building_type.building_type
-    
 class SceneSerializer(serializers.ModelSerializer):
     artwork_id = serializers.IntegerField(write_only=True)
     location_id = serializers.IntegerField(write_only=True,required=False)
@@ -97,15 +92,13 @@ class ArtworkActorsSerializer(serializers.ModelSerializer):
     actor_id = serializers.IntegerField(write_only=True)
     role_type_id = serializers.IntegerField(write_only=True,required=False)
     actor = UserSerializer(read_only=True)
-    role_type =serializers.SerializerMethodField() 
+    role_type = RoleTypeSerializer(read_only=True)
     artwork=ArtworkSerializer(read_only=True)
     artwork_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = artwork_actors
         fields = ['id','actor', 'role_type', 'approved','actor_id','role_type_id','artwork','artwork_id']   
 
-    def get_role_type(self,obj):
-        return obj.role_type.role_type 
 
 class SceneActorsSerializer(serializers.ModelSerializer):
     actor_id = serializers.IntegerField(write_only=True)
@@ -134,3 +127,10 @@ class artworkGallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = artwork_gallery
         fields = ['id','actor','artwork_name','poster','character_name','role_type','role_type_id','actor_id'] 
+
+class actorActingTypeSerializer(serializers.ModelSerializer):
+    acting_type_id = serializers.IntegerField(write_only=True)
+    acting_type = ActingTypeSerializer(read_only=True)
+    class Meta:
+        model = actor_acting_types
+        fields = ['id','actor','acting_type','acting_type_id'] 
