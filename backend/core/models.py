@@ -74,13 +74,13 @@ class actor_acting_types(models.Model):
 class artwork_gallery(models.Model):
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
     artwork_name = models.CharField(max_length=255)
-    poster = models.CharField(max_length=255)
+    poster = models.ImageField(blank=True,upload_to='images/')
     character_name = models.CharField(max_length=255)
     role_type = models.ForeignKey(RoleType,on_delete=models.CASCADE)
 
 class artwork(models.Model):
     title = models.CharField(max_length=255)
-    poster = models.CharField(max_length=255)
+    poster = models.ImageField(blank=True,upload_to='images/')
     director = models.ForeignKey(User,on_delete=models.CASCADE)
     done = models.BooleanField(default=False)
 
@@ -105,11 +105,11 @@ class booking_dates(models.Model):
 
 class location_photos(models.Model):
     location = models.ForeignKey(filming_location,on_delete=models.CASCADE)
-    photo = models.CharField(max_length=255)
+    photo = models.ImageField(upload_to='images/')
 
 class location_videos(models.Model):
     location = models.ForeignKey(filming_location,on_delete=models.CASCADE)
-    video = models.CharField(max_length=255)
+    video = models.FileField(upload_to='videos/')
 
 class favoraites(models.Model):
     location = models.ForeignKey(filming_location,on_delete=models.CASCADE)

@@ -194,7 +194,7 @@ def artwork_done(request,pk):
         artwork_instance = artwork.objects.get(id=pk)
         artwork_instance.done = True
         artwork_instance.save()
-        return Response({'message': 'scene updated successfully.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'artwork updated successfully.'}, status=status.HTTP_200_OK)
     except artwork.DoesNotExist:
         return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)
     
@@ -450,3 +450,121 @@ def building_type_list(request):
     serializer = BuildingTypeSerializer(building_types, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def actors_list(request):
+    actors = User.objects.filter(role="actor")
+    serializer = UserSerializer(actors, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET','DELETE'])
+@permission_classes([IsAuthenticated,])
+def location_image_detail(request, pk):
+    try:
+        image = location_photos.objects.get(pk=pk)
+    except location_photos.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = locationImageSerializer(image)
+        return Response(serializer.data)
+
+    elif request.method == 'DELETE':
+        image.delete()
+        return Response(status=status.HTTP_200_OK)
+    
+@api_view(['GET','POST'])
+@permission_classes([IsAuthenticated,])
+def location_image_list(request, pk):
+    try:
+        location = filming_location.objects.get(pk=pk)
+    except filming_location.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        images = location_photos.objects.filter(location=location)
+        serializer = locationImageSerializer(images, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        images = request.data.get('photos', [])
+        for image in images:
+            image['location_id'] = location.id
+            serializer = locationImageSerializer(data=image)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        return Response({'message': 'photos added successfully.'}, status=status.HTTP_201_CREATED)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def test_add_location_image(request, pk):
+    try:
+        location = filming_location.objects.get(pk=pk)
+    except filming_location.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND) 
+    
+    data = request.data
+    data['location_id']=location.id
+    serializer = locationImageSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED) 
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+
+@api_view(['GET','DELETE'])
+@permission_classes([IsAuthenticated,])
+def location_video_detail(request, pk):
+    try:
+        video = location_videos.objects.get(pk=pk)
+    except location_videos.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = locationVideoSerializer(video)
+        return Response(serializer.data)
+
+    elif request.method == 'DELETE':
+        video.delete()
+        return Response(status=status.HTTP_200_OK)
+    
+@api_view(['GET','POST'])
+@permission_classes([IsAuthenticated,])
+def location_video_list(request, pk):
+    try:
+        location = filming_location.objects.get(pk=pk)
+    except filming_location.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        videos = location_videos.objects.filter(location=location)
+        serializer = locationVideoSerializer(videos, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        videos = request.data.get('videos', [])
+        for video in videos:
+            video['location_id'] = location.id
+            serializer = locationVideoSerializer(data=video)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        return Response({'message': 'videos added successfully.'}, status=status.HTTP_201_CREATED)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def test_add_location_video(request, pk):
+    try:
+        location = filming_location.objects.get(pk=pk)
+    except filming_location.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND) 
+    
+    data = request.data
+    data['location_id']=location.id
+    serializer = locationVideoSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED) 
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 

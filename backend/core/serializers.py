@@ -134,3 +134,17 @@ class actorActingTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = actor_acting_types
         fields = ['id','actor','acting_type','acting_type_id'] 
+
+class locationImageSerializer(serializers.ModelSerializer):
+    location_id = serializers.IntegerField(write_only=True)
+    location = FilmingLocationSerializer(read_only=True)
+    class Meta:
+        model = location_photos
+        fields = ['id','location','location_id','photo'] 
+
+class locationVideoSerializer(serializers.ModelSerializer):
+    location_id = serializers.IntegerField(write_only=True)
+    location = FilmingLocationSerializer(read_only=True)
+    class Meta:
+        model = location_videos
+        fields = ['id','location','location_id','video'] 

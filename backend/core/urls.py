@@ -30,4 +30,11 @@ urlpatterns = [
     path('role_types',views.role_type_list),
     path('building_styles',views.building_style_list),
     path('building_types',views.building_type_list),
+    path('actors',views.actors_list),
+    path('location/<int:pk>/photos',views.location_image_list),
+    path('location/photo/<int:pk>',views.location_image_detail),
+    path('location/<int:pk>/photo',views.test_add_location_image),
+    path('location/<int:pk>/videos',views.location_video_list),
+    path('location/video/<int:pk>',views.location_video_detail),
+    path('location/<int:pk>/video',views.test_add_location_video),
 ]
