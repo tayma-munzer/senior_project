@@ -14,19 +14,22 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(15), //بتخلي الزر كبير
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10),
+    return Container(
+      width: 370,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusDirectional.circular(10),
+          ),
+          backgroundColor: primaryColor,
         ),
-        backgroundColor: primaryColor,
-      ),
-      child: CustomText(
-        text: text,
-        color: Colors.white,
-        alignment: Alignment.center,
+        child: CustomText(
+          text: text,
+          color: Colors.white,
+          alignment: Alignment.center,
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senior_app/widgets/custom_drawer.dart'; // Import the custom drawer
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -8,7 +9,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.menu, color: Colors.black),
-        onPressed: () {},
+        onPressed: () {
+          // Open the drawer when the menu icon is pressed
+          Scaffold.of(context).openDrawer(); // Opens the drawer
+        },
       ),
       actions: [
         IconButton(
