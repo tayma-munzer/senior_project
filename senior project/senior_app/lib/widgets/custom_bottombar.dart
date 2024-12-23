@@ -7,8 +7,8 @@ class CustomBottomNavBar extends StatelessWidget {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home, color: Colors.grey), // Default grey color
-          activeIcon: Icon(Icons.home, color: Colors.blue), // Active blue color
+          icon: Icon(Icons.home, color: Colors.grey),
+          activeIcon: Icon(Icons.home, color: Colors.blue),
           label: 'Home',
         ),
         BottomNavigationBarItem(
@@ -31,13 +31,12 @@ class CustomBottomNavBar extends StatelessWidget {
       onTap: (index) {
         _onItemTapped(index);
       },
-      selectedItemColor: Colors.blue, // Set the selected item color
-      unselectedItemColor: Colors.grey, // Set the unselected item color
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.grey,
     );
   }
 
   int _getCurrentIndex() {
-    // You can implement a logic to get the current index based on the route
     String routeName = Get.currentRoute;
     switch (routeName) {
       case '/directorHome':
@@ -49,7 +48,7 @@ class CustomBottomNavBar extends StatelessWidget {
       case '/artworkDetails':
         return 3;
       default:
-        return 0; // Default to Home
+        return 0;
     }
   }
 

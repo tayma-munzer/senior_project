@@ -31,15 +31,12 @@ class LoginController extends GetxController {
     return true;
   }
 
-  // Method to login the user using AuthController
   Future<String?> login() async {
     if (email == null || password == null) return null;
 
-    // Assuming `authenticateUser` returns a bool for success
     bool isAuthenticated =
         await authController.authenticateUser(email!, password!);
     if (isAuthenticated) {
-      // Access the value of the RxString token
       return authController.token.value;
     }
     return null;

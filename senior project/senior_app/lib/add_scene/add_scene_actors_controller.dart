@@ -39,14 +39,14 @@ class AddSceneActorsController extends GetxController {
   }
 
   void submitScene() {
-    print("Scene Name: ${sceneName.value}"); // Print the scene name
+    print("Scene Name: ${sceneName.value}");
     print("Selected Actors:");
 
     if (selectedActorList.isEmpty) {
       print("No actors selected.");
     } else {
       for (var actor in selectedActorList) {
-        print(actor['name']); // Print only the name of the selected actor.
+        print(actor['name']);
       }
     }
   }

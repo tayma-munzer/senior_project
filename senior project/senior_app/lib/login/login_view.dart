@@ -66,9 +66,7 @@ class LoginView extends StatelessWidget {
                           String? token = await controller.login();
 
                           if (token != null) {
-                            // Print the token
                             print("User token: $token");
-                            // Navigate to the home screen
                             Get.offNamed('/directorHome');
                           } else {
                             Get.snackbar("Error", "Invalid credentials");

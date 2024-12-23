@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String labelText; // Label text above the text field
-  final String hintText; // Hint text inside the text field
+  final String labelText;
+  final String hintText;
   final double fontSize;
   final Color labelColor;
   final Color hintColor;

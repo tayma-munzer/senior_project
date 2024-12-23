@@ -9,7 +9,6 @@ import 'package:table_calendar/table_calendar.dart';
 class ViewSceneDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Retrieve data passed from previous views (with null checks)
     final args = Get.arguments;
 
     final sceneName = args?['sceneName'] ?? 'اسم المشهد غير متوفر';
@@ -20,12 +19,10 @@ class ViewSceneDetailsView extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(),
       body: SingleChildScrollView(
-        // Wrap the whole body with SingleChildScrollView
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display Scene Name
             CustomText(
               text: sceneName,
               fontSize: 24,
@@ -33,7 +30,6 @@ class ViewSceneDetailsView extends StatelessWidget {
             ),
             SizedBox(height: 20),
 
-            // Display Selected Actors
             CustomText(
               text: "الممثلين المختارين:",
               fontSize: 20,
@@ -41,7 +37,7 @@ class ViewSceneDetailsView extends StatelessWidget {
             ),
             SizedBox(height: 10),
             ListView.builder(
-              shrinkWrap: true, // Prevents it from taking too much space
+              shrinkWrap: true,
               itemCount: selectedActors.length,
               itemBuilder: (context, index) {
                 final actor = selectedActors[index];
@@ -93,7 +89,6 @@ class ViewSceneDetailsView extends StatelessWidget {
             ),
             SizedBox(height: 20),
 
-            // Display Selected Location
             CustomText(
               text:
                   "الموقع المختار: ${selectedLocation['name'] ?? 'موقع غير متوفر'}",
@@ -150,7 +145,6 @@ class ViewSceneDetailsView extends StatelessWidget {
             CustomButton(
               text: "موافق",
               onPressed: () {
-                // Handle the final confirmation action here
                 Get.back();
               },
             ),

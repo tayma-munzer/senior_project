@@ -13,7 +13,6 @@ class SignUpChoicesView extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Top right image
           Positioned(
             top: 0,
             left: 0,
@@ -23,8 +22,6 @@ class SignUpChoicesView extends StatelessWidget {
               height: 100,
             ),
           ),
-
-          // Bottom right image
           Positioned(
             bottom: 0,
             right: 0,
@@ -34,22 +31,16 @@ class SignUpChoicesView extends StatelessWidget {
               height: 100,
             ),
           ),
-
-          // Center content
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Center top image
                 Image.asset(
                   'assets/choices.png',
                   width: 300,
                   height: 300,
                 ),
-
                 SizedBox(height: 20),
-
-                // Buttons
                 _buildChoiceButton(controller, 'ممثل', screenWidth),
                 SizedBox(height: 10),
                 _buildChoiceButton(controller, 'مخرج', screenWidth),

@@ -1,12 +1,9 @@
 import 'package:get/get.dart';
 
 class AddDaysController extends GetxController {
-  // List to store selected days
   var selectedDays = <DateTime>[].obs;
 
-  // Toggle a day (add or remove from selected list)
   void toggleDay(DateTime day) {
-    // Create a new DateTime object with only the date (ignoring time)
     final dayWithoutTime = DateTime(day.year, day.month, day.day);
 
     if (selectedDays.contains(dayWithoutTime)) {
@@ -16,7 +13,6 @@ class AddDaysController extends GetxController {
     }
   }
 
-  // Print the selected days
   void submitDays() {
     if (selectedDays.isEmpty) {
       print("No days selected.");

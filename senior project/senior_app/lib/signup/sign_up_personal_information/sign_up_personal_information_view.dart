@@ -9,8 +9,7 @@ import 'package:senior_app/widgets/custom_textfield.dart';
 
 class SignUpPersonalInformationView extends StatelessWidget {
   final controller = Get.find<SignUpPersonalInformationController>();
-  final choiceController = Get.find<
-      SignUpChoicesController>(); // Instantiate the SignUpChoicesController
+  final choiceController = Get.find<SignUpChoicesController>();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -18,7 +17,6 @@ class SignUpPersonalInformationView extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Top left image
           Positioned(
             top: 0,
             left: 0,
@@ -28,8 +26,6 @@ class SignUpPersonalInformationView extends StatelessWidget {
               height: 100,
             ),
           ),
-
-          // Bottom right image
           Positioned(
             bottom: 0,
             right: 0,
@@ -39,8 +35,6 @@ class SignUpPersonalInformationView extends StatelessWidget {
               height: 100,
             ),
           ),
-
-          // Center content
           Center(
             child: SingleChildScrollView(
               child: Form(
@@ -48,19 +42,16 @@ class SignUpPersonalInformationView extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Center top image
                     Image.asset(
                       'assets/personalinformation.png',
                       width: 300,
                       height: 300,
                     ),
-
                     CustomText(
                       text: "الاسم الاول",
                       alignment: Alignment.centerRight,
                       fontSize: 20,
                     ),
-
                     CustomTextFormField(
                       hint: 'الاسم الاول',
                       onSave: (value) =>
@@ -73,7 +64,6 @@ class SignUpPersonalInformationView extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 10),
-
                     CustomText(
                       text: " اسم العائلة",
                       alignment: Alignment.centerRight,
@@ -91,7 +81,6 @@ class SignUpPersonalInformationView extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 10),
-
                     CustomText(
                       text: " رقم الهاتف",
                       alignment: Alignment.centerRight,
@@ -112,7 +101,6 @@ class SignUpPersonalInformationView extends StatelessWidget {
                       keyboardType: TextInputType.phone,
                     ),
                     SizedBox(height: 10),
-
                     CustomText(
                       text: " رقم الهاتف الارضي",
                       alignment: Alignment.centerRight,
@@ -133,8 +121,6 @@ class SignUpPersonalInformationView extends StatelessWidget {
                       keyboardType: TextInputType.phone,
                     ),
                     SizedBox(height: 20),
-
-                    // Next Button
                     CustomButton(
                       text: 'التالي',
                       onPressed: () {

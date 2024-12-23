@@ -61,8 +61,7 @@ class SignUpLocationView extends StatelessWidget {
                       fontSize: 20,
                       alignment: Alignment.topRight,
                     ),
-                    SizedBox(
-                        width: 10), // Add some space between text and dropdown
+                    SizedBox(width: 10),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -96,9 +95,7 @@ class SignUpLocationView extends StatelessWidget {
                           print(
                               ' land line number: ${personalInformationController.landlineNumber.value}');
 
-                          // Check user role and navigate accordingly
                           if (choiceController.selectedChoice.value == 'ممثل') {
-                            // Corrected from 'actor' to 'ممثل'
                             Get.toNamed('/signupactingtypes');
                           } else {
                             Get.toNamed('/login');

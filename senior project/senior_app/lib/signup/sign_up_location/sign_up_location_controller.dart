@@ -11,7 +11,6 @@ class SignUpLocationController extends GetxController {
       formKey.currentState!.save();
       print("Selected Country: $selectedCountry");
       print("Birth Date: $birthDate");
-      // Call API or navigate to the next screen here
     }
   }
 

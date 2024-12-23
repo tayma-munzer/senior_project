@@ -6,7 +6,7 @@ import 'package:senior_app/widgets/custom_button.dart';
 class SignUpView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SignUpController>(); // Get the controller
+    final controller = Get.find<SignUpController>();
 
     return Scaffold(
       body: Stack(
@@ -30,7 +30,7 @@ class SignUpView extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.asset('assets/signup.png'), // Path to your image
+                      Image.asset('assets/signup.png'),
                       SizedBox(height: 20),
                       _buildTextField(
                         label: 'البريد الإلكتروني',
@@ -79,10 +79,8 @@ class SignUpView extends StatelessWidget {
                       CustomButton(
                         text: 'التالي',
                         onPressed: () {
-                          controller
-                              .saveSignUp(); // Call the saveSignUp function
-                          Get.toNamed(
-                              '/directorHome'); // Navigate to the signup page
+                          controller.saveSignUp();
+                          Get.toNamed('/directorHome');
                         },
                       ),
                     ],
@@ -111,8 +109,8 @@ class SignUpView extends StatelessWidget {
         labelText: label,
         hintText: hint,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.zero, // No corners (rectangle)
-          borderSide: BorderSide(color: Colors.grey), // Border color
+          borderRadius: BorderRadius.zero,
+          borderSide: BorderSide(color: Colors.grey),
         ),
         suffixIcon: suffixIcon,
       ),

@@ -6,7 +6,7 @@ class CustomTextFormField extends StatelessWidget {
   final void Function(String?)? onSave;
   final String? Function(String?)? validator;
   final Function(String)? onChanged;
-  final TextInputType keyboardType; // Add keyboardType property
+  final TextInputType keyboardType;
 
   const CustomTextFormField({
     Key? key,
@@ -14,7 +14,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onSave,
     this.validator,
     this.onChanged,
-    this.keyboardType = TextInputType.text, // Default to text input
+    this.keyboardType = TextInputType.text,
   }) : super(key: key);
 
   @override

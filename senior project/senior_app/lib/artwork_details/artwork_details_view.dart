@@ -34,8 +34,7 @@ class ArtworkDetailsView extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.add),
                     onPressed: () {
-                      Get.toNamed(
-                          '/addscene'); // This should trigger the binding and load AddSceneView.
+                      Get.toNamed('/addscene');
                     },
                   ),
                   CustomText(

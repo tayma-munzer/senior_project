@@ -20,7 +20,7 @@ class ViewLocationDetailsView extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end, // Align to the right
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Obx(() {
                 final mediaList = controller.location['images'] ?? [];
@@ -87,7 +87,7 @@ class ViewLocationDetailsView extends StatelessWidget {
               }),
               SizedBox(height: 16),
               Obx(() => Align(
-                    alignment: Alignment.centerRight, // Align text to the right
+                    alignment: Alignment.centerRight,
                     child: Text(
                       controller.location['name'] ?? 'Unknown',
                       style:

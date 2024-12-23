@@ -34,7 +34,7 @@ class AddLocationController extends GetxController {
     if (selectedLocationIndex.value == null ||
         selectedLocationIndex.value < 0) {
       print("No location selected!");
-      return; // Exit early if no location is selected
+      return;
     }
 
     print("Location submitted: ${locations[selectedLocationIndex.value]}");

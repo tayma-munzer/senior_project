@@ -9,7 +9,6 @@ class SignUpActingTypeController extends GetxController {
     'Comedy',
     'Thriller',
     'Horror',
-    // Add more acting types as needed
   ];
   var savedActingTypes = <String>[].obs;
 
@@ -24,8 +23,7 @@ class SignUpActingTypeController extends GetxController {
   }
 
   bool isUserActor() {
-    // Check user role logic - for demo, assume it's hardcoded
-    return true; // Replace with actual user role check
+    return true;
   }
 
   @override

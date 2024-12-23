@@ -25,13 +25,11 @@ class AddDaysView extends StatelessWidget {
               alignment: Alignment.bottomRight,
             ),
             SizedBox(height: 16),
-            // Use Obx to update only the parts that need to be reactive
             Expanded(
               child: TableCalendar(
                 firstDay: DateTime.now(),
                 lastDay: DateTime.now().add(Duration(days: 365)),
                 focusedDay: DateTime.now(),
-                // Reactively update selected days only
                 selectedDayPredicate: (day) {
                   return controller.selectedDays.any((selectedDay) =>
                       selectedDay.year == day.year &&
@@ -39,11 +37,11 @@ class AddDaysView extends StatelessWidget {
                       selectedDay.day == day.day);
                 },
                 onDaySelected: (selectedDay, focusedDay) {
-                  controller.toggleDay(selectedDay); // Toggle the day selection
+                  controller.toggleDay(selectedDay);
                 },
                 calendarStyle: CalendarStyle(
                   selectedDecoration: BoxDecoration(
-                    color: Colors.green, // Highlight selected days in green
+                    color: Colors.green,
                     shape: BoxShape.circle,
                   ),
                   todayDecoration: BoxDecoration(
@@ -67,8 +65,8 @@ class AddDaysView extends StatelessWidget {
             CustomButton(
               text: "التالي",
               onPressed: () {
-                controller.submitDays(); // Print the selected days
-                Get.toNamed('/viewscenedetails'); // Navigate to the next page
+                controller.submitDays();
+                Get.toNamed('/viewscenedetails');
               },
             ),
           ],
