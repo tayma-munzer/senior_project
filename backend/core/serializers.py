@@ -26,12 +26,17 @@ class BuildingTypeSerializer(serializers.ModelSerializer):
         model = BuildingType
         fields = ['id','building_type']
 
+class AdditionalinfoSerializer(serializers.ModelSerializer):
+    current_country = CountriesSerializer(read_only = True)
+    current_country_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = actor_additional_info
+        fields = ['current_country','current_country_id','available','approved','personal_image','date_of_birth']
+
 class UserSerializer(serializers.ModelSerializer):
-    current_country = serializers.SerializerMethodField()
-    available = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ['id','first_name', 'last_name', 'email','password','role','phone_number','landline_number','current_country','available']
+        fields = ['id','first_name', 'last_name', 'email','password','role','phone_number','landline_number']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -39,26 +44,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])  # Hash the password
         user.save()
         return user
-    
-    def get_current_country(self, obj):
-        try:
-            actor_info = actor_additional_info.objects.get(actor=obj)
-            return actor_info.current_country.contry
-        except actor_additional_info.DoesNotExist:
-            return None
-
-    def get_available(self, obj):
-        try:
-            actor_info = actor_additional_info.objects.get(actor=obj)
-            return actor_info.available
-        except actor_additional_info.DoesNotExist:
-            return None
         
 
-class AdditionalinfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = actor_additional_info
-        fields = ['current_country','available','approved']
 
 class ArtworkSerializer(serializers.ModelSerializer):
     director = UserSerializer(read_only = True)
