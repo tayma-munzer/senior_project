@@ -47,7 +47,8 @@ def login(request):
 @permission_classes([IsAuthenticated,])
 def artwork_list(request):
     if request.method == 'GET':
-        artworks = artwork.objects.all()
+        user = request.user
+        artworks = artwork.objects.filter(director=user).order_by('done')
         serializer = ArtworkSerializer(artworks, many=True)
         return Response(serializer.data)
 
@@ -350,6 +351,7 @@ def user_profile(request):
         return Response(response_data)
 
     elif request.method == 'PUT':
+        print(user.role)
         serializer = UserSerializer(user, data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -479,19 +481,23 @@ def building_type_list(request):
 
 @api_view(['GET'])
 def actors_list(request):
-    actors = User.objects.filter(role="actor")
+    actor_ids = actor_additional_info.objects.filter(approved=True).values_list('actor_id', flat=True).distinct()
+    actors = User.objects.filter(id__in=actor_ids,role="actor").order_by('-additional_info__available')
     acting_type = request.query_params.get('acting_type')
     living_country = request.query_params.get('country')
     available = request.query_params.get('available')
+    min_age = request.query_params.get('min_age')
+    max_age = request.query_params.get('max_age')
+    ordering = request.query_params.get('ordering')
     search = request.query_params.get('search')
     if acting_type:
         actor_ids = actor_acting_types.objects.filter(acting_type__type=acting_type).values_list('actor_id', flat=True).distinct()
         actors = actors.filter(id__in=actor_ids)
     if living_country :
-        actor_ids = actor_additional_info.objects.filter(current_country__contry=living_country).values_list('actor__id', flat=True).distinct()
+        actor_ids = actor_additional_info.objects.filter(current_country__contry=living_country).values_list('actor_id', flat=True).distinct()
         actors = actors.filter(id__in=actor_ids)
     if available:
-        actor_ids = actor_additional_info.objects.filter(available=available).values_list('actor__id', flat=True).distinct()
+        actor_ids = actor_additional_info.objects.filter(available=available).values_list('actor_id', flat=True).distinct()
         actors = actors.filter(id__in=actor_ids)
     if search :
         search_terms = search.split()
@@ -499,6 +505,13 @@ def actors_list(request):
         for term in search_terms:
             query |= Q(first_name__icontains=term) | Q(last_name__icontains=term)
         actors = actors.filter(query)
+    #if min_age:
+
+    if ordering :
+        if ordering == "age":
+            actors = actors.order_by("additional_info__date_of_birth")
+        if ordering == "-age":
+            actors = actors.order_by("-additional_info__date_of_birth")
     serializer = UserSerializer(actors, many=True)
     response_data = serializer.data
     for data in response_data:
@@ -619,3 +632,14 @@ def test_add_location_video(request, pk):
         return Response(serializer.data, status=status.HTTP_201_CREATED) 
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated,])
+def actor_image(request):
+    user=request.user
+    additional_info = actor_additional_info.objects.get(actor=user)
+    serializer = AdditionalinfoSerializer(additional_info, data=request.data,partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
