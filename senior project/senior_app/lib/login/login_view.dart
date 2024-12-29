@@ -47,7 +47,7 @@ class LoginView extends StatelessWidget {
                     CustomText(text: "Phone number or Email"),
                     CustomTextFormField(
                       hint: "Phone number or Email",
-                      onSave: (value) => controller.emailOrPhone = value,
+                      onSave: (value) => controller.email = value,
                       validator: controller.validateEmailOrPhone,
                     ),
                     SizedBox(height: 10),
@@ -63,9 +63,10 @@ class LoginView extends StatelessWidget {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
 
-                          bool isAuthenticated = await controller.login();
+                          String? token = await controller.login();
 
-                          if (isAuthenticated) {
+                          if (token != null) {
+                            print("User token: $token");
                             Get.offNamed('/directorHome');
                           } else {
                             Get.snackbar("Error", "Invalid credentials");

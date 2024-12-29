@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class AddSceneController extends GetxController {
+class AddSceneActorsController extends GetxController {
   var sceneName = ''.obs;
 
   var actors = [
@@ -24,33 +24,34 @@ class AddSceneController extends GetxController {
     },
   ].obs;
 
-  var selectedActors = <bool>[].obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    selectedActors.assignAll(List.filled(actors.length, false));
-  }
+  var selectedActors = List.generate(3, (index) => false).obs;
+  var selectedActorList = <Map<String, dynamic>>[].obs;
 
   void toggleSelection(int index, bool value) {
     selectedActors[index] = value;
+
+    if (value) {
+      selectedActorList.add(actors[index]);
+    } else {
+      selectedActorList
+          .removeWhere((actor) => actor['name'] == actors[index]['name']);
+    }
   }
 
   void submitScene() {
     print("Scene Name: ${sceneName.value}");
     print("Selected Actors:");
-    for (int i = 0; i < actors.length; i++) {
-      if (selectedActors[i]) {
-        print("- ${actors[i]['name']}");
+
+    if (selectedActorList.isEmpty) {
+      print("No actors selected.");
+    } else {
+      for (var actor in selectedActorList) {
+        print(actor['name']);
       }
     }
-
-    // Get.to(
-    //   () => AddSceneLocationView(),
-    // );
   }
 
   void addActor() {
-    print("aadd actor tapped");
+    print("Add actor tapped");
   }
 }

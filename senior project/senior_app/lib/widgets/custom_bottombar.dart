@@ -1,95 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CustomBottomNavBar extends StatefulWidget {
-  @override
-  _CustomBottomNavBarState createState() => _CustomBottomNavBarState();
-}
-
-class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    SettingsPage(),
-    LocationPage(),
-    HomePage(),
-    ActorsPage(),
-    ProfilePage(),
-  ];
-
+class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.home, color: Colors.grey),
+          activeIcon: Icon(Icons.home, color: Colors.blue),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.location_on),
-          label: 'Location',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.face_2_sharp),
+          icon: Icon(Icons.movie, color: Colors.grey),
+          activeIcon: Icon(Icons.movie, color: Colors.blue),
           label: 'Actors',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
+          icon: Icon(Icons.location_on, color: Colors.grey),
+          activeIcon: Icon(Icons.location_on, color: Colors.blue),
+          label: 'Locations',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.art_track, color: Colors.grey),
+          activeIcon: Icon(Icons.art_track, color: Colors.blue),
+          label: 'Artwork',
         ),
       ],
-      currentIndex: _currentIndex,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.black,
-      backgroundColor: Colors.white,
+      currentIndex: _getCurrentIndex(),
       onTap: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-        Get.to(
-          _pages[index],
-          transition: Transition.fadeIn,
-        );
+        _onItemTapped(index);
       },
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.grey,
     );
   }
-}
 
-class SettingsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Settings')), body: Container());
+  int _getCurrentIndex() {
+    String routeName = Get.currentRoute;
+    switch (routeName) {
+      case '/directorHome':
+        return 0;
+      case '/viewactors':
+        return 1;
+      case '/viewlocations':
+        return 2;
+      case '/artworkDetails':
+        return 3;
+      default:
+        return 0;
+    }
   }
-}
 
-class LocationPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Location')), body: Container());
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Home')), body: Container());
-  }
-}
-
-class ActorsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Actors')), body: Container());
-  }
-}
-
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Profile')), body: Container());
+  void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        Get.offNamed('/directorHome');
+        break;
+      case 1:
+        Get.offNamed('/viewactors');
+        break;
+      case 2:
+        Get.offNamed('/viewlocations');
+        break;
+      case 3:
+        Get.offNamed('/artworkDetails');
+        break;
+    }
   }
 }

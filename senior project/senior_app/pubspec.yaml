@@ -39,6 +39,9 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   http: ^1.2.2
   shared_preferences: ^2.3.3
+  get_storage: ^2.1.1
+  table_calendar: ^3.0.8
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

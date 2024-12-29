@@ -21,7 +21,6 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
   void initState() {
     super.initState();
 
-//الحركة تبع الصولاة
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 2),
@@ -49,7 +48,6 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Animated position for the image
             AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
