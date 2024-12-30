@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 import json
+from django.db.models import Q
 
 # Create your views here.
 
@@ -46,7 +47,8 @@ def login(request):
 @permission_classes([IsAuthenticated,])
 def artwork_list(request):
     if request.method == 'GET':
-        artworks = artwork.objects.all()
+        user = request.user
+        artworks = artwork.objects.filter(director=user).order_by('done')
         serializer = ArtworkSerializer(artworks, many=True)
         return Response(serializer.data)
 
@@ -144,6 +146,15 @@ def scene_detail(request, pk):
 def filming_location_list(request):
     if request.method == 'GET':
         locations = filming_location.objects.all()
+        buildingStyle = request.query_params.get('building_style')
+        buildingType = request.query_params.get('building_type')
+        search = request.query_params.get('search')
+        if buildingStyle :
+            locations = locations.filter(building_style__building_style = buildingStyle)
+        if buildingType :
+            locations = locations.filter(building_type__building_type = buildingType)
+        if search :
+            locations = locations.filter(desc__contains = search)
         serializer = FilmingLocationSerializer(locations, many=True)
         return Response(serializer.data)
 
@@ -249,7 +260,13 @@ def artworkactors(request, pk):
             artwork_instance = artwork.objects.get(id=pk)
             actors = artwork_actors.objects.filter(artwork=artwork_instance)
             serializer = ArtworkActorsSerializer(actors,many=True)
-            return Response(serializer.data)
+            response_data = serializer.data
+            for data in response_data:
+                actor = data['actor']
+                info = actor_additional_info.objects.get(actor_id=data['actor']['id'])
+                infoSerializer = AdditionalinfoSerializer(info)
+                data['actor']['additional_info']=infoSerializer.data
+            return Response(response_data)
         except artwork.DoesNotExist:
             return Response({'error': 'artwork not found.'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -275,7 +292,13 @@ def sceneactors(request, pk):
             scene_instance = scenes.objects.get(id=pk)
             actors = scene_actors.objects.filter(scene=scene_instance)
             serializer = SceneActorsSerializer(actors,many=True)
-            return Response(serializer.data)
+            response_data = serializer.data
+            for data in response_data:
+                actor = data['actor']
+                info = actor_additional_info.objects.get(actor_id=data['actor']['id'])
+                infoSerializer = AdditionalinfoSerializer(info)
+                data['actor']['additional_info']=infoSerializer.data
+            return Response(response_data)
         except scenes.DoesNotExist:
             return Response({'error': 'scene not found.'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -320,9 +343,15 @@ def user_profile(request):
     user=request.user
     if request.method == 'GET':
         serializer = UserSerializer(user)
-        return Response(serializer.data)
+        response_data = serializer.data
+        if user.role == "actor":
+            info = actor_additional_info.objects.get(actor=user)
+            infoSerializer = AdditionalinfoSerializer(info)
+            response_data['additional_info']=infoSerializer.data
+        return Response(response_data)
 
     elif request.method == 'PUT':
+        print(user.role)
         serializer = UserSerializer(user, data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -337,6 +366,8 @@ def additional_info(request):
         info = actor_additional_info.objects.get(actor=user)
     except actor_additional_info.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    if 'approved' in request.data:
+        del request.data['approved']
     serializer = AdditionalinfoSerializer(info, data=request.data,partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -450,11 +481,56 @@ def building_type_list(request):
     serializer = BuildingTypeSerializer(building_types, many=True)
     return Response(serializer.data)
 
+from datetime import date, timedelta
+from django.utils import timezone
+
 @api_view(['GET'])
 def actors_list(request):
-    actors = User.objects.filter(role="actor")
+    actor_ids = actor_additional_info.objects.filter(approved=True).values_list('actor_id', flat=True).distinct()
+    actors = User.objects.filter(id__in=actor_ids,role="actor").order_by('-additional_info__available')
+    acting_type = request.query_params.get('acting_type')
+    living_country = request.query_params.get('country')
+    available = request.query_params.get('available')
+    min_age = request.query_params.get('min_age')
+    max_age = request.query_params.get('max_age')
+    ordering = request.query_params.get('ordering')
+    search = request.query_params.get('search')
+    if acting_type:
+        actor_ids = actor_acting_types.objects.filter(acting_type__type=acting_type).values_list('actor_id', flat=True).distinct()
+        actors = actors.filter(id__in=actor_ids)
+    if living_country :
+        actor_ids = actor_additional_info.objects.filter(current_country__contry=living_country).values_list('actor_id', flat=True).distinct()
+        actors = actors.filter(id__in=actor_ids)
+    if available:
+        actor_ids = actor_additional_info.objects.filter(available=available).values_list('actor_id', flat=True).distinct()
+        actors = actors.filter(id__in=actor_ids)
+    if search :
+        search_terms = search.split()
+        query = Q()
+        for term in search_terms:
+            query |= Q(first_name__icontains=term) | Q(last_name__icontains=term)
+        actors = actors.filter(query)
+
+    today = date.today()
+    if min_age :
+        min_birthdate = today - timedelta(days=int(min_age) * 365.25)
+        actors = actors.filter(additional_info__date_of_birth__lte=min_birthdate)
+    if max_age :
+        max_birthdate = today - timedelta(days=int(max_age) * 365.25)
+        actors = actors.filter(additional_info__date_of_birth__gte=max_birthdate)
+
+    if ordering :
+        if ordering == "age":
+            actors = actors.order_by("additional_info__date_of_birth")
+        if ordering == "-age":
+            actors = actors.order_by("-additional_info__date_of_birth")
     serializer = UserSerializer(actors, many=True)
-    return Response(serializer.data)
+    response_data = serializer.data
+    for data in response_data:
+        info = actor_additional_info.objects.get(actor_id=data['id'])
+        infoSerializer = AdditionalinfoSerializer(info)
+        data['additional_info']=infoSerializer.data
+    return Response(response_data)
 
 @api_view(['GET','DELETE'])
 @permission_classes([IsAuthenticated,])
@@ -568,3 +644,23 @@ def test_add_location_video(request, pk):
         return Response(serializer.data, status=status.HTTP_201_CREATED) 
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+@api_view(['PATCH','DELETE'])
+@permission_classes([IsAuthenticated,])
+def actor_image(request):
+    user=request.user
+    additional_info = actor_additional_info.objects.get(actor=user)
+    if request.method == 'PATCH':
+        if 'approved' in request.data:
+            del request.data['approved']
+        serializer = AdditionalinfoSerializer(additional_info, data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        default_image_path = 'personal_image/default.jpg'
+        additional_info.personal_image = default_image_path
+        additional_info.save()
+        serializer = AdditionalinfoSerializer(additional_info)
+        return Response(serializer.data, status=status.HTTP_200_OK)

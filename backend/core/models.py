@@ -15,7 +15,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)  # Hash the password
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -32,12 +32,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.IntegerField()
     landline_number = models.IntegerField()
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)# Example additional field
+    is_staff = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email' 
-    REQUIRED_FIELDS = ['first_name','last_name','role','phone_number','landline_number']  # Add any other required fields here
+    REQUIRED_FIELDS = ['first_name','last_name','role','phone_number','landline_number']
 
     def __str__(self):
         return self.email
@@ -58,13 +58,15 @@ class BuildingType(models.Model):
         return self.building_type
 
 class actor_additional_info(models.Model):
-    actor = models.ForeignKey(User,on_delete=models.CASCADE)
+    actor = models.ForeignKey(User, related_name='additional_info',on_delete=models.CASCADE)
     current_country = models.ForeignKey(countries,on_delete=models.CASCADE)
     available = models.BooleanField(default=False)
     approved = models.BooleanField(default=False)
+    personal_image = models.ImageField(upload_to='personal_image/',default='personal_image/default.jpg')
+    date_of_birth = models.DateField(auto_now_add=True)
 
 class official_document(models.Model):
-    document = models.CharField(max_length=255)
+    document = models.FileField(upload_to='documents/')
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
 
 class actor_acting_types(models.Model):
@@ -74,13 +76,13 @@ class actor_acting_types(models.Model):
 class artwork_gallery(models.Model):
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
     artwork_name = models.CharField(max_length=255)
-    poster = models.ImageField(blank=True,upload_to='images/')
+    poster = models.ImageField(upload_to='images/')
     character_name = models.CharField(max_length=255)
     role_type = models.ForeignKey(RoleType,on_delete=models.CASCADE)
 
 class artwork(models.Model):
     title = models.CharField(max_length=255)
-    poster = models.ImageField(blank=True,upload_to='images/')
+    poster = models.ImageField(upload_to='images/')
     director = models.ForeignKey(User,on_delete=models.CASCADE)
     done = models.BooleanField(default=False)
 

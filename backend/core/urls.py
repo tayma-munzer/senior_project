@@ -37,4 +37,5 @@ urlpatterns = [
     path('location/<int:pk>/videos',views.location_video_list),
     path('location/video/<int:pk>',views.location_video_detail),
     path('location/<int:pk>/video',views.test_add_location_video),
+    path('personal_image',views.actor_image),
 ]
