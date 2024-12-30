@@ -53,7 +53,7 @@ class ViewLocationsView extends StatelessWidget {
                 itemCount: locations.length,
                 itemBuilder: (context, index) {
                   final location = locations[index];
-                  return _buildLocationCard(location);
+                  return _buildLocationCard(location, index);
                 },
               );
             }),
@@ -64,32 +64,48 @@ class ViewLocationsView extends StatelessWidget {
     );
   }
 
-  Widget _buildLocationCard(Map location) {
-    final bool isSelected = controller.isLocationSelected(location);
-
+  Widget _buildLocationCard(Map location, int index) {
     return GestureDetector(
       onTap: () {
         Get.toNamed('/locationdetails', arguments: location);
       },
       child: Card(
-        color: isSelected ? primaryColor : whiteColor,
+        color: whiteColor,
         elevation: 4,
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: AssetImage(
-                        location['images']?[0] ?? 'assets/login.png'),
-                    fit: BoxFit.cover,
+              Row(
+                children: [
+                  Obx(() {
+                    final isFavorite = controller.isFavorite(index);
+                    return GestureDetector(
+                      onTap: () {
+                        controller.toggleFavorite(index);
+                        print('Location Name: ${location['location']}');
+                      },
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: Colors.red,
+                      ),
+                    );
+                  }),
+                  SizedBox(width: 8),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                        image: AssetImage(
+                            location['images']?[0] ?? 'assets/login.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               SizedBox(width: 16),
               Expanded(
@@ -97,7 +113,7 @@ class ViewLocationsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      location['name'] ?? 'Unknown',
+                      location['location'] ?? 'Unknown',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
@@ -110,7 +126,7 @@ class ViewLocationsView extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            location['description'] ?? 'No description',
+                            location['detailed_address'] ?? 'No description',
                             style: TextStyle(fontSize: 14),
                             textAlign: TextAlign.right,
                           ),
@@ -122,7 +138,7 @@ class ViewLocationsView extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "${location['owner'] ?? 'Unknown'}: المالك",
+                      "${location['building_owner']['first_name']} ${location['building_owner']['last_name']}: المالك",
                       style: TextStyle(fontSize: 14),
                     ),
                   ],

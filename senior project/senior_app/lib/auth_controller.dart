@@ -10,33 +10,26 @@ class AuthController extends GetxController {
 
   Future<bool> authenticateUser(String emailOrPhone, String password) async {
     try {
-      print("object22");
-      print(emailOrPhone);
-      print(password);
+      print(
+          'Authenticating with email/phone: $emailOrPhone, password: $password');
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'email': emailOrPhone,
-          'password': password,
-        }),
+        body: json.encode({'email': emailOrPhone, 'password': password}),
       );
-      print("object");
 
       if (response.statusCode == 200) {
-        print("hiii");
+        print('Authentication successful');
         final Map<String, dynamic> data = json.decode(response.body);
         await saveToken(data['token']);
         return true;
       } else {
-        print("llll");
-        print(response.body);
-        print(response.statusCode);
-        Get.snackbar("Error", "Invalid credentials");
+        print('Authentication failed: ${response.body}');
+        Get.snackbar('Error', 'Invalid credentials');
         return false;
       }
     } catch (e) {
-      print("Error during authentication: $e");
+      print('Error during authentication: $e');
       return false;
     }
   }

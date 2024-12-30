@@ -13,6 +13,8 @@ import 'package:senior_app/artwork_details/artwork_details_bindings.dart';
 import 'package:senior_app/artwork_details/artwork_details_view.dart';
 import 'package:senior_app/director_home_page/director-home_binding.dart';
 import 'package:senior_app/director_home_page/director-home_view.dart';
+import 'package:senior_app/favorite_locations/favorite_location_view.dart';
+import 'package:senior_app/favorite_locations/favorite_locations_binding.dart';
 import 'package:senior_app/location_details/location_details_binding.dart';
 import 'package:senior_app/location_details/location_details_view.dart';
 import 'package:senior_app/login/login_binding.dart';
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Cinema Director Assistance',
-      initialRoute: '/signupchoices',
+      initialRoute: '/login',
       getPages: [
         GetPage(
             name: '/login', page: () => LoginView(), binding: LoginBinding()),
@@ -56,6 +58,11 @@ class MyApp extends StatelessWidget {
             name: '/signuplocation',
             page: () => SignUpLocationView(),
             binding: SignUpLocationBinding()),
+        GetPage(
+            name: '/favoritelocations',
+            page: () => FavoriteLocationView(),
+            binding: FavoriteLocationBinding()),
+
         GetPage(
             name: '/signuppersonalinformation',
             page: () => SignUpPersonalInformationView(),
@@ -98,10 +105,10 @@ class MyApp extends StatelessWidget {
             name: '/viewactors',
             page: () => ViewActorsView(),
             binding: ViewActorsBinding()),
-        GetPage(
-            name: '/actorsdetails',
-            page: () => ActorDetailsView(),
-            binding: ActorDetailsBinding()),
+        // GetPage(
+        //     name: '/actorsdetails',
+        //     page: () => ActorDetailsView(),
+        //     binding: ActorDetailsBinding()),
         GetPage(
             name: '/locationdetails',
             page: () => ViewLocationDetailsView(),
@@ -110,6 +117,11 @@ class MyApp extends StatelessWidget {
             name: '/viewlocations',
             page: () => ViewLocationsView(),
             binding: ViewLocationsBinding()),
+        GetPage(
+          name: '/favorites',
+          page: () => FavoriteLocationView(),
+          binding: FavoriteLocationBinding(),
+        ),
       ],
     );
   }

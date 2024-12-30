@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/colors.dart';
 import 'package:senior_app/view_actors/view_actors_controller.dart';
-import 'package:senior_app/view_locations/view_locations_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_drawer.dart';
@@ -54,7 +53,7 @@ class ViewActorsView extends StatelessWidget {
                 itemCount: actor.length,
                 itemBuilder: (context, index) {
                   final actors = actor[index];
-                  return _builActorsCard(actors);
+                  return _buildActorsCard(actors);
                 },
               );
             }),
@@ -65,7 +64,7 @@ class ViewActorsView extends StatelessWidget {
     );
   }
 
-  Widget _builActorsCard(Map actors) {
+  Widget _buildActorsCard(Map actors) {
     final bool isSelected = controller.isActorSelected(actors);
 
     return GestureDetector(
@@ -86,8 +85,10 @@ class ViewActorsView extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image:
-                        AssetImage(actors['images']?[0] ?? 'assets/login.png'),
+                    image: AssetImage((actors['images'] != null &&
+                            actors['images'].isNotEmpty)
+                        ? actors['images'][0]
+                        : 'assets/login.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -98,25 +99,23 @@ class ViewActorsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      actors['name'] ?? 'Unknown',
+                      '${actors['first_name'] ?? 'Unknown First Name'} ${actors['last_name'] ?? 'Unknown Last Name'}',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "${actors['age'] ?? 'Unknown'}: العمر ",
+                      "${actors['current_country'] ?? 'Unknown Country'}: الدولة الحالية",
                       style: TextStyle(fontSize: 14),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            actors['acting_type'] ?? ': نوع التمثيل',
-                            style: TextStyle(fontSize: 14),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      actors['availability'] == true ? 'متوفر' : 'غير متوفر',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: actors['availability'] == true
+                            ? Colors.green
+                            : Colors.red,
+                      ),
                     ),
                   ],
                 ),

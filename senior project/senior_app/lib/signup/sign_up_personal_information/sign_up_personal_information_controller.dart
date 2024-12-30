@@ -13,7 +13,6 @@ class SignUpPersonalInformationController extends GetxController {
     phoneNumber.value = phone;
     landlineNumber.value = landline;
 
-    // Print to debug console
     print('First Name: $firstName');
     print('Last Name: $lastName');
     print('Phone Number: $phoneNumber');

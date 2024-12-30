@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/colors.dart';
+import 'package:senior_app/director_home_page/artwork.dart';
 import 'package:senior_app/director_home_page/director-home_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
@@ -44,88 +45,106 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return Transform.translate(
-                  offset: Offset(0, _animation.value),
-                  child: child,
-                );
-              },
-              child: Image.asset('assets/directorhome.webp', width: 300),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _buildCard(),
-                  SizedBox(height: 16),
-                  _buildCard(),
-                ],
+      body: Obx(() {
+        if (controller.artworks.isEmpty) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: Offset(0, _animation.value),
+                    child: child,
+                  );
+                },
+                child: Image.asset('assets/directorhome.webp', width: 300),
               ),
-            ),
-          ],
-        ),
-      ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: controller.artworks.map((artwork) {
+                    return _buildCard(artwork);
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
       bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
-  Widget _buildCard() {
+  Widget _buildCard(Artwork artwork) {
     return GestureDetector(
       onTap: () {
         Get.toNamed('/artworkDetails');
       },
       child: Card(
         elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 16.0, 8.0, 16.0),
-          child: Row(
-            children: [
-              Container(
-                width: 200,
-                height: 80,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/login.png'),
-                    fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            // Main content of the card
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16.0, 8.0, 16.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 200,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            "http://10.0.2.2:8000" + artwork.poster),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Title in top-right corner
+            Positioned(
+              top: 20,
+              right: 8,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: CustomText(
+                  text: artwork.title,
+                  fontSize: 20,
+                  alignment: Alignment.centerRight,
                 ),
               ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CustomText(
-                      text: "عنوان",
-                      fontSize: 20,
-                      alignment: Alignment.centerRight,
-                    ),
-                    SizedBox(height: 8),
-                    CustomText(
-                      text: "تفاصيل",
-                      fontSize: 18,
-                      alignment: Alignment.centerRight,
-                    ),
-                    SizedBox(height: 8),
-                    CustomText(
-                      text: "منتهي",
-                      fontSize: 18,
-                      alignment: Alignment.centerRight,
-                      color: redColor,
-                    ),
-                  ],
+            ),
+            // Status (منتهي / غير مكتمل) in bottom-right corner
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: CustomText(
+                  text: artwork.done == 0 ? "منتهي" : "غير مكتمل",
+                  fontSize: 22,
+                  alignment: Alignment.centerRight,
+                  color: artwork.done == 0 ? Colors.green : redColor,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

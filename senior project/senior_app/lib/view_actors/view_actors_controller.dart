@@ -1,39 +1,57 @@
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewActorsController extends GetxController {
-  var actorsList = [
-    {
-      'name': ' حلا مرعي',
-      'images': ['assets/login.png'],
-      'age': '20',
-      'acting_type': 'حزين ',
-    },
-    {
-      'name': ' حلا فادي',
-      'images': ['assets/login.png'],
-      'age': '20',
-      'acting_type': 'دراما ',
-    },
-    {
-      'name': ' حلا محمد',
-      'images': ['assets/login.png'],
-      'age': '20',
-      'acting_type': 'مغامرات ',
-    },
-  ].obs;
-
+  var actorsList = <Map>[].obs;
   var selectedActors = <Map>[].obs;
   var searchQuery = ''.obs;
 
-  List filteredActors() {
+  @override
+  void onInit() {
+    super.onInit();
+    fetchActors();
+  }
+
+  Future<void> fetchActors() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/actors'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        actorsList.assignAll(data
+            .map((actor) => {
+                  'first_name': actor['first_name'],
+                  'last_name': actor['last_name'],
+                  'current_country': actor['current_country'],
+                  'availability': actor['availability'],
+                })
+            .toList());
+      } else {
+        print('Failed to load actors: ${response.body}');
+      }
+    } catch (e) {
+      print('Error fetching actors: $e');
+    }
+  }
+
+  List<Map> filteredActors() {
     if (searchQuery.value.isEmpty) {
       return actorsList;
     }
     return actorsList.where((actor) {
-      return actor['name']
-          .toString()
-          .toLowerCase()
-          .contains(searchQuery.value.toLowerCase());
+      final fullName = '${actor['first_name']} ${actor['last_name']}';
+      return fullName.toLowerCase().contains(searchQuery.value.toLowerCase());
     }).toList();
   }
 

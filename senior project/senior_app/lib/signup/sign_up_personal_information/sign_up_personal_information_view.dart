@@ -113,7 +113,7 @@ class SignUpPersonalInformationView extends StatelessWidget {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'الرجاء إدخال رقم الهاتف الارضي';
-                        } else if (!RegExp(r'^011\d{8}$').hasMatch(value)) {
+                        } else if (!RegExp(r'^011\d{7}$').hasMatch(value)) {
                           return 'رقم الهاتف الارضي يجب أن يبدأ بـ 011 ويحتوي على 10 أرقام';
                         }
                         return null;

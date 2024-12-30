@@ -16,7 +16,7 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             title: Text('Item 1'),
             onTap: () {
-              Navigator.pushNamed(context, '/viewlocations');
+              Navigator.pushNamed(context, '/favorites');
             },
           ),
           ListTile(
