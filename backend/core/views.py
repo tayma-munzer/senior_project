@@ -366,6 +366,8 @@ def additional_info(request):
         info = actor_additional_info.objects.get(actor=user)
     except actor_additional_info.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    if 'approved' in request.data:
+        del request.data['approved']
     serializer = AdditionalinfoSerializer(info, data=request.data,partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -479,6 +481,9 @@ def building_type_list(request):
     serializer = BuildingTypeSerializer(building_types, many=True)
     return Response(serializer.data)
 
+from datetime import date, timedelta
+from django.utils import timezone
+
 @api_view(['GET'])
 def actors_list(request):
     actor_ids = actor_additional_info.objects.filter(approved=True).values_list('actor_id', flat=True).distinct()
@@ -505,7 +510,14 @@ def actors_list(request):
         for term in search_terms:
             query |= Q(first_name__icontains=term) | Q(last_name__icontains=term)
         actors = actors.filter(query)
-    #if min_age:
+
+    today = date.today()
+    if min_age :
+        min_birthdate = today - timedelta(days=int(min_age) * 365.25)
+        actors = actors.filter(additional_info__date_of_birth__lte=min_birthdate)
+    if max_age :
+        max_birthdate = today - timedelta(days=int(max_age) * 365.25)
+        actors = actors.filter(additional_info__date_of_birth__gte=max_birthdate)
 
     if ordering :
         if ordering == "age":
@@ -633,13 +645,22 @@ def test_add_location_video(request, pk):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
     
-@api_view(['PATCH'])
+@api_view(['PATCH','DELETE'])
 @permission_classes([IsAuthenticated,])
 def actor_image(request):
     user=request.user
     additional_info = actor_additional_info.objects.get(actor=user)
-    serializer = AdditionalinfoSerializer(additional_info, data=request.data,partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'PATCH':
+        if 'approved' in request.data:
+            del request.data['approved']
+        serializer = AdditionalinfoSerializer(additional_info, data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        default_image_path = 'personal_image/default.jpg'
+        additional_info.personal_image = default_image_path
+        additional_info.save()
+        serializer = AdditionalinfoSerializer(additional_info)
+        return Response(serializer.data, status=status.HTTP_200_OK)
