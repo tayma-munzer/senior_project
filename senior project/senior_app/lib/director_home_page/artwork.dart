@@ -1,4 +1,3 @@
-// artwork.dart
 class Artwork {
   final String title;
   final String poster;

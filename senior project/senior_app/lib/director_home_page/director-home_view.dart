@@ -76,6 +76,13 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
           ),
         );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed('/lll');
+        },
+        backgroundColor: primaryColor,
+        child: Icon(Icons.add),
+      ),
       bottomNavigationBar: CustomBottomNavBar(),
     );
   }
@@ -89,7 +96,6 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
         elevation: 4,
         child: Stack(
           children: [
-            // Main content of the card
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16.0, 8.0, 16.0),
               child: Row(
@@ -117,7 +123,6 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
                 ],
               ),
             ),
-            // Title in top-right corner
             Positioned(
               top: 20,
               right: 8,
@@ -130,7 +135,6 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
                 ),
               ),
             ),
-            // Status (منتهي / غير مكتمل) in bottom-right corner
             Positioned(
               bottom: 8,
               right: 8,

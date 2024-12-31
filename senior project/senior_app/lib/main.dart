@@ -1,4 +1,4 @@
-// lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/actor_details/actor_details_binding.dart';

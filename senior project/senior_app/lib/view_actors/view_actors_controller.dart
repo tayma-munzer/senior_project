@@ -7,6 +7,7 @@ class ViewActorsController extends GetxController {
   var actorsList = <Map>[].obs;
   var selectedActors = <Map>[].obs;
   var searchQuery = ''.obs;
+  var userCountry = ''.obs; // To store the user's country
 
   @override
   void onInit() {
@@ -29,14 +30,25 @@ class ViewActorsController extends GetxController {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        actorsList.assignAll(data
-            .map((actor) => {
-                  'first_name': actor['first_name'],
-                  'last_name': actor['last_name'],
-                  'current_country': actor['current_country'],
-                  'availability': actor['availability'],
-                })
-            .toList());
+
+        actorsList.assignAll(data.map((actor) {
+          final country = actor['additional_info']['current_country']
+                  ['contry'] ??
+              'Unknown';
+
+          if (actor['email'] == prefs.getString('user_email')) {
+            userCountry.value = country;
+          }
+
+          return {
+            'first_name': actor['first_name'],
+            'last_name': actor['last_name'],
+            'availability': actor['additional_info']['available'],
+            'country': country,
+            'personal_image': actor['additional_info']['personal_image'] ??
+                '/media/default.jpg', // Ensure personal_image exists in the API response
+          };
+        }).toList());
       } else {
         print('Failed to load actors: ${response.body}');
       }

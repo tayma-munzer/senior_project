@@ -85,10 +85,8 @@ class ViewActorsView extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image: AssetImage((actors['images'] != null &&
-                            actors['images'].isNotEmpty)
-                        ? actors['images'][0]
-                        : 'assets/login.png'),
+                    image: NetworkImage(
+                        "http://10.0.2.2:8000${actors['personal_image'] ?? '/media/default.jpg'}"), // Updated string interpolation
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -105,7 +103,7 @@ class ViewActorsView extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "${actors['current_country'] ?? 'Unknown Country'}: الدولة الحالية",
+                      "${actors['country'] ?? 'Unknown Country'}: الدولة الحالية",
                       style: TextStyle(fontSize: 14),
                     ),
                     Text(

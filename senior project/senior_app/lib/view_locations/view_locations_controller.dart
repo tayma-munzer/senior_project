@@ -8,7 +8,7 @@ class ViewLocationsController extends GetxController {
   var locationsList = <Map>[].obs;
   var selectedLocations = <Map>[].obs;
   var searchQuery = ''.obs;
-  var favoriteStates = <bool>[].obs; // List to track favorite states
+  var favoriteStates = <bool>[].obs;
 
   @override
   void onInit() {
