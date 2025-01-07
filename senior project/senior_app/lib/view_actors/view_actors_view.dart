@@ -6,8 +6,35 @@ import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_drawer.dart';
 
-class ViewActorsView extends StatelessWidget {
+class ViewActorsView extends StatefulWidget {
+  @override
+  _ViewActorsViewState createState() => _ViewActorsViewState();
+}
+
+class _ViewActorsViewState extends State<ViewActorsView>
+    with SingleTickerProviderStateMixin {
   final ViewActorsController controller = Get.find();
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _animation = Tween<double>(begin: 0.8, end: 1.1).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +70,24 @@ class ViewActorsView extends StatelessWidget {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Center(
+              child: AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _animation.value,
+                    child: Image.asset(
+                      "assets/actors.png",
+                      width: 150,
+                      height: 150,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
           Expanded(
             child: Obx(() {
               final actor = controller.filteredActors();
@@ -65,14 +110,11 @@ class ViewActorsView extends StatelessWidget {
   }
 
   Widget _buildActorsCard(Map actors) {
-    final bool isSelected = controller.isActorSelected(actors);
-
     return GestureDetector(
       onTap: () {
         Get.toNamed('/actorsdetails', arguments: actors);
       },
       child: Card(
-        color: isSelected ? primaryColor : whiteColor,
         elevation: 4,
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Padding(
@@ -86,7 +128,7 @@ class ViewActorsView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
                     image: NetworkImage(
-                        "http://10.0.2.2:8000${actors['personal_image'] ?? '/media/default.jpg'}"), // Updated string interpolation
+                        "http://10.0.2.2:8000${actors['personal_image']}"),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -97,13 +139,13 @@ class ViewActorsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '${actors['first_name'] ?? 'Unknown First Name'} ${actors['last_name'] ?? 'Unknown Last Name'}',
+                      '${actors['first_name']} ${actors['last_name']}',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "${actors['country'] ?? 'Unknown Country'}: الدولة الحالية",
+                      "${actors['country']}: الدولة الحالية",
                       style: TextStyle(fontSize: 14),
                     ),
                     Text(

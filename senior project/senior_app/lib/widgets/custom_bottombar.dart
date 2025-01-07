@@ -26,6 +26,11 @@ class CustomBottomNavBar extends StatelessWidget {
           activeIcon: Icon(Icons.art_track, color: Colors.blue),
           label: 'Artwork',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person, color: Colors.grey),
+          activeIcon: Icon(Icons.person, color: Colors.blue),
+          label: 'Account',
+        ),
       ],
       currentIndex: _getCurrentIndex(),
       onTap: (index) {
@@ -38,6 +43,8 @@ class CustomBottomNavBar extends StatelessWidget {
 
   int _getCurrentIndex() {
     String routeName = Get.currentRoute;
+    print('Current route: $routeName'); // Add this for debugging
+
     switch (routeName) {
       case '/directorHome':
         return 0;
@@ -47,6 +54,8 @@ class CustomBottomNavBar extends StatelessWidget {
         return 2;
       case '/artworkDetails':
         return 3;
+      case '/directorpersonalaccount':
+        return 4;
       default:
         return 0;
     }
@@ -65,6 +74,9 @@ class CustomBottomNavBar extends StatelessWidget {
         break;
       case 3:
         Get.offNamed('/artworkDetails');
+        break;
+      case 4:
+        Get.offNamed('/directorpersonalaccount');
         break;
     }
   }

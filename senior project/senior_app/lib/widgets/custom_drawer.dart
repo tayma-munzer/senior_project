@@ -14,19 +14,36 @@ class CustomDrawer extends StatelessWidget {
             child: Center(),
           ),
           ListTile(
-            title: Text('Item 1'),
+            leading: Icon(Icons.favorite, color: primaryColor),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text('مواقع التصوير المفضلة'),
+              ],
+            ),
             onTap: () {
               Navigator.pushNamed(context, '/favorites');
             },
           ),
           ListTile(
-            title: Text('Item 2'),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text('Item 2'),
+              ],
+            ),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: Text('Item 3'),
+            leading: Icon(Icons.favorite, color: Colors.red),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text('Item 3'),
+              ],
+            ),
             onTap: () {
               Navigator.pop(context);
             },

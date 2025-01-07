@@ -43,7 +43,7 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: whiteColor,
       appBar: CustomAppBar(),
       body: Obx(() {
         if (controller.artworks.isEmpty) {
@@ -78,7 +78,7 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.toNamed('/lll');
+          Get.toNamed('/addartworkposter');
         },
         backgroundColor: primaryColor,
         child: Icon(Icons.add),

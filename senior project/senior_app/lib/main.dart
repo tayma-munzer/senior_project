@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/actor_details/actor_details_binding.dart';
 import 'package:senior_app/actor_details/actor_details_view.dart';
+import 'package:senior_app/add_artwork/add_artwork_poster_binding.dart';
+import 'package:senior_app/add_artwork/add_artwork_poster_view.dart';
 import 'package:senior_app/add_days/add_days_binding.dart';
 import 'package:senior_app/add_days/add_days_view.dart';
 import 'package:senior_app/add_location/add_location_binding.dart';
@@ -13,6 +14,8 @@ import 'package:senior_app/artwork_details/artwork_details_bindings.dart';
 import 'package:senior_app/artwork_details/artwork_details_view.dart';
 import 'package:senior_app/director_home_page/director-home_binding.dart';
 import 'package:senior_app/director_home_page/director-home_view.dart';
+import 'package:senior_app/director_profile/director_profile_binding.dart';
+import 'package:senior_app/director_profile/director_profile_view.dart';
 import 'package:senior_app/favorite_locations/favorite_location_view.dart';
 import 'package:senior_app/favorite_locations/favorite_locations_binding.dart';
 import 'package:senior_app/location_details/location_details_binding.dart';
@@ -22,7 +25,6 @@ import 'package:senior_app/login/login_view.dart';
 import 'package:senior_app/signup/sign_up/sign_up_binding.dart';
 import 'package:senior_app/signup/sign_up/sign_up_view.dart';
 import 'package:senior_app/signup/sign_up_acting_types/sign_up_acting_type_binding.dart';
-import 'package:senior_app/signup/sign_up_acting_types/sign_up_acting_type_controller.dart';
 import 'package:senior_app/signup/sign_up_acting_types/sign_up_acting_types_view.dart';
 import 'package:senior_app/signup/sign_up_choices/sign_up_choices_binding.dart';
 import 'package:senior_app/signup/sign_up_choices/sign_up_choices_view.dart';
@@ -62,7 +64,6 @@ class MyApp extends StatelessWidget {
             name: '/favoritelocations',
             page: () => FavoriteLocationView(),
             binding: FavoriteLocationBinding()),
-
         GetPage(
             name: '/signuppersonalinformation',
             page: () => SignUpPersonalInformationView(),
@@ -105,10 +106,10 @@ class MyApp extends StatelessWidget {
             name: '/viewactors',
             page: () => ViewActorsView(),
             binding: ViewActorsBinding()),
-        // GetPage(
-        //     name: '/actorsdetails',
-        //     page: () => ActorDetailsView(),
-        //     binding: ActorDetailsBinding()),
+        GetPage(
+            name: '/actorsdetails',
+            page: () => ActorDetailsView(),
+            binding: ActorDetailsBinding()),
         GetPage(
             name: '/locationdetails',
             page: () => ViewLocationDetailsView(),
@@ -121,6 +122,16 @@ class MyApp extends StatelessWidget {
           name: '/favorites',
           page: () => FavoriteLocationView(),
           binding: FavoriteLocationBinding(),
+        ),
+        GetPage(
+          name: '/directorpersonalaccount',
+          page: () => DirectorPersonalProfileView(),
+          binding: DirectorPersonalProfileBinding(),
+        ),
+        GetPage(
+          name: '/addartworkposter',
+          page: () => AddArtworkPosterView(),
+          binding: AddArtworkPosterBinding(),
         ),
       ],
     );

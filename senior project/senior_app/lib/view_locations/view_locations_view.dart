@@ -12,6 +12,7 @@ class ViewLocationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
       body: Column(
@@ -43,6 +44,16 @@ class ViewLocationsView extends StatelessWidget {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Center(
+              child: Image.asset(
+                "assets/locations.webp",
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           Expanded(
             child: Obx(() {
               final locations = controller.filteredLocations();
@@ -53,7 +64,7 @@ class ViewLocationsView extends StatelessWidget {
                 itemCount: locations.length,
                 itemBuilder: (context, index) {
                   final location = locations[index];
-                  return _buildLocationCard(location, index);
+                  return _buildLocationCard(location);
                 },
               );
             }),
@@ -64,50 +75,34 @@ class ViewLocationsView extends StatelessWidget {
     );
   }
 
-  Widget _buildLocationCard(Map location, int index) {
+  Widget _buildLocationCard(Map location) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/locationdetails', arguments: location);
+        if (location['id'] != null) {
+          Get.toNamed('/locationdetails', arguments: location);
+        } else {
+          print('Location details are missing.');
+        }
       },
       child: Card(
-        color: whiteColor,
         elevation: 4,
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Row(
-                children: [
-                  Obx(() {
-                    final isFavorite = controller.isFavorite(index);
-                    return GestureDetector(
-                      onTap: () {
-                        controller.toggleFavorite(index);
-                        print('Location Name: ${location['location']}');
-                      },
-                      child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.red,
-                      ),
-                    );
-                  }),
-                  SizedBox(width: 8),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: AssetImage(
-                            location['images']?[0] ?? 'assets/login.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+              Obx(() {
+                final isFavorite =
+                    controller.favoriteController.isFavorite(location);
+                return GestureDetector(
+                  onTap: () => controller.toggleFavorite(location),
+                  child: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
                   ),
-                ],
-              ),
-              SizedBox(width: 16),
+                );
+              }),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -117,25 +112,14 @@ class ViewLocationsView extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 4),
                     Text(
-                      "${location['building_style'] ?? 'Unknown'}: نوع البناء",
+                      " ${location['building_style']?['building_style'] ?? 'Unknown Style'} : نوع البناء",
                       style: TextStyle(fontSize: 14),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            location['detailed_address'] ?? 'No description',
-                            style: TextStyle(fontSize: 14),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                        Text(
-                          ": الوصف",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
+                    Text(
+                      "${location['detailed_address'] ?? 'No description'}:عنوان البناء",
+                      style: TextStyle(fontSize: 14),
+                      textAlign: TextAlign.right,
                     ),
                     Text(
                       "${location['building_owner']['first_name']} ${location['building_owner']['last_name']}: المالك",

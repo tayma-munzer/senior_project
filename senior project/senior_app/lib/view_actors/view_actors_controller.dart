@@ -5,9 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewActorsController extends GetxController {
   var actorsList = <Map>[].obs;
-  var selectedActors = <Map>[].obs;
   var searchQuery = ''.obs;
-  var userCountry = ''.obs; // To store the user's country
+  var userCountry = ''.obs;
 
   @override
   void onInit() {
@@ -41,10 +40,15 @@ class ViewActorsController extends GetxController {
           }
 
           return {
+            'id': actor['id'],
             'first_name': actor['first_name'],
             'last_name': actor['last_name'],
+            'email': actor['email'],
+            'phone_number': actor['phone_number'],
+            'landline_number': actor['landline_number'],
             'availability': actor['additional_info']['available'],
             'country': country,
+            'date_of_birth': actor['additional_info']['date_of_birth'],
             'personal_image': actor['additional_info']['personal_image'] ??
                 '/media/default.jpg', // Ensure personal_image exists in the API response
           };
@@ -65,17 +69,5 @@ class ViewActorsController extends GetxController {
       final fullName = '${actor['first_name']} ${actor['last_name']}';
       return fullName.toLowerCase().contains(searchQuery.value.toLowerCase());
     }).toList();
-  }
-
-  void toggleActorSelection(Map actor) {
-    if (selectedActors.contains(actor)) {
-      selectedActors.remove(actor);
-    } else {
-      selectedActors.add(actor);
-    }
-  }
-
-  bool isActorSelected(Map actor) {
-    return selectedActors.contains(actor);
   }
 }
