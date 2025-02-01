@@ -16,7 +16,6 @@ class SignUpController extends GetxController {
     if (formKey.currentState!.validate()) {
       email = emailController.text;
       password = passwordController.text;
-      // Handle the sign-up logic here (e.g., save to database)
       print('Email: $email, Password: $password');
     }
   }

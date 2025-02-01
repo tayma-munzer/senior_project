@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/actor_details/actor_details_binding.dart';
 import 'package:senior_app/actor_details/actor_details_view.dart';
+import 'package:senior_app/add%20photos%20to%20filming%20location/add_photos_filminglocation_binding.dart';
+import 'package:senior_app/add%20photos%20to%20filming%20location/add_photos_filminglocation_view.dart';
 import 'package:senior_app/add_artwork/add_artwork_poster_binding.dart';
 import 'package:senior_app/add_artwork/add_artwork_poster_view.dart';
 import 'package:senior_app/add_days/add_days_binding.dart';
@@ -18,6 +20,8 @@ import 'package:senior_app/director_profile/director_profile_binding.dart';
 import 'package:senior_app/director_profile/director_profile_view.dart';
 import 'package:senior_app/favorite_locations/favorite_location_view.dart';
 import 'package:senior_app/favorite_locations/favorite_locations_binding.dart';
+import 'package:senior_app/location%20filming%20owner/add%20location/add_filming_location_binding.dart';
+import 'package:senior_app/location%20filming%20owner/add%20location/add_filming_location_view.dart';
 import 'package:senior_app/location_details/location_details_binding.dart';
 import 'package:senior_app/location_details/location_details_view.dart';
 import 'package:senior_app/login/login_binding.dart';
@@ -89,9 +93,9 @@ class MyApp extends StatelessWidget {
             page: () => AddSceneActorsView(),
             binding: AddSceneActorsBinding()),
         GetPage(
-            name: '/addlocation',
-            page: () => AddLocationView(),
-            binding: AddLocationBinding()),
+            name: '/addfilminglocation',
+            page: () => AddFilmingLocationView(),
+            binding: AddFilmingLocationBinding()),
         GetPage(
           name: '/adddays',
           page: () => AddDaysView(),
@@ -133,6 +137,14 @@ class MyApp extends StatelessWidget {
           page: () => AddArtworkPosterView(),
           binding: AddArtworkPosterBinding(),
         ),
+        GetPage(
+            name: '/addfilminglocation',
+            page: () => AddFilmingLocationView(),
+            binding: AddFilmingLocationBinding()),
+        GetPage(
+            name: '/addphotostofilminglocation',
+            page: () => AddPhotoFilmingLocationView(),
+            binding: AddPhotoFilmingLocationBinding()),
       ],
     );
   }

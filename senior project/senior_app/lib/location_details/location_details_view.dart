@@ -5,7 +5,7 @@ import 'package:senior_app/location_details/location_details_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_drawer.dart';
-import 'package:senior_app/widgets/custom_text.dart'; // Import the custom text widgets
+import 'package:senior_app/widgets/custom_text.dart';
 
 class ViewLocationDetailsView extends StatelessWidget {
   final ViewLocationDetailsController controller = Get.find();

@@ -36,7 +36,11 @@ class SignUpActingTypeView extends StatelessWidget {
                   fontSize: 20,
                 ),
                 SizedBox(height: 20),
-                Obx(() => DropdownButton<String>(
+                Obx(() {
+                  if (controller.actingTypes.isEmpty) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return DropdownButton<String>(
                       value: controller.selectedActingType.value.isEmpty
                           ? null
                           : controller.selectedActingType.value,
@@ -45,7 +49,13 @@ class SignUpActingTypeView extends StatelessWidget {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              value,
+                              textDirection: TextDirection.rtl,
+                            ),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
@@ -54,7 +64,9 @@ class SignUpActingTypeView extends StatelessWidget {
                           controller.selectedActingType.value = newValue;
                         }
                       },
-                    )),
+                    );
+                  }
+                }),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -93,9 +105,7 @@ class SignUpActingTypeView extends StatelessWidget {
                 CustomButton(
                   text: 'تأكيد',
                   onPressed: () {
-                    if (controller.selectedActingType.value.isNotEmpty) {
-                      controller
-                          .saveActingType(controller.selectedActingType.value);
+                    if (controller.savedActingTypes.isNotEmpty) {
                       Get.toNamed('/signup');
                     } else {
                       Get.snackbar(

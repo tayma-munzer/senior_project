@@ -36,7 +36,7 @@ class AddArtworkPosterView extends StatelessWidget {
               ),
               SizedBox(height: 10),
               CustomTextFormField(
-                hint: 'Enter artwork name',
+                hint: 'ادخل اسم العمل الفني',
                 onChanged: (value) {
                   controller.nameController.text = value;
                 },
@@ -65,7 +65,7 @@ class AddArtworkPosterView extends StatelessWidget {
                                   fit: BoxFit.cover,
                                 ),
                                 SizedBox(height: 10),
-                                Text('Tap to select an image'),
+                                Text('tap to select an image'),
                                 Icon(Icons.camera_alt,
                                     size: 30, color: Colors.grey),
                               ],

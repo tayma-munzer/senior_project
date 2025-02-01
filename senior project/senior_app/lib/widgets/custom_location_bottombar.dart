@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CustomBottomNavBar extends StatelessWidget {
+class CustomBottomLocationNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -14,12 +14,12 @@ class CustomBottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.movie, color: Colors.grey),
           activeIcon: Icon(Icons.movie, color: Colors.blue),
-          label: 'Actors',
+          label: 'Locations',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.location_on, color: Colors.grey),
-          activeIcon: Icon(Icons.location_on, color: Colors.blue),
-          label: 'Locations',
+          icon: Icon(Icons.favorite, color: Colors.grey),
+          activeIcon: Icon(Icons.favorite, color: Colors.blue),
+          label: 'Favorites',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.art_track, color: Colors.grey),
@@ -41,13 +41,11 @@ class CustomBottomNavBar extends StatelessWidget {
 
   int _getCurrentIndex() {
     String routeName = Get.currentRoute;
-    print('CustomBottomNavBar - Current route: $routeName');
+    print('CustomBottomLocationNavBar - Current route: $routeName');
 
     switch (routeName) {
-      case '/directorHome':
-        return 0;
-      case '/viewactors':
-        return 1;
+      case '/addfilminglocation':
+        return 1; // Change this index if needed
       case '/viewlocations':
         return 2;
       case '/artworkDetails':
@@ -62,10 +60,10 @@ class CustomBottomNavBar extends StatelessWidget {
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
-        Get.offNamed('/directorHome');
+        Get.offNamed('/viewlocations');
         break;
       case 1:
-        Get.offNamed('/viewactors');
+        Get.offNamed('/addfilminglocation');
         break;
       case 2:
         Get.offNamed('/viewlocations');
