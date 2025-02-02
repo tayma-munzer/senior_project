@@ -38,6 +38,8 @@ import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_
 import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_view.dart';
 import 'package:senior_app/view_actors/view_actors_binding.dart';
 import 'package:senior_app/view_actors/view_actors_view.dart';
+import 'package:senior_app/view_filming_owner_locations/view_filming_locations_owner_binding.dart';
+import 'package:senior_app/view_filming_owner_locations/view_filming_locations_owner_view.dart';
 import 'package:senior_app/view_locations/view_locations_binding.dart';
 import 'package:senior_app/view_locations/view_locations_view.dart';
 import 'package:senior_app/view_scene/view_scene_details_binding.dart';
@@ -145,6 +147,10 @@ class MyApp extends StatelessWidget {
             name: '/addphotostofilminglocation',
             page: () => AddPhotoFilmingLocationView(),
             binding: AddPhotoFilmingLocationBinding()),
+        GetPage(
+            name: '/locationHome',
+            page: () => ViewOwnerFilmingLocationView(),
+            binding: ViewOwnerFilmingLocationBinding()),
       ],
     );
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/widgets/custom_appbar_location.dart';
 import 'package:senior_app/widgets/custom_button.dart';
+import 'package:senior_app/widgets/custom_location_bottombar.dart';
+import 'package:senior_app/widgets/custom_text.dart';
 import 'add_photos_filminglocation_controller.dart';
 
 class AddPhotoFilmingLocationView extends StatelessWidget {
@@ -9,12 +12,19 @@ class AddPhotoFilmingLocationView extends StatelessWidget {
     final controller = Get.find<AddPhotoFilmingLocationController>();
 
     return Scaffold(
-      appBar: AppBar(title: Text("إضافة صور للموقع التصويري")),
+      appBar: CustomAppBarLocation(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            CustomText(
+              text: "إضافة صور للموقع التصويري",
+              fontSize: 20,
+              color: Colors.black,
+              alignment: Alignment.centerRight,
+            ),
+            SizedBox(height: 10),
             GestureDetector(
               onTap: controller.pickImages,
               child: Container(
@@ -73,6 +83,7 @@ class AddPhotoFilmingLocationView extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: CustomBottomLocationNavBar(),
     );
   }
 }
