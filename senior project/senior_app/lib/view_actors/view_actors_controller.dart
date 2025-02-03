@@ -50,7 +50,7 @@ class ViewActorsController extends GetxController {
             'country': country,
             'date_of_birth': actor['additional_info']['date_of_birth'],
             'personal_image': actor['additional_info']['personal_image'] ??
-                '/media/default.jpg', // Ensure personal_image exists in the API response
+                '/media/default.jpg',
           };
         }).toList());
       } else {

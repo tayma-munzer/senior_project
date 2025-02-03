@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/signup/sign_up_choices/sign_up_choices_controller.dart';
 import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
-import 'package:senior_app/widgets/custom_textfield.dart';
-import 'sign_up_location_controller.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_button.dart';
 import 'package:senior_app/colors.dart';
+import 'sign_up_location_controller.dart';
 
 class SignUpLocationView extends StatelessWidget {
   final SignUpLocationController controller =
@@ -40,30 +39,36 @@ class SignUpLocationView extends StatelessWidget {
                   width: 300,
                 ),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    DropdownButton<String>(
-                      value: controller.selectedCountry,
-                      items: <String>['سوريا', 'مصر', 'الأردن', 'لبنان']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        controller.selectedCountry = newValue!;
-                      },
-                    ),
-                    CustomText(
-                      text: "الموقع الحالي",
-                      fontSize: 20,
-                      alignment: Alignment.topRight,
-                    ),
-                    SizedBox(width: 10),
-                  ],
-                ),
+                Obx(() {
+                  if (controller.countries.isEmpty) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        DropdownButton<String>(
+                          value: controller.selectedCountry.value,
+                          items: controller.countries
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            controller.selectedCountry.value = newValue!;
+                          },
+                        ),
+                        CustomText(
+                          text: "الموقع الحالي",
+                          fontSize: 20,
+                          alignment: Alignment.topRight,
+                        ),
+                        SizedBox(width: 10),
+                      ],
+                    );
+                  }
+                }),
                 SizedBox(height: 20),
                 Form(
                   key: controller.formKey,
@@ -72,12 +77,23 @@ class SignUpLocationView extends StatelessWidget {
                       CustomText(
                         text: "تاريخ الميلاد",
                         color: Colors.black,
-                        alignment: Alignment.center,
+                        alignment: Alignment.topRight,
+                        fontSize: 20,
                       ),
-                      CustomTextFormField(
-                        hint: 'يوم/شهر/سنة',
+                      SizedBox(height: 15),
+                      TextFormField(
+                        textAlign: TextAlign.end,
+                        controller: controller.birthDateController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: 'يوم/شهر/سنة',
+                          suffixIcon: Icon(Icons.calendar_today),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onTap: () => controller.selectBirthDate(context),
                         validator: controller.validateBirthDate,
-                        onSave: (value) => controller.birthDate = value!,
                       ),
                       SizedBox(height: 20),
                       CustomButton(
@@ -87,18 +103,18 @@ class SignUpLocationView extends StatelessWidget {
                           print(
                               'Selected role: ${choiceController.selectedChoice.value}');
                           print(
-                              ' first name: ${personalInformationController.firstName.value}');
+                              'First name: ${personalInformationController.firstName.value}');
                           print(
-                              ' last name: ${personalInformationController.lastName.value}');
+                              'Last name: ${personalInformationController.lastName.value}');
                           print(
-                              ' phone number: ${personalInformationController.phoneNumber.value}');
+                              'Phone number: ${personalInformationController.phoneNumber.value}');
                           print(
-                              ' land line number: ${personalInformationController.landlineNumber.value}');
+                              'Landline number: ${personalInformationController.landlineNumber.value}');
 
                           if (choiceController.selectedChoice.value == 'ممثل') {
                             Get.toNamed('/signupactingtypes');
                           } else {
-                            Get.toNamed('/login');
+                            Get.toNamed('/directorHome');
                           }
                         },
                       ),

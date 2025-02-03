@@ -136,7 +136,14 @@ class SignUpPersonalInformationView extends StatelessWidget {
                           print(
                               'Selected role: ${choiceController.selectedChoice.value}');
 
-                          Get.toNamed('/signuplocation');
+                          String selectedRole =
+                              choiceController.selectedChoice.value;
+                          if (selectedRole == 'ممثل') {
+                            Get.toNamed('/signuplocation');
+                          } else if (selectedRole == 'مخرج' ||
+                              selectedRole == 'صاحب موقع') {
+                            Get.toNamed('/signup');
+                          }
                         }
                       },
                     ),

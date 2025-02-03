@@ -13,7 +13,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: whiteColor,
       body: Stack(
         children: [
           Positioned(
@@ -39,53 +39,65 @@ class LoginView extends StatelessWidget {
                     SizedBox(height: 50),
                     Image.asset('assets/login.png', width: 300),
                     CustomText(
-                        text: "LOGIN", fontSize: 24, color: Colors.black),
+                      text: "تسجيل دخول",
+                      fontSize: 24,
+                      color: Colors.black,
+                      alignment: Alignment.topRight,
+                    ),
                     SizedBox(height: 10),
                     CustomText(
-                        text: "Please sign in to continue", color: grayColor),
+                      text: "يرجى تسجيل الدخول للمتابعة",
+                      color: grayColor,
+                      alignment: Alignment.topRight,
+                    ),
                     SizedBox(height: 10),
-                    CustomText(text: "Phone number or Email"),
+                    CustomText(
+                      text: "البريد الالكتروني",
+                      alignment: Alignment.topRight,
+                    ),
                     CustomTextFormField(
-                      hint: "Phone number or Email",
+                      hint: "البريد الالكتروني",
                       onSave: (value) => controller.email = value,
-                      validator: controller.validateEmailOrPhone,
+                      validator: controller.validateEmail,
+                    ),
+                    SizedBox(height: 10),
+                    CustomText(
+                      text: " كلمة المرور",
+                      alignment: Alignment.topRight,
                     ),
                     SizedBox(height: 10),
                     CustomTextFormField(
-                      hint: "Password",
+                      hint: "كلمة المرور",
                       onSave: (value) => controller.password = value,
                       validator: controller.validatePassword,
                     ),
                     SizedBox(height: 20),
                     CustomButton(
-                      text: "Sign In",
+                      text: "تسجيل دخول",
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-
-                          String? token = await controller.login();
-
-                          if (token != null) {
-                            print("User token: $token");
-                            Get.offNamed('/directorHome');
-                          } else {
-                            Get.snackbar("Error", "Invalid credentials");
-                          }
+                          await controller.login();
                         }
                       },
                     ),
                     TextButton(
                       onPressed: () {},
                       child: CustomText(
-                          text: "Forgot password?", color: grayColor),
+                        text: "هل نسيت كلمة المرور؟",
+                        color: grayColor,
+                        alignment: Alignment.center,
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
                         Get.toNamed('/signup');
                       },
                       child: CustomText(
-                          text: "Don't have an account? Sign Up",
-                          color: grayColor),
+                        text: "ليس لديك حساب؟انشء واحدا",
+                        color: grayColor,
+                        alignment: Alignment.center,
+                      ),
                     ),
                   ],
                 ),
