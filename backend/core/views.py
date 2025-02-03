@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 import json
 from django.db.models import Q
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 
@@ -41,7 +43,7 @@ def login(request):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key}, status=status.HTTP_200_OK)
     else:
-        return Response({'error': 'Invalid email or password','user':user,'email':email,'password':password}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated,])
@@ -155,8 +157,18 @@ def filming_location_list(request):
             locations = locations.filter(building_type__building_type = buildingType)
         if search :
             locations = locations.filter(desc__contains = search)
-        serializer = FilmingLocationSerializer(locations, many=True)
-        return Response(serializer.data)
+        locations_data = []
+        for location in locations:
+            serializer = FilmingLocationSerializer(location)
+            location_photo = location_photos.objects.filter(location=location).first()
+            if location_photo :
+                photo_url = location_photo.photo.url  
+            else:
+                photo_url = '/media/images/default_location.jpg'
+            location_data = serializer.data
+            location_data['photo'] = photo_url
+            locations_data.append(location_data)
+        return Response(locations_data,status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         data = request.data
@@ -177,7 +189,14 @@ def filming_location_detail(request, pk):
 
     if request.method == 'GET':
         serializer = FilmingLocationSerializer(location)
-        return Response(serializer.data)
+        location_photo = location_photos.objects.filter(location = location).first()
+        if location_photo:
+            photo_url = location_photo.photo.url
+        else:
+            photo_url = '/media/images/default_location.jpg'  
+        response_data = serializer.data
+        response_data['photo'] = photo_url
+        return Response(response_data)
 
     elif request.method == 'PUT':
         serializer = FilmingLocationSerializer(location, data=request.data)
@@ -195,8 +214,18 @@ def filming_location_detail(request, pk):
 def owner_filming_locations(request):
     user = request.user
     filming_locations = filming_location.objects.filter(building_owner=user)
-    serializer = FilmingLocationSerializer(filming_locations, many=True) 
-    return Response(serializer.data,status=status.HTTP_200_OK)
+    locations_data = []
+    for location in filming_locations:
+        serializer = FilmingLocationSerializer(location)
+        location_photo = location_photos.objects.filter(location=location).first()
+        if location_photo :
+            photo_url = location_photo.photo.url  
+        else:
+            photo_url = '/media/images/default_location.jpg'
+        location_data = serializer.data
+        location_data['photo'] = photo_url
+        locations_data.append(location_data)
+    return Response(locations_data,status=status.HTTP_200_OK)
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated,])
@@ -562,11 +591,14 @@ def location_image_list(request, pk):
     
     elif request.method == 'POST':
         images = request.data.get('photos', [])
+        print("the array in readed")
         for image in images:
+            print("image in entered")
             image['location_id'] = location.id
             serializer = locationImageSerializer(data=image)
             if serializer.is_valid():
                 serializer.save()
+                print("image is saves successfully")
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         return Response({'message': 'photos added successfully.'}, status=status.HTTP_201_CREATED)
@@ -664,3 +696,16 @@ def actor_image(request):
         additional_info.save()
         serializer = AdditionalinfoSerializer(additional_info)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+
+    ## to make notifications in views 
+    # channel_layer = get_channel_layer()
+    # async_to_sync(channel_layer.group_send)(
+    #     f'notifications_{user.id}',
+    #     {
+    #         'type': 'send_notification',
+    #         'notification': serializer.data
+    #     }
+    # )
