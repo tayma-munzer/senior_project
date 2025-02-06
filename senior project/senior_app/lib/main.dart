@@ -14,6 +14,7 @@ import 'package:senior_app/add_scene/add_scene_actors_binding.dart';
 import 'package:senior_app/add_scene/add_scene_actors_view.dart';
 import 'package:senior_app/artwork_details/artwork_details_bindings.dart';
 import 'package:senior_app/artwork_details/artwork_details_view.dart';
+import 'package:senior_app/auth_controller.dart';
 import 'package:senior_app/director_home_page/director-home_binding.dart';
 import 'package:senior_app/director_home_page/director-home_view.dart';
 import 'package:senior_app/director_profile/director_profile_binding.dart';
@@ -24,6 +25,8 @@ import 'package:senior_app/location%20filming%20owner/add%20location/add_filming
 import 'package:senior_app/location%20filming%20owner/add%20location/add_filming_location_view.dart';
 import 'package:senior_app/location_details/location_details_binding.dart';
 import 'package:senior_app/location_details/location_details_view.dart';
+import 'package:senior_app/location_owner_profile/location_owner_profile_binding.dart';
+import 'package:senior_app/location_owner_profile/location_owner_profile_view.dart';
 import 'package:senior_app/login/login_binding.dart';
 import 'package:senior_app/login/login_view.dart';
 import 'package:senior_app/signup/sign_up/sign_up_binding.dart';
@@ -38,12 +41,17 @@ import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_
 import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_view.dart';
 import 'package:senior_app/view_actors/view_actors_binding.dart';
 import 'package:senior_app/view_actors/view_actors_view.dart';
+import 'package:senior_app/view_location_owner_details/edit)location_owner_view.dart';
 import 'package:senior_app/view_filming_owner_locations/view_filming_locations_owner_binding.dart';
 import 'package:senior_app/view_filming_owner_locations/view_filming_locations_owner_view.dart';
+import 'package:senior_app/view_location_owner_details/view_location_details_binding.dart';
+import 'package:senior_app/view_location_owner_details/view_location_details_view.dart';
 import 'package:senior_app/view_locations/view_locations_binding.dart';
 import 'package:senior_app/view_locations/view_locations_view.dart';
 import 'package:senior_app/view_scene/view_scene_details_binding.dart';
 import 'package:senior_app/view_scene/view_scene_details_view.dart';
+import 'package:senior_app/welcome/welcom_view.dart';
+import 'package:senior_app/welcome/welcome_binding.dart';
 
 void main() {
   runApp(MyApp());
@@ -135,6 +143,11 @@ class MyApp extends StatelessWidget {
           binding: DirectorPersonalProfileBinding(),
         ),
         GetPage(
+          name: '/locationownerprofile',
+          page: () => LocationOwnerProfileView(),
+          binding: LocationOwnerProfileBinding(),
+        ),
+        GetPage(
           name: '/addartworkposter',
           page: () => AddArtworkPosterView(),
           binding: AddArtworkPosterBinding(),
@@ -151,6 +164,19 @@ class MyApp extends StatelessWidget {
             name: '/locationHome',
             page: () => ViewOwnerFilmingLocationView(),
             binding: ViewOwnerFilmingLocationBinding()),
+        GetPage(
+            name: '/welcome',
+            page: () => WelcomeView(),
+            binding: WelcomeBinding()),
+        GetPage(
+          name: '/locationownerdetails',
+          page: () => ViewLocationOwnerLocationDetailsView(),
+          binding: ViewLocationOwnerLocationDetailsBinding(),
+        ),
+        // GetPage(
+        //   name: '/editlocationowner',
+        //   page: () => EditLocationOwnerLocationDetailsView(),
+        // ),
       ],
     );
   }

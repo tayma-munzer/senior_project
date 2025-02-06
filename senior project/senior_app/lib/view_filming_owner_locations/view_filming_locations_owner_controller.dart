@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ViewOwnerFilmingLocationController extends GetxController {
   RxList locations = [].obs;
   RxBool isLoading = false.obs;
+
   Future<void> fetchLocations() async {
     isLoading.value = true;
     final prefs = await SharedPreferences.getInstance();
@@ -22,7 +23,7 @@ class ViewOwnerFilmingLocationController extends GetxController {
     if (response.statusCode == 200) {
       try {
         final decodedData = json.decode(response.body);
-        print('Decoded Data Type: ${decodedData.runtimeType}');
+        print('Decoded Data: $decodedData');
 
         if (decodedData is List) {
           locations.value = decodedData;

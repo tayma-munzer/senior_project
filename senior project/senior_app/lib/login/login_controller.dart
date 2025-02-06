@@ -39,7 +39,7 @@ class LoginController extends GetxController {
         } else if (role == 'director') {
           Get.offNamed('/directorHome');
         } else if (role == 'location_owner') {
-          Get.offNamed('/locationHome');
+          Get.offNamed('/locationownerprofile');
         } else {
           Get.snackbar('Error', 'Unauthorized user role');
         }
