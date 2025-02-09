@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/auth_controller.dart';
+import 'package:senior_app/Actors/view_actore_artwork/view_actor_artwork_gallary_binding.dart';
+import 'package:senior_app/Actors/view_actore_artwork/view_actor_artwork_gallery_view.dart';
+import 'package:senior_app/Actors/view_details_artwork_gallary/artwork_gallary_details_binding.dart';
+import 'package:senior_app/Actors/view_details_artwork_gallary/artwork_gallary_details_view.dart';
+import 'package:senior_app/Actors/view_profile/view_actor_profile_binding.dart';
+import 'package:senior_app/Actors/view_profile/view_actor_profile_view.dart';
 import 'package:senior_app/actor_details/actor_details_binding.dart';
 import 'package:senior_app/actor_details/actor_details_view.dart';
 import 'package:senior_app/add%20photos%20to%20filming%20location/add_photos_filminglocation_binding.dart';
@@ -14,7 +21,6 @@ import 'package:senior_app/add_scene/add_scene_actors_binding.dart';
 import 'package:senior_app/add_scene/add_scene_actors_view.dart';
 import 'package:senior_app/artwork_details/artwork_details_bindings.dart';
 import 'package:senior_app/artwork_details/artwork_details_view.dart';
-import 'package:senior_app/auth_controller.dart';
 import 'package:senior_app/director_home_page/director-home_binding.dart';
 import 'package:senior_app/director_home_page/director-home_view.dart';
 import 'package:senior_app/director_profile/director_profile_binding.dart';
@@ -41,9 +47,9 @@ import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_
 import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_view.dart';
 import 'package:senior_app/view_actors/view_actors_binding.dart';
 import 'package:senior_app/view_actors/view_actors_view.dart';
-import 'package:senior_app/view_location_owner_details/edit)location_owner_view.dart';
 import 'package:senior_app/view_filming_owner_locations/view_filming_locations_owner_binding.dart';
 import 'package:senior_app/view_filming_owner_locations/view_filming_locations_owner_view.dart';
+import 'package:senior_app/view_location_owner_details/edit_location_owner_view.dart';
 import 'package:senior_app/view_location_owner_details/view_location_details_binding.dart';
 import 'package:senior_app/view_location_owner_details/view_location_details_view.dart';
 import 'package:senior_app/view_locations/view_locations_binding.dart';
@@ -54,6 +60,10 @@ import 'package:senior_app/welcome/welcom_view.dart';
 import 'package:senior_app/welcome/welcome_binding.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Register the AuthController so that it is available globally
+  Get.put(AuthController());
+
   runApp(MyApp());
 }
 
@@ -173,10 +183,26 @@ class MyApp extends StatelessWidget {
           page: () => ViewLocationOwnerLocationDetailsView(),
           binding: ViewLocationOwnerLocationDetailsBinding(),
         ),
-        // GetPage(
-        //   name: '/editlocationowner',
-        //   page: () => EditLocationOwnerLocationDetailsView(),
-        // ),
+        GetPage(
+          name: '/editlocationowner',
+          page: () => EditLocationOwnerView(),
+          // You can also add a binding if you need one.
+        ),
+        GetPage(
+          name: '/actorHome',
+          page: () => ViewActorArtworkGalleryView(),
+          binding: ViewActorArtworkGallaryBinding(),
+        ),
+        GetPage(
+          name: '/actorprofile',
+          page: () => ViewActorProfileView(),
+          binding: ViewActorProfileBinding(),
+        ),
+        GetPage(
+          name: '/artworkdetails',
+          page: () => ArtworkGallaryDetailsView(),
+          binding: ArtworkGallaryDetailsBinding(),
+        ),
       ],
     );
   }
