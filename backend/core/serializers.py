@@ -135,3 +135,10 @@ class locationVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = location_videos
         fields = ['id','location','location_id','video'] 
+
+class OfficialDocumentSerializer(serializers.ModelSerializer):
+    actor = UserSerializer(read_only = True)
+    actor_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = official_document
+        fields = ['id','document','actor','actor_id']
