@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view ,permission_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -199,7 +199,9 @@ def filming_location_detail(request, pk):
         return Response(response_data)
 
     elif request.method == 'PUT':
-        serializer = FilmingLocationSerializer(location, data=request.data)
+        data=request.data
+        data['building_owner_id']=request.user.id
+        serializer = FilmingLocationSerializer(location, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -279,6 +281,16 @@ def artworkactors(request, pk):
                 serializer = ArtworkActorsSerializer(data=actor)
                 if serializer.is_valid():
                     serializer.save()
+                    channel_layer = get_channel_layer()
+                    actor_id = actor['actor_id']
+                    async_to_sync(channel_layer.group_send)(
+                        f'notifications_{actor_id}',
+                        {
+                            'type': 'send_notification',
+                            'notification': serializer.data,
+                            'title':'acting_request'
+                        }
+                    )
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
             return Response({'message': 'actors added successfully.'}, status=status.HTTP_201_CREATED)
@@ -698,8 +710,76 @@ def actor_image(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
+def pending_actors(request):
+    actors = User.objects.filter(additional_info__approved=False)
+    return render(request, 'pending_actors.html', {'actors': actors})
 
+def approve_actor(request, actor_id):
+    actor = get_object_or_404(User, id=actor_id)
+    actor.additional_info.update(approved=True)
+    return redirect('pending_actors')
 
+def reject_actor(request, actor_id):
+    actor = get_object_or_404(User, id=actor_id)
+    actor.additional_info.update(approved=False)
+    return redirect('pending_actors')
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def add_official_doc(request):    
+    data = request.data
+    data['actor_id']=request.user.id
+    serializer = OfficialDocumentSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED) 
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated,])
+def acting_request_approve(request,pk):
+    try:
+        artwork_actor = artwork_actors.objects.get(id=pk)
+        artwork_actor.approved = True
+        artwork_actor.save()
+        channel_layer = get_channel_layer()
+        actor_name = artwork_actor.actor.first_name +" "+ artwork_actor.actor.last_name
+        artwork_title = artwork_actor.artwork.title
+        async_to_sync(channel_layer.group_send)(
+            f'notifications_{artwork_actor.artwork.director.id}',
+            {
+                'type': 'send_notification',
+                'notification':f'{artwork_title} على طلب الانضمام للعمل الفني {actor_name} وافق الممثل',
+                'title':'request_answer'
+            }
+        )
+        return Response({'message': 'status updated successfully.'}, status=status.HTTP_200_OK)
+    except artwork.DoesNotExist:
+        return Response({'error': 'artwork actor not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated,])
+def acting_request_reject(request,pk):
+    try:
+        artwork_actor = artwork_actors.objects.get(id=pk)
+        artwork_actor.delete()
+        channel_layer = get_channel_layer()
+        actor_name = artwork_actor.actor.first_name +" "+ artwork_actor.actor.last_name
+        artwork_title = artwork_actor.artwork.title
+        async_to_sync(channel_layer.group_send)(
+            f'notifications_{artwork_actor.artwork.director.id}',
+            {
+                'type': 'send_notification',
+                'notification':f'{artwork_title} طلب الانضمام للعمل الفني {actor_name} رفض الممثل',
+                'title':'request_answer'
+            }
+        )
+        return Response({'message': 'status updated successfully.'}, status=status.HTTP_200_OK)
+    except artwork.DoesNotExist:
+        return Response({'error': 'artwork actor not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
     ## to make notifications in views 
     # channel_layer = get_channel_layer()
     # async_to_sync(channel_layer.group_send)(

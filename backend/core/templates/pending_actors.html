@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .actor-image {
+            width: 30px; 
+            height: 30px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            margin-left: 5px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">الممثلون المعلقون</h1>  
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-center">البريد الإلكتروني</th>  
+                    <th class="text-center">الاسم</th>  
+                    <th class="text-center">رقم الهاتف</th> 
+                    <th class="text-center">المستندات</th>  
+                    <th class="text-center">الإجراءات</th>  
+                </tr>
+            </thead>
+            <tbody>
+                {% for actor in actors %}
+                <tr>
+                    <td class="text-center">{{ actor.email }}</td>
+                    <td class="text-center">
+                        <a href="{{ actor.additional_info.first.personal_image.url }}" target="_blank">
+                            <img src="{{ actor.additional_info.first.personal_image.url }}" alt="{{ actor.first_name }}'s image" class="actor-image">
+                        </a>
+                        {{ actor.first_name }} {{ actor.last_name }}
+                    </td>
+                    <td class="text-center">{{ actor.phone_number }}</td>
+                    <td class="text-center">
+                        {% for doc in actor.official_document_set.all %}
+                            <div>
+                                <a href="{{ doc.document.url }}" target="_blank">{{ doc.document.name|slice:"10:" }}</a>
+                            </div>
+                        {% endfor %}
+                    </td>
+                    <td class="text-center">
+                        <form action="{% url 'approve_actor' actor.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">قبول</button>  
+                        </form>
+                        <form action="{% url 'reject_actor' actor.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">رفض</button> 
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

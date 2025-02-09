@@ -11,11 +11,13 @@ class CustomBottomNavBar extends StatelessWidget {
       future: authController.fetchUserProfile(authController.token.value),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show a loading indicator while fetching the profile
+          return Center(
+              child:
+                  CircularProgressIndicator()); // Loading indicator while fetching the profile
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data == null) {
-          return Text('No profile data found');
+          return Center(child: Text('No profile data found'));
         } else {
           final String role = snapshot.data!['role'];
           return BottomNavigationBar(
@@ -35,41 +37,34 @@ class CustomBottomNavBar extends StatelessWidget {
       case 'actor':
         return [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            activeIcon: Icon(Icons.home, color: Colors.blue),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.grey),
-            activeIcon: Icon(Icons.person, color: Colors.blue),
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings, color: Colors.grey),
-            activeIcon: Icon(Icons.settings, color: Colors.blue),
+            icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ];
       case 'locationowner':
         return [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            activeIcon: Icon(Icons.home, color: Colors.blue),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_location, color: Colors.grey),
-            activeIcon: Icon(Icons.add_location, color: Colors.blue),
+            icon: Icon(Icons.add_location),
             label: 'Add Location',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list, color: Colors.grey),
-            activeIcon: Icon(Icons.list, color: Colors.blue),
+            icon: Icon(Icons.list),
             label: 'Orders',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.grey),
-            activeIcon: Icon(Icons.person, color: Colors.blue),
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ];
@@ -77,28 +72,23 @@ class CustomBottomNavBar extends StatelessWidget {
       default:
         return [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            activeIcon: Icon(Icons.home, color: Colors.blue),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.movie, color: Colors.grey),
-            activeIcon: Icon(Icons.movie, color: Colors.blue),
+            icon: Icon(Icons.movie),
             label: 'Actors',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on, color: Colors.grey),
-            activeIcon: Icon(Icons.location_on, color: Colors.blue),
+            icon: Icon(Icons.location_on),
             label: 'Locations',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.art_track, color: Colors.grey),
-            activeIcon: Icon(Icons.art_track, color: Colors.blue),
+            icon: Icon(Icons.art_track),
             label: 'Artwork',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.grey),
-            activeIcon: Icon(Icons.person, color: Colors.blue),
+            icon: Icon(Icons.person),
             label: 'Account',
           ),
         ];
@@ -116,15 +106,15 @@ class CustomBottomNavBar extends StatelessWidget {
         return 0;
       case '/viewactors':
       case '/actorprofile':
-      case '/welcome':
+      case '/addlocationowner':
         return 1;
-      case '/welcome':
-      case '/welcome':
+      case '/locationorders':
         return 2;
       case '/artworkDetails':
         return 3;
-      case '/welcome':
-      case '/welcome':
+      case '/locationownerprofile':
+        return 3;
+      case '/directorpersonalaccount':
         return 4;
       default:
         return 0;
@@ -132,6 +122,7 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   void _onItemTapped(int index, String role) {
+    print('Navigating for role: $role, index: $index');
     switch (role) {
       case 'actor':
         switch (index) {

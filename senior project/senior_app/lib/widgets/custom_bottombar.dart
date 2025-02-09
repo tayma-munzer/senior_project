@@ -13,14 +13,18 @@ class CustomBottomNavBar extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text('error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data == null) {
-          return Text('No profile data found');
+          return Text('no profile data found');
         } else {
           final String role = snapshot.data!['role'];
+          final List<BottomNavigationBarItem> navItems =
+              _getBottomNavItems(role);
+          final int currentIndex = _getValidCurrentIndex(role, navItems.length);
+
           return BottomNavigationBar(
-            items: _getBottomNavItems(role),
-            currentIndex: _getCurrentIndex(),
+            items: navItems,
+            currentIndex: currentIndex,
             onTap: (index) => _onItemTapped(index, role),
             selectedItemColor: Colors.blue,
             unselectedItemColor: Colors.grey,
@@ -34,75 +38,36 @@ class CustomBottomNavBar extends StatelessWidget {
     switch (role) {
       case 'actor':
         return [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            activeIcon: Icon(Icons.home, color: Colors.blue),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.grey),
-            activeIcon: Icon(Icons.person, color: Colors.blue),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings, color: Colors.grey),
-            activeIcon: Icon(Icons.settings, color: Colors.blue),
-            label: 'Settings',
-          ),
+              icon: Icon(Icons.settings), label: 'Settings'),
         ];
-      case 'locationowner':
+      case 'location_owner':
         return [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            activeIcon: Icon(Icons.home, color: Colors.blue),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_location, color: Colors.grey),
-            activeIcon: Icon(Icons.add_location, color: Colors.blue),
-            label: 'Add Location',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list, color: Colors.grey),
-            activeIcon: Icon(Icons.list, color: Colors.blue),
-            label: 'Orders',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.grey),
-            activeIcon: Icon(Icons.person, color: Colors.blue),
-            label: 'Profile',
-          ),
+              icon: Icon(Icons.add_location), label: 'Add Location'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Orders'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ];
       case 'director':
       default:
         return [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Actors'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            activeIcon: Icon(Icons.home, color: Colors.blue),
-            label: 'Home',
-          ),
+              icon: Icon(Icons.location_on), label: 'Locations'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.movie, color: Colors.grey),
-            activeIcon: Icon(Icons.movie, color: Colors.blue),
-            label: 'Actors',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_on, color: Colors.grey),
-            activeIcon: Icon(Icons.location_on, color: Colors.blue),
-            label: 'Locations',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.art_track, color: Colors.grey),
-            activeIcon: Icon(Icons.art_track, color: Colors.blue),
-            label: 'Artwork',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.grey),
-            activeIcon: Icon(Icons.person, color: Colors.blue),
-            label: 'Account',
-          ),
+              icon: Icon(Icons.art_track), label: 'Artwork'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
         ];
     }
+  }
+
+  int _getValidCurrentIndex(String role, int maxIndex) {
+    int index = _getCurrentIndex();
+    return (index >= 0 && index < maxIndex) ? index : 0;
   }
 
   int _getCurrentIndex() {
@@ -116,7 +81,7 @@ class CustomBottomNavBar extends StatelessWidget {
         return 0;
       case '/viewactors':
       case '/actorprofile':
-      case '/addlocationowner':
+      case '/addfilminglocation':
         return 1;
       case '/viewlocations':
       case '/locationorders':
@@ -152,7 +117,7 @@ class CustomBottomNavBar extends StatelessWidget {
             Get.offNamed('/locationHome');
             break;
           case 1:
-            Get.offNamed('/addlocationowner');
+            Get.offNamed('/addfilminglocation');
             break;
           case 2:
             Get.offNamed('/locationorders');
