@@ -33,12 +33,10 @@ class ViewOwnerFilmingLocationView extends StatelessWidget {
 
             final location = controller.locations[index - 1];
 
-            // Safe navigation with null checks
             final locationId = location['id'] ?? 0;
             final locationName = location['location'] ?? 'Unknown Location';
-            final photoId = location['photo'] ?? 0; // Get the photo ID
-            final photoUrl =
-                "http://10.0.2.2:8000/location/photo/$photoId"; // Construct photo URL
+            final photoId = location['photo'] ?? 0;
+            final photoUrl = "http://10.0.2.2:8000/location/photo/$photoId";
             final detailedAddress =
                 location['detailed_address'] ?? 'No Address';
             final buildingStyle = location['building_style']
@@ -52,12 +50,9 @@ class ViewOwnerFilmingLocationView extends StatelessWidget {
                 if (locationId != 0) {
                   print(
                       'Navigating to ViewLocationOwnerLocationDetailsView with locationId: $locationId');
-                  // Navigate to ViewLocationOwnerLocationDetailsView with the locationId
                   Get.toNamed(
                     '/locationownerdetails',
-                    arguments: {
-                      'locationId': locationId
-                    }, // Pass the locationId
+                    arguments: {'locationId': locationId},
                   );
                 } else {
                   print('Invalid location ID');
