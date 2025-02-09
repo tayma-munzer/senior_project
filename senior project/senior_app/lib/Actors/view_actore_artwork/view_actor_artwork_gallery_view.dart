@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/Actors/view_actore_artwork/view_actor_artwork_gallary_controller.dart';
 import 'package:senior_app/widgets/custom_appbar_location.dart';
+import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_location_bottombar.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 
@@ -39,7 +40,7 @@ class ViewActorArtworkGalleryView extends StatelessWidget {
                 artwork['character_name'] ?? 'No character name';
             final roleType =
                 artwork['role_type']?['role_type'] ?? 'Unknown role type';
-            final posterPath = artwork['poster'] ?? ''; // Ensure it’s not null
+            final posterPath = artwork['poster'] ?? '';
             final imageUrl = "http://10.0.2.2:8000$posterPath";
 
             return GestureDetector(
@@ -111,7 +112,7 @@ class ViewActorArtworkGalleryView extends StatelessWidget {
           },
         );
       }),
-      bottomNavigationBar: CustomBottomLocationNavBar(),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 }

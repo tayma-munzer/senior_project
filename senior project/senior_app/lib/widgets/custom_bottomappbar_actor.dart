@@ -11,7 +11,7 @@ class CustomBottomNavBar extends StatelessWidget {
       future: authController.fetchUserProfile(authController.token.value),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(); // Show a loading indicator while fetching the profile
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data == null) {
@@ -112,19 +112,19 @@ class CustomBottomNavBar extends StatelessWidget {
     switch (routeName) {
       case '/directorHome':
       case '/actorHome':
-      case '/locationHome':
+      case '/locationownerhome':
         return 0;
       case '/viewactors':
       case '/actorprofile':
-      case '/addlocationowner':
+      case '/welcome':
         return 1;
-      case '/viewlocations':
-      case '/locationorders':
+      case '/welcome':
+      case '/welcome':
         return 2;
       case '/artworkDetails':
         return 3;
-      case '/directorpersonalaccount':
-      case '/locationownerprofile':
+      case '/welcome':
+      case '/welcome':
         return 4;
       default:
         return 0;
@@ -142,14 +142,14 @@ class CustomBottomNavBar extends StatelessWidget {
             Get.offNamed('/actorprofile');
             break;
           case 2:
-            Get.offNamed('/actorsettings');
+            Get.offNamed('/welcome');
             break;
         }
         break;
-      case 'location_owner':
+      case 'locationowner':
         switch (index) {
           case 0:
-            Get.offNamed('/locationHome');
+            Get.offNamed('/locationownerhome');
             break;
           case 1:
             Get.offNamed('/addlocationowner');

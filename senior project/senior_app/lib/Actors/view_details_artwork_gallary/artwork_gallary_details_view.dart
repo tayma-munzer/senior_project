@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/Actors/view_details_artwork_gallary/artwork_gallary_details_controller.dart';
+import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_appbar_location.dart';
 import 'package:senior_app/widgets/custom_location_bottombar.dart';
@@ -67,7 +68,7 @@ class ArtworkGallaryDetailsView extends StatelessWidget {
           ),
         );
       }),
-      bottomNavigationBar: CustomBottomLocationNavBar(),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 }

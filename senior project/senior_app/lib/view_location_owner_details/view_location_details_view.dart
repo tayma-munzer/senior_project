@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/view_location_owner_details/view_location_details_controller.dart';
@@ -23,7 +22,6 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
           return Center(child: CustomText(text: "No details available"));
         }
 
-        final buildingOwner = location['building_owner'] ?? {};
         final photos = controller.photos;
         final videoUrl = location['video'] ?? '';
 
@@ -66,14 +64,14 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
                     ],
                   ),
                 ],
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 CustomText(
                   text: location['location'] ?? 'Unknown Location',
                   fontSize: 24,
                   color: Colors.black,
                   alignment: Alignment.centerRight,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 CustomText(
                   text:
                       '${location['detailed_address'] ?? 'No Address'} : تفاصيل العنوان',
@@ -81,7 +79,7 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
                   color: Colors.grey,
                   alignment: Alignment.centerRight,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 CustomText(
                   text:
                       'Description: ${location['desc'] ?? 'No Description'} :  الوصف',
@@ -89,26 +87,26 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
                   color: Colors.grey,
                   alignment: Alignment.centerRight,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 CustomText(
                   text:
-                      ' ${location['building_style']['building_style'] ?? 'Unknown'} : نمط البناء',
+                      ' ${location['building_style'] != null ? location['building_style']['building_style'] : 'Unknown'} : نمط البناء',
                   fontSize: 20,
                   color: Colors.blue,
                   alignment: Alignment.centerRight,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 CustomText(
                   text:
-                      ' ${location['building_type']['building_type'] ?? 'Unknown'} :  نوع البناء',
+                      ' ${location['building_type'] != null ? location['building_type']['building_type'] : 'Unknown'} :  نوع البناء',
                   fontSize: 20,
                   color: Colors.green,
                   alignment: Alignment.centerRight,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 if (videoUrl.isNotEmpty) ...[
                   CustomText(text: 'Video:', fontSize: 18, color: Colors.black),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
                     height: 200,
@@ -128,7 +126,7 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
         onPressed: () {
           _showPopupMenu(context);
         },
-        child: Icon(Icons.build),
+        child: const Icon(Icons.build),
         backgroundColor: Colors.blue,
       ),
     );
@@ -152,8 +150,8 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
           child: Row(
             children: [
               Icon(Icons.edit, color: Colors.blue),
-              SizedBox(width: 10),
-              Text('تعديل الموقع'),
+              const SizedBox(width: 10),
+              const Text('تعديل الموقع'),
             ],
           ),
         ),
@@ -162,8 +160,8 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
           child: Row(
             children: [
               Icon(Icons.delete, color: Colors.red),
-              SizedBox(width: 10),
-              Text('حذف الموقع'),
+              const SizedBox(width: 10),
+              const Text('حذف الموقع'),
             ],
           ),
         ),
@@ -172,7 +170,13 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
     );
 
     if (result == 'edit') {
-      Get.toNamed('/editlocationowner');
+      Get.toNamed(
+        '/editlocationowner',
+        arguments: {
+          'locationId': locationId,
+          'locationDetails': controller.locationDetails.value,
+        },
+      );
     } else if (result == 'delete') {
       if (locationId != 0) {
         await _showDeleteConfirmationDialog(context, controller, locationId);
@@ -182,7 +186,6 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
     }
   }
 
-  // Method to show the delete confirmation dialog
   Future<void> _showDeleteConfirmationDialog(
       BuildContext context,
       ViewLocationOwnerLocationDetailsController controller,
@@ -191,21 +194,21 @@ class ViewLocationOwnerLocationDetailsView extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('تأكيد الحذف'),
-          content: Text('هل أنت متأكد من حذف هذا الموقع؟'),
+          title: const Text('تأكيد الحذف'),
+          content: const Text('هل أنت متأكد من حذف هذا الموقع؟'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('إلغاء', style: TextStyle(color: Colors.red)),
+              child: const Text('إلغاء', style: TextStyle(color: Colors.red)),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
                 await controller.deleteLocation(locationId);
               },
-              child: Text('حذف', style: TextStyle(color: Colors.blue)),
+              child: const Text('حذف', style: TextStyle(color: Colors.blue)),
             ),
           ],
         );
