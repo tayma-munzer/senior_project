@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/Actors/view_actore_artwork/view_actor_artwork_gallary_binding.dart';
+import 'package:senior_app/Actors/view_actore_artwork/view_actor_artwork_gallery_view.dart';
+import 'package:senior_app/Actors/view_details_artwork_gallary/artwork_gallary_details_binding.dart';
+import 'package:senior_app/Actors/view_details_artwork_gallary/artwork_gallary_details_view.dart';
+import 'package:senior_app/Actors/view_profile/view_actor_profile_binding.dart';
+import 'package:senior_app/Actors/view_profile/view_actor_profile_view.dart';
 import 'package:senior_app/actor_details/actor_details_binding.dart';
 import 'package:senior_app/actor_details/actor_details_view.dart';
 import 'package:senior_app/add%20photos%20to%20filming%20location/add_photos_filminglocation_binding.dart';
@@ -173,10 +179,25 @@ class MyApp extends StatelessWidget {
           page: () => ViewLocationOwnerLocationDetailsView(),
           binding: ViewLocationOwnerLocationDetailsBinding(),
         ),
+        GetPage(
+          name: '/actorHome',
+          page: () => ViewActorArtworkGalleryView(),
+          binding: ViewActorArtworkGallaryBinding(),
+        ),
+        GetPage(
+          name: '/actorprofile',
+          page: () => ViewActorProfileView(),
+          binding: ViewActorProfileBinding(),
+        ),
         // GetPage(
         //   name: '/editlocationowner',
         //   page: () => EditLocationOwnerLocationDetailsView(),
         // ),
+        GetPage(
+          name: '/artworkdetails',
+          page: () => ArtworkGallaryDetailsView(),
+          binding: ArtworkGallaryDetailsBinding(),
+        ),
       ],
     );
   }
