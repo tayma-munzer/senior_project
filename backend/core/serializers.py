@@ -142,3 +142,10 @@ class OfficialDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = official_document
         fields = ['id','document','actor','actor_id']
+
+class StoryBoardSerializer(serializers.ModelSerializer):
+    director_id = serializers.IntegerField(write_only=True)
+    director = UserSerializer(read_only=True)
+    class Meta:
+        model = story_board
+        fields = ['id','director','director_id','image_base64','prompt'] 

@@ -129,7 +129,12 @@ class scenes(models.Model):
 class scene_actors(models.Model):
     scene = models.ForeignKey(scenes,on_delete=models.CASCADE)
     actor = models.ForeignKey(User,on_delete=models.CASCADE)
-    
+
+class story_board(models.Model):
+    director = models.ForeignKey(User,on_delete=models.CASCADE)
+    prompt = models.CharField(max_length=255)
+    image_base64 = models.ImageField(upload_to='story_board/')
+
 
 
 

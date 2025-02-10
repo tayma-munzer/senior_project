@@ -11,6 +11,10 @@ import json
 from django.db.models import Q
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+import requests
+from django.core.files.base import ContentFile
+import base64
+import uuid
 
 # Create your views here.
 
@@ -603,14 +607,16 @@ def location_image_list(request, pk):
     
     elif request.method == 'POST':
         images = request.data.get('photos', [])
-        print("the array in readed")
+        print("the array is readed")
         for image in images:
-            print("image in entered")
+            print("image is entered")
             image['location_id'] = location.id
+            print(image['location_id'])
+            print(image['photo'])
             serializer = locationImageSerializer(data=image)
             if serializer.is_valid():
                 serializer.save()
-                print("image is saves successfully")
+                print("image is saved successfully")
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         return Response({'message': 'photos added successfully.'}, status=status.HTTP_201_CREATED)
@@ -717,6 +723,15 @@ def pending_actors(request):
 def approve_actor(request, actor_id):
     actor = get_object_or_404(User, id=actor_id)
     actor.additional_info.update(approved=True)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f'notifications_{actor_id}',
+        {
+            'type': 'send_notification',
+            'notification': 'مرحبا بك في تطبيقنا ,تم الموافقة على انشاء حسابك',
+            'title':'public_notifcation'
+        }
+    )
     return redirect('pending_actors')
 
 def reject_actor(request, actor_id):
@@ -751,7 +766,7 @@ def acting_request_approve(request,pk):
             {
                 'type': 'send_notification',
                 'notification':f'{artwork_title} على طلب الانضمام للعمل الفني {actor_name} وافق الممثل',
-                'title':'request_answer'
+                'title':'public_notifcation'
             }
         )
         return Response({'message': 'status updated successfully.'}, status=status.HTTP_200_OK)
@@ -773,14 +788,40 @@ def acting_request_reject(request,pk):
             {
                 'type': 'send_notification',
                 'notification':f'{artwork_title} طلب الانضمام للعمل الفني {actor_name} رفض الممثل',
-                'title':'request_answer'
+                'title':'public_notifcation'
             }
         )
         return Response({'message': 'status updated successfully.'}, status=status.HTTP_200_OK)
     except artwork.DoesNotExist:
         return Response({'error': 'artwork actor not found.'}, status=status.HTTP_404_NOT_FOUND)
-    
-    ## to make notifications in views 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def story_board(request):    
+    prompt = request.data.get('prompt')
+    if not prompt:
+        return Response({"error": "Prompt is required."}, status=status.HTTP_400_BAD_REQUEST)
+    endpoint = 'https://aeaf-34-87-122-38.ngrok-free.app/generate'
+    response = requests.post(endpoint, json={'prompt': prompt})
+    if response.status_code == 200:
+        response_data = response.json()
+        text = response_data.get('prompt')
+        image_base64 = response_data.get('image_base64')
+        image_data = base64.b64decode(image_base64)
+        image_name = f"{uuid.uuid4()}.jpg"
+        image_file = ContentFile(image_data, name=image_name)
+        data={}
+        data['image_base64'] = image_file
+        data['director_id'] = request.user.id
+        data['prompt']=prompt
+        image_serializer = StoryBoardSerializer(data=data)
+        if image_serializer.is_valid():
+            image_model_instance = image_serializer.save()  # Save the image instance
+            return Response({"message": "Image saved successfully.", "id": image_model_instance.id}, status=status.HTTP_201_CREATED)
+        return Response(image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+## to make notifications in views 
     # channel_layer = get_channel_layer()
     # async_to_sync(channel_layer.group_send)(
     #     f'notifications_{user.id}',
