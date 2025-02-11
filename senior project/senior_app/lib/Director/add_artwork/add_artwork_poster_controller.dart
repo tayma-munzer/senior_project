@@ -41,7 +41,7 @@ class AddArtworkPosterController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = await response.stream.bytesToString();
         final responseData = json.decode(responseBody);
-        final artworkId = responseData['id']; // Extract the artwork ID
+        final artworkId = responseData['id'];
         return artworkId;
       } else {
         Get.snackbar('Error', 'Failed to upload artwork');

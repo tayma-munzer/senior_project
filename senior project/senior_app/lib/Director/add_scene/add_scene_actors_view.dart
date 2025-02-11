@@ -20,20 +20,6 @@ class AddSceneActorsView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomText(
-              text: 'اسم المشهد',
-              fontSize: 20,
-              alignment: Alignment.bottomRight,
-            ),
-            CustomTextFormField(
-              hint: "أدخل اسم المشهد",
-              onChanged: (value) {
-                controller.sceneName.value = value ?? "";
-              },
-              onSave: (value) {
-                controller.sceneName.value = value ?? "";
-              },
-            ),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,6 +44,9 @@ class AddSceneActorsView extends StatelessWidget {
             SizedBox(height: 16),
             Expanded(
               child: Obx(() {
+                if (controller.actors.isEmpty) {
+                  return Center(child: CircularProgressIndicator());
+                }
                 return ListView.builder(
                   itemCount: controller.actors.length,
                   itemBuilder: (context, index) {
@@ -88,8 +77,13 @@ class AddSceneActorsView extends StatelessWidget {
                                 SizedBox(width: 8),
                                 CircleAvatar(
                                   radius: 36,
-                                  backgroundImage: AssetImage(
-                                      actor['image'] ?? 'assets/login.png'),
+                                  backgroundImage: actor['image'] != null &&
+                                          actor['image']
+                                              .toString()
+                                              .startsWith('http')
+                                      ? NetworkImage(actor['image'])
+                                      : AssetImage(actor['image'] ??
+                                          'assets/login.png') as ImageProvider,
                                 ),
                               ],
                             ),

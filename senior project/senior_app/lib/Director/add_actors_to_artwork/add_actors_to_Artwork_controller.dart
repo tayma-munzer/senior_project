@@ -7,25 +7,23 @@ class AddActorsToArtworkController extends GetxController {
   var actorsList = <Map>[].obs;
   var searchQuery = ''.obs;
   var userCountry = ''.obs;
-  var selectedActorIds = <int>[].obs; // Track multiple selected actors
-  var roleTypes = <Map>[].obs; // To store role types
-
-  // Change selectedRoles to store the role_type_id (int) instead of a string.
-  var selectedRoles = <int, int>{}.obs; // Map: actor_id => role_type_id
+  var selectedActorIds = <int>[].obs;
+  var roleTypes = <Map>[].obs;
+  var selectedRoles = <int, int>{}.obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchActors();
-    fetchRoleTypes(); // Fetch role types when the controller is initialized
+    fetchRoleTypes();
   }
 
   void toggleActorSelection(int actorId) {
     if (selectedActorIds.contains(actorId)) {
-      selectedActorIds.remove(actorId); // Deselect if already selected
+      selectedActorIds.remove(actorId);
       selectedRoles.remove(actorId);
     } else {
-      selectedActorIds.add(actorId); // Select if not already selected
+      selectedActorIds.add(actorId);
     }
   }
 
@@ -115,7 +113,6 @@ class AddActorsToArtworkController extends GetxController {
     }).toList();
   }
 
-  // When a role is selected for an actor, store the role_type_id.
   void selectRoleForActor(int actorId, int roleTypeId) {
     selectedRoles[actorId] = roleTypeId;
     if (!selectedActorIds.contains(actorId)) {
@@ -128,7 +125,6 @@ class AddActorsToArtworkController extends GetxController {
     selectedActorIds.remove(actorId);
   }
 
-  // New function to submit the selected actors and their roles.
   Future<void> submitActorsForArtwork(int artworkId) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
@@ -156,7 +152,6 @@ class AddActorsToArtworkController extends GetxController {
           body: json.encode(payload));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Navigate to the next step if needed.
         Get.toNamed('/nextStep');
       } else {
         Get.snackbar('Error', 'Failed to add actors to artwork');

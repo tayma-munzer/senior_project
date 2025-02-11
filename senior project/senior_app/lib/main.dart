@@ -224,6 +224,11 @@ class MyApp extends StatelessWidget {
           page: () => ActorArtworkDetailsView(),
           binding: ActorArtworkDetailsBinding(),
         ),
+        GetPage(
+          name: '/addlocationtoartwork',
+          page: () => AddLocationView(),
+          binding: AddLocationBinding(),
+        ),
       ],
     );
   }

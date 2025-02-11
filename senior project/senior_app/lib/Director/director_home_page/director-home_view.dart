@@ -91,7 +91,10 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
     return GestureDetector(
       onTap: () {
         controller.setSelectedArtwork(artwork.id);
-        Get.toNamed('/artworkDetails', arguments: artwork.id);
+        Get.toNamed('/artworkDetails', arguments: {
+          'artworkId': artwork.id,
+          'artworkTitle': artwork.title, // Pass the artwork title
+        });
       },
       child: Card(
         elevation: 4,

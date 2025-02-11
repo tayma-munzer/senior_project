@@ -9,10 +9,13 @@ class ArtworkDetailsController extends GetxController {
   var scenes = <Scene>[].obs;
   var isLoading = false.obs;
   late int artworkId;
+  var artworkTitle = ''.obs; // Add this line to store the artwork title
 
   @override
   void onInit() {
-    artworkId = Get.arguments;
+    final Map<String, dynamic> args = Get.arguments;
+    artworkId = args['artworkId'];
+    artworkTitle.value = args['artworkTitle']; // Retrieve the artwork title
     fetchActors();
     super.onInit();
   }
