@@ -10,17 +10,14 @@ import 'artwork_details_controller.dart';
 
 class ArtworkDetailsView extends StatelessWidget {
   ArtworkDetailsView({Key? key}) : super(key: key) {
-    // Remove any existing instance of ArtworkDetailsController.
     if (Get.isRegistered<ArtworkDetailsController>()) {
       Get.delete<ArtworkDetailsController>();
     }
-    // Register a factory that will create a new instance each time.
     Get.create<ArtworkDetailsController>(() => ArtworkDetailsController());
   }
 
   @override
   Widget build(BuildContext context) {
-    // Retrieve the controller instance.
     final ArtworkDetailsController controller =
         Get.find<ArtworkDetailsController>();
 
@@ -40,8 +37,6 @@ class ArtworkDetailsView extends StatelessWidget {
                     alignment: Alignment.center,
                   )),
               SizedBox(height: 20),
-
-              /// **Actors Section**
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -62,6 +57,13 @@ class ArtworkDetailsView extends StatelessWidget {
               Obx(() {
                 if (controller.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
+                }
+                if (controller.actors.isEmpty) {
+                  return CustomText(
+                    text: "لا يوجد ممثلين",
+                    fontSize: 16,
+                    alignment: Alignment.center,
+                  );
                 }
                 return Column(
                   children: controller.actors.map((actor) {
@@ -96,8 +98,6 @@ class ArtworkDetailsView extends StatelessWidget {
                 );
               }),
               SizedBox(height: 20),
-
-              /// **Scenes Section**
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -119,6 +119,13 @@ class ArtworkDetailsView extends StatelessWidget {
               Obx(() {
                 if (controller.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
+                }
+                if (controller.scenes.isEmpty) {
+                  return CustomText(
+                    text: "لا يوجد مشاهد",
+                    fontSize: 16,
+                    alignment: Alignment.center,
+                  );
                 }
                 return Column(
                   children: controller.scenes.map((scene) {

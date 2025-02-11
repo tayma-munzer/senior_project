@@ -9,14 +9,15 @@ class ArtworkDetailsController extends GetxController {
   var scenes = <Scene>[].obs;
   var isLoading = false.obs;
   late int artworkId;
-  var artworkTitle = ''.obs; // Add this line to store the artwork title
+  var artworkTitle = ''.obs;
 
   @override
   void onInit() {
     final Map<String, dynamic> args = Get.arguments;
     artworkId = args['artworkId'];
-    artworkTitle.value = args['artworkTitle']; // Retrieve the artwork title
+    artworkTitle.value = args['artworkTitle'];
     fetchActors();
+    fetchScenes();
     super.onInit();
   }
 
@@ -47,7 +48,38 @@ class ArtworkDetailsController extends GetxController {
         print("Error fetching actors: ${response.body}");
       }
     } catch (e) {
-      print("Exception: $e");
+      print("Exception while fetching actors: $e");
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<void> fetchScenes() async {
+    try {
+      isLoading(true);
+      String? token = await AuthController().getToken();
+      if (token == null) {
+        print("Error: User token is null");
+        return;
+      }
+
+      var response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/scenes'),
+        headers: {'Authorization': 'Token $token'},
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        scenes.value = data.map((item) {
+          return Scene(
+            title: item['title'],
+          );
+        }).toList();
+      } else {
+        print("Error fetching scenes: ${response.body}");
+      }
+    } catch (e) {
+      print("Exception while fetching scenes: $e");
     } finally {
       isLoading(false);
     }
