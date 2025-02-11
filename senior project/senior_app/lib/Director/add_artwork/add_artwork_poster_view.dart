@@ -1,104 +1,67 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/Director/add_artwork/add_artwork_poster_controller.dart';
+import 'package:senior_app/widgets/custom_appbar.dart';
+import 'package:senior_app/widgets/custom_bottomappbar_actor.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_button.dart';
 import 'package:senior_app/widgets/custom_textfield.dart';
 
 class AddArtworkPosterView extends StatelessWidget {
-  final AddArtworkPosterController controller =
-      Get.put(AddArtworkPosterController());
+  final AddArtworkPosterController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: CustomText(
-          text: 'Add Artwork Poster',
-          color: Colors.white,
-          fontSize: 20,
-          alignment: Alignment.center,
-        ),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(
-                text: 'اسم العمل الفني',
-                fontSize: 18,
-                color: Colors.black,
-              ),
-              SizedBox(height: 10),
-              CustomTextFormField(
-                hint: 'ادخل اسم العمل الفني',
-                onChanged: (value) {
-                  controller.nameController.text = value;
-                },
-              ),
-              SizedBox(height: 20),
-              CustomText(
-                text: 'ادخل صورة للعمل الفني',
-                fontSize: 18,
-                color: Colors.black,
-              ),
-              SizedBox(height: 10),
-              Obx(() {
-                return GestureDetector(
-                  onTap: () async {
-                    await controller.pickImage();
-                  },
-                  child: Column(
-                    children: [
-                      controller.imagePath.value.isEmpty
-                          ? Column(
-                              children: [
-                                Image.asset(
-                                  'assets/login.png',
-                                  height: 150,
-                                  width: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                                SizedBox(height: 10),
-                                Text('tap to select an image'),
-                                Icon(Icons.camera_alt,
-                                    size: 30, color: Colors.grey),
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                Image.file(
-                                  File(controller.imagePath.value),
-                                  height: 150,
-                                  width: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                                SizedBox(height: 10),
-                                Text('Tap to change the image'),
-                                Icon(Icons.camera_alt,
-                                    size: 30, color: Colors.grey),
-                              ],
-                            ),
-                    ],
-                  ),
-                );
-              }),
-              SizedBox(height: 30),
-              CustomButton(
-                text: 'التالي',
-                onPressed: () async {
-                  await controller.submitArtwork();
-                },
-              ),
-            ],
-          ),
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            CustomText(
+              text: "اسم العمل الفني",
+              alignment: Alignment.centerRight,
+              fontSize: 20,
+            ),
+            SizedBox(height: 20),
+            CustomTextFormField(
+              hint: "أدخل اسم العمل الفني",
+              onChanged: (value) => controller.titleController.text = value,
+            ),
+            SizedBox(height: 20),
+            CustomText(
+              text: "ادخل صورة للعمل الفني",
+              alignment: Alignment.centerRight,
+              fontSize: 20,
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: controller.pickImage,
+                  child: Obx(() => controller.selectedImage.value != null
+                      ? Image.file(controller.selectedImage.value!, height: 150)
+                      : Icon(Icons.camera_alt, size: 50)),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            CustomButton(
+              text: "التالي",
+              onPressed: () async {
+                final artworkId = await controller.uploadArtwork();
+                if (artworkId != null) {
+                  Get.toNamed('/addactorstoartwork', arguments: artworkId);
+                }
+              },
+            ),
+          ],
         ),
       ),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 }

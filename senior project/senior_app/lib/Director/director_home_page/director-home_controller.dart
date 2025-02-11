@@ -6,6 +6,7 @@ import 'package:senior_app/Director/director_home_page/artwork.dart';
 
 class DirectorHomeController extends GetxController {
   var artworks = <Artwork>[].obs;
+  var selectedArtworkId = 0.obs;
 
   @override
   void onInit() {
@@ -17,7 +18,7 @@ class DirectorHomeController extends GetxController {
     try {
       String? token = await AuthController().getToken();
       if (token == null || token.isEmpty) {
-        Get.snackbar('rrror', 'token is missing. please log in again.');
+        Get.snackbar('Error', 'Token is missing. Please log in again.');
         return;
       }
 
@@ -48,5 +49,9 @@ class DirectorHomeController extends GetxController {
       print('Error fetching artworks: $e');
       Get.snackbar('Error', 'An error occurred while fetching artworks.');
     }
+  }
+
+  void setSelectedArtwork(int id) {
+    selectedArtworkId.value = id;
   }
 }

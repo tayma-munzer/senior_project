@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/Director/actor_details/actor_details_controller.dart';
+import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_controller.dart';
 import 'package:senior_app/colors.dart';
 import 'package:senior_app/Director/view_actors/view_actors_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
@@ -9,8 +10,8 @@ import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
-class ActorDetailsView extends StatelessWidget {
-  final ActorDetailsController controller = Get.find();
+class ActorArtworkDetailsView extends StatelessWidget {
+  final ActorArtworkDetailsController controller = Get.find();
   final ViewActorsController actorsController = Get.find();
 
   @override

@@ -56,7 +56,7 @@ class AddVideoToFilmingLocationController extends GetxController {
       var response = await request.send();
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar('Success', 'تم رفع الفيديو بنجاح');
-        Get.offAllNamed('/locationownerHome'); // Navigate to Home after success
+        Get.offAllNamed('/locationHome');
       } else {
         Get.snackbar('Error', 'فشل رفع الفيديو: ${response.statusCode}');
       }

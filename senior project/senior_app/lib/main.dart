@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_binding.dart';
+import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_view.dart';
+import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_binding.dart';
+import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_view.dart';
 import 'package:senior_app/Location%20Owner/add_video_to_filming_location/add_video_to_filming_location_binding.dart';
 import 'package:senior_app/Location%20Owner/add_video_to_filming_location/add_video_to_filming_location_view.dart';
 import 'package:senior_app/auth_controller.dart';
@@ -208,6 +212,17 @@ class MyApp extends StatelessWidget {
           name: '/addvideostofilminglocation',
           page: () => AddVideoToFilmingLocationView(),
           binding: AddVideoToFilmingLocationBinding(),
+        ),
+        GetPage(
+          name: '/addactorstoartwork',
+          page: () => AddActorsToArtworkView(),
+          binding: AddActorsToArtworkBinding(),
+        ),
+        //actorsdetailsartwork
+        GetPage(
+          name: '/actorsdetailsartwork',
+          page: () => ActorArtworkDetailsView(),
+          binding: ActorArtworkDetailsBinding(),
         ),
       ],
     );

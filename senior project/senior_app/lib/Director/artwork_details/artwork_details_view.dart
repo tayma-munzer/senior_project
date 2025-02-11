@@ -4,11 +4,19 @@ import 'package:senior_app/colors.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_text.dart';
+import 'package:senior_app/widgets/custom_textfield.dart';
+import 'package:senior_app/widgets/custom_button.dart';
 import 'artwork_details_controller.dart';
 
 class ArtworkDetailsView extends StatelessWidget {
   final ArtworkDetailsController controller =
-      Get.find<ArtworkDetailsController>();
+      Get.put(ArtworkDetailsController());
+
+  final List<String> hardcodedScenes = [
+    "المشهد الأول: لقاء البطل والبطلة",
+    "المشهد الثاني: المواجهة الحاسمة",
+    "المشهد الثالث: النهاية الغامضة",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +42,7 @@ class ArtworkDetailsView extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.add),
                     onPressed: () {
-                      Get.toNamed('/addscene');
+                      Get.toNamed('/addactors');
                     },
                   ),
                   CustomText(
@@ -45,51 +53,49 @@ class ArtworkDetailsView extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-              Obx(() => Column(
-                    children: controller.actors.map((actor) {
-                      return Card(
-                        color: darkgray,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.delete, color: primaryColor),
-                                onPressed: () {
-                                  controller.deleteActor(actor);
-                                },
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  CustomText(
-                                    text: actor.name,
-                                    fontSize: 16,
-                                    alignment: Alignment.centerRight,
-                                  ),
-                                  CustomText(
-                                    text: actor.role,
-                                    fontSize: 14,
-                                    alignment: Alignment.centerRight,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+              Obx(() {
+                if (controller.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return Column(
+                  children: controller.actors.map((actor) {
+                    return Card(
+                      color: darkgray,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.delete, color: primaryColor),
+                              onPressed: () {
+                                controller.deleteActor(actor);
+                              },
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                CustomText(
+                                  text: "${actor.firstName} ${actor.lastName}",
+                                  fontSize: 16,
+                                  alignment: Alignment.centerRight,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      );
-                    }).toList(),
-                  )),
+                      ),
+                    );
+                  }).toList(),
+                );
+              }),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     icon: Icon(Icons.add),
-                    onPressed: () {
-                      Get.toNamed('/hhh');
-                    },
+                    onPressed: () {},
                   ),
                   CustomText(
                     text: "المشاهد",
@@ -99,65 +105,21 @@ class ArtworkDetailsView extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-              Obx(() => Column(
-                    children: controller.scenes.map((scene) {
-                      return Card(
-                        color: lightblue,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    icon:
-                                        Icon(Icons.delete, color: primaryColor),
-                                    onPressed: () {
-                                      controller.deleteScene(scene);
-                                    },
-                                  ),
-                                  CustomText(
-                                    text: scene.title,
-                                    fontSize: 16,
-                                    alignment: Alignment.centerRight,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CustomText(
-                                    text: scene.isFinished
-                                        ? "منتهي"
-                                        : "غير منتهي",
-                                    fontSize: 14,
-                                    color: scene.isFinished
-                                        ? Colors.green
-                                        : Colors.red,
-                                    alignment: Alignment.centerRight,
-                                  ),
-                                  Row(
-                                    children: [
-                                      CustomText(
-                                        text: scene.description,
-                                        fontSize: 14,
-                                        alignment: Alignment.centerRight,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  )),
+              Column(
+                children: hardcodedScenes.map((scene) {
+                  return Card(
+                    color: Colors.grey[300],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomText(
+                        text: scene,
+                        fontSize: 16,
+                        alignment: Alignment.centerRight,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ],
           ),
         ),
