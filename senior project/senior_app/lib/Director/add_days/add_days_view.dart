@@ -12,6 +12,11 @@ class AddDaysView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments;
+    controller.locationId = arguments['locationId'];
+    controller.title = arguments['title'];
+    controller.artworkId = arguments['artworkId'];
+
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
@@ -26,39 +31,44 @@ class AddDaysView extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Expanded(
-              child: TableCalendar(
-                firstDay: DateTime.now(),
-                lastDay: DateTime.now().add(Duration(days: 365)),
-                focusedDay: DateTime.now(),
-                selectedDayPredicate: (day) {
-                  return controller.selectedDays.any((selectedDay) =>
-                      selectedDay.year == day.year &&
-                      selectedDay.month == day.month &&
-                      selectedDay.day == day.day);
+              child: GetBuilder<AddDaysController>(
+                builder: (controller) {
+                  return TableCalendar(
+                    firstDay: DateTime.now(),
+                    lastDay: DateTime.now().add(Duration(days: 365)),
+                    focusedDay: DateTime.now(),
+                    selectedDayPredicate: (day) {
+                      return controller.selectedDays.any((selectedDay) =>
+                          selectedDay.year == day.year &&
+                          selectedDay.month == day.month &&
+                          selectedDay.day == day.day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      controller.toggleDay(selectedDay);
+                      controller.update();
+                    },
+                    calendarStyle: CalendarStyle(
+                      selectedDecoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                      ),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                      defaultDecoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      weekendDecoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    headerStyle: HeaderStyle(
+                      formatButtonVisible: false,
+                      titleCentered: true,
+                    ),
+                  );
                 },
-                onDaySelected: (selectedDay, focusedDay) {
-                  controller.toggleDay(selectedDay);
-                },
-                calendarStyle: CalendarStyle(
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                  ),
-                  todayDecoration: BoxDecoration(
-                    color: Colors.orange,
-                    shape: BoxShape.circle,
-                  ),
-                  defaultDecoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  weekendDecoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                headerStyle: HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                ),
               ),
             ),
             SizedBox(height: 16),
@@ -66,7 +76,6 @@ class AddDaysView extends StatelessWidget {
               text: "التالي",
               onPressed: () {
                 controller.submitDays();
-                Get.toNamed('/viewscenedetails');
               },
             ),
           ],

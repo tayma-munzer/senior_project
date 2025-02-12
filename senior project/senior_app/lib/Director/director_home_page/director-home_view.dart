@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/Director/director_home_page/director-home_controller.dart';
 import 'package:senior_app/colors.dart';
 import 'package:senior_app/Director/director_home_page/artwork.dart';
-import 'package:senior_app/Director/director_home_page/director-home_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_text.dart';
@@ -90,7 +90,11 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
   Widget _buildCard(Artwork artwork) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/artworkDetails');
+        controller.setSelectedArtwork(artwork.id);
+        Get.toNamed('/artworkDetails', arguments: {
+          'artworkId': artwork.id,
+          'artworkTitle': artwork.title, // Pass the artwork title
+        });
       },
       child: Card(
         elevation: 4,

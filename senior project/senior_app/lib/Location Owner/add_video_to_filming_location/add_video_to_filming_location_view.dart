@@ -115,7 +115,7 @@ class _AddVideoToFilmingLocationViewState
             CustomButton(
               text: 'التالي',
               onPressed: () =>
-                  controller.uploadVideo(1), // Replace 1 with actual locationId
+                  controller.uploadVideo(1), //هون في تعديل موضوع الdaynamic
             ),
             SizedBox(height: 10),
             CustomButton(
