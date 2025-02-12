@@ -29,12 +29,10 @@ class ArtworkDetailsController extends GetxController {
         print("Error: User token is null");
         return;
       }
-
       var response = await http.get(
         Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/actors'),
         headers: {'Authorization': 'Token $token'},
       );
-
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         actors.value = data.map((item) {
@@ -62,12 +60,10 @@ class ArtworkDetailsController extends GetxController {
         print("Error: User token is null");
         return;
       }
-
       var response = await http.get(
         Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/scenes'),
         headers: {'Authorization': 'Token $token'},
       );
-
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         scenes.value = data.map((item) {
@@ -102,12 +98,10 @@ class Actor {
   final int id;
   final String firstName;
   final String lastName;
-
   Actor({required this.id, required this.firstName, required this.lastName});
 }
 
 class Scene {
   final String title;
-
   Scene({required this.title});
 }

@@ -93,7 +93,7 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
         controller.setSelectedArtwork(artwork.id);
         Get.toNamed('/artworkDetails', arguments: {
           'artworkId': artwork.id,
-          'artworkTitle': artwork.title, // Pass the artwork title
+          'artworkTitle': artwork.title,
         });
       },
       child: Card(

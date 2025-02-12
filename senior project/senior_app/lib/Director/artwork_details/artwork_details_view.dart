@@ -4,8 +4,6 @@ import 'package:senior_app/colors.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_text.dart';
-import 'package:senior_app/widgets/custom_textfield.dart';
-import 'package:senior_app/widgets/custom_button.dart';
 import 'artwork_details_controller.dart';
 
 class ArtworkDetailsView extends StatelessWidget {
@@ -43,7 +41,8 @@ class ArtworkDetailsView extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.add),
                     onPressed: () {
-                      Get.toNamed('/addactors');
+                      Get.toNamed('/addactorstoartwork',
+                          arguments: {'artworkId': controller.artworkId});
                     },
                   ),
                   CustomText(
@@ -98,6 +97,7 @@ class ArtworkDetailsView extends StatelessWidget {
                 );
               }),
               SizedBox(height: 20),
+              // Scenes Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -37,26 +37,29 @@ class AddDaysController extends GetxController {
   Future<void> submitDays() async {
     if (selectedDays.isEmpty) {
       print("No days selected.");
-    } else {
-      String? token = await AuthController().getToken();
-      if (token == null) {
-        print("Error: User token is null");
-        return;
-      }
+      return;
+    }
 
-      String formatDate(DateTime? date) {
-        if (date == null) return "";
-        return "${date.year}-${date.month}-${date.day}";
-      }
+    String? token = await AuthController().getToken();
+    if (token == null) {
+      print("Error: User token is null");
+      return;
+    }
 
-      var requestBody = {
-        "title": title,
-        "start_date": formatDate(startDate),
-        "end_date": formatDate(endDate),
-        "artwork_id": artworkId,
-        "location_id": locationId
-      };
+    String formatDate(DateTime? date) {
+      if (date == null) return "";
+      return "${date.year}-${date.month}-${date.day}";
+    }
 
+    var requestBody = {
+      "title": title,
+      "start_date": formatDate(startDate),
+      "end_date": formatDate(endDate),
+      "artwork_id": artworkId,
+      "location_id": locationId
+    };
+
+    try {
       var response = await http.post(
         Uri.parse('http://10.0.2.2:8000/scene'),
         headers: {
@@ -67,11 +70,18 @@ class AddDaysController extends GetxController {
       );
 
       if (response.statusCode == 201) {
+        var responseData = json.decode(response.body);
+        int sceneId = responseData['id'];
+
         print("Scene successfully created: ${response.body}");
-        Get.toNamed('/nextStep');
+
+        Get.toNamed('/addsceneactors',
+            arguments: {'artworkId': artworkId, 'sceneId': sceneId});
       } else {
         print("Error creating scene: ${response.body}");
       }
+    } catch (e) {
+      print("Exception occurred: $e");
     }
   }
 }
