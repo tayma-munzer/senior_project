@@ -41,6 +41,8 @@ urlpatterns = [
     path('official_document',views.add_official_doc),
     path('acting_request/<int:pk>/approve',views.acting_request_approve),
     path('acting_request/<int:pk>/reject',views.acting_request_reject),
+    path('story_board',views.story_board),
+    path('trailer',views.gettrailer),
     path('pending-actors/', views.pending_actors, name='pending_actors'),
     path('approve-actor/<int:actor_id>/', views.approve_actor, name='approve_actor'),
     path('reject-actor/<int:actor_id>/', views.reject_actor, name='reject_actor'),
