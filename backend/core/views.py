@@ -819,6 +819,30 @@ def story_board(request):
             image_model_instance = image_serializer.save()  # Save the image instance
             return Response({"message": "Image saved successfully.", "id": image_model_instance.id}, status=status.HTTP_201_CREATED)
         return Response(image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from django.core.files.base import ContentFile
+import os
+import json
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def gettrailer(request):    
+    video_url = request.data.get('video_url')
+    video_duration = request.data.get('video_duration')
+    num_scenes = request.data.get('num_scenes')
+    text_idea = request.data.get('text_idea')
+    endpoint = 'https://b059-35-188-156-101.ngrok-free.app/generate_trailer/'
+    response = requests.post(endpoint, json={'text_idea': text_idea,'video_url':video_url,'video_duration':video_duration,'num_scenes':num_scenes})
+    if response.status_code == 200:
+        video_content = response.content
+        video = trailer()
+        video.video_url=video_url
+        video.video_duration=video_duration
+        video.num_scenes=num_scenes
+        video.text_idea=text_idea
+        video.director=request.user
+        filename = 'video_{}.mp4'.format(os.path.basename(endpoint))
+        video.trailer.save(filename, ContentFile(video_content), save=True)
+        serializer = TrailerSerializer(video)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 ## to make notifications in views 
