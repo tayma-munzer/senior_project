@@ -154,6 +154,11 @@ class camera_location(models.Model):
     video = models.FileField(upload_to='camera_location_input/')
     generated_video = models.FileField(upload_to='camera_location_output/')
     
+class chroma(models.Model):
+    director = models.ForeignKey(User,on_delete=models.CASCADE)
+    prompt = models.CharField(max_length=255)
+    file = models.FileField(upload_to='chroma_input/')
+    generated_image = models.ImageField(upload_to='chroma_output/')
 
 
 

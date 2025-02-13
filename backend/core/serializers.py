@@ -174,3 +174,9 @@ class CameraLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = camera_location
         fields = ['id','director','video','generated_video'] 
+
+class ChromaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chroma
+        fields = ['id','director','prompt','file','generated_image'] 
+
