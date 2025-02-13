@@ -102,8 +102,7 @@ class filming_location(models.Model):
     
 class booking_dates(models.Model):
     location = models.ForeignKey(filming_location,on_delete=models.CASCADE)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    date = models.DateField()
 
 class location_photos(models.Model):
     location = models.ForeignKey(filming_location,on_delete=models.CASCADE)

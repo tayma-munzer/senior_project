@@ -864,7 +864,32 @@ def synclips(request):
         serializer = SyncLipsSerializer(video)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
+@api_view(['POST','GET','DELETE'])
+@permission_classes([IsAuthenticated,])
+def booking_location(request,id):
+    try:
+        location = filming_location.objects.get(id=id)
+    except filming_location.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        bookingDates = booking_dates.objects.filter(location=location)
+        dates = [booking.date for booking in bookingDates]
+        serializer = FilmingLocationSerializer(location)
+        return Response({"dates": dates,"location":serializer.data}, status=status.HTTP_200_OK)
+    elif request.method == 'POST':   
+        dates = request.data.get('dates')
+        for date in dates:
+            serializer = BookingDatesSerializer(data= {'location_id':location.id,'date':date})
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        return Response(status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        dates = request.data.get('dates')
+        for date in dates :
+            booking_dates.objects.get(location=location,date=date).delete()
+        return Response(status=status.HTTP_200_OK)
 
 ## to make notifications in views 
     # channel_layer = get_channel_layer()

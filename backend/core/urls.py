@@ -41,6 +41,7 @@ urlpatterns = [
     path('official_document',views.add_official_doc),
     path('acting_request/<int:pk>/approve',views.acting_request_approve),
     path('acting_request/<int:pk>/reject',views.acting_request_reject),
+    path('location_booking/<int:id>',views.booking_location),
     path('story_board',views.story_board),
     path('trailer',views.gettrailer),
     path('sync_lips',views.synclips),

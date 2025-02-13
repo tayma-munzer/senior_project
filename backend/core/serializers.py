@@ -162,3 +162,10 @@ class SyncLipsSerializer(serializers.ModelSerializer):
     class Meta:
         model = sync_lips
         fields = ['id','director','video','text','generated_video'] 
+
+class BookingDatesSerializer(serializers.ModelSerializer):
+    location_id = serializers.IntegerField(write_only=True)
+    location = FilmingLocationSerializer(read_only=True)
+    class Meta:
+        model = booking_dates
+        fields = ['id','location','location_id','date'] 
