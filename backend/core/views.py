@@ -154,6 +154,7 @@ def filming_location_list(request):
         locations = filming_location.objects.all()
         buildingStyle = request.query_params.get('building_style')
         buildingType = request.query_params.get('building_type')
+        dates = request.query_params.getlist('date')
         search = request.query_params.get('search')
         if buildingStyle :
             locations = locations.filter(building_style__building_style = buildingStyle)
@@ -161,6 +162,8 @@ def filming_location_list(request):
             locations = locations.filter(building_type__building_type = buildingType)
         if search :
             locations = locations.filter(desc__contains = search)
+        if dates:
+            locations = locations.exclude(booking_dates__date__in=dates).distinct()
         locations_data = []
         for location in locations:
             serializer = FilmingLocationSerializer(location)
