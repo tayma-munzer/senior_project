@@ -844,6 +844,27 @@ def gettrailer(request):
         serializer = TrailerSerializer(video)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def synclips(request):    
+    inputvideo = request.FILES.get('video')
+    text = request.data.get('text')
+    endpoint = 'https://9e01-34-106-86-187.ngrok-free.app/sync-lips/'
+    files = {'video': inputvideo}
+    data = {'text': text}
+    response = requests.post(endpoint, files=files,data=data)
+    if response.status_code == 200:
+        video_content = response.content
+        video = sync_lips()
+        video.text=text
+        video.director=request.user
+        video.video = inputvideo
+        outputfilename = 'video_{}.mp4'.format(os.path.basename(endpoint))
+        video.generated_video.save(outputfilename, ContentFile(video_content), save=True)
+        serializer = SyncLipsSerializer(video)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 
 ## to make notifications in views 
     # channel_layer = get_channel_layer()

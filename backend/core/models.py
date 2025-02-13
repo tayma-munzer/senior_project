@@ -143,7 +143,12 @@ class trailer(models.Model):
     num_scenes=models.IntegerField()
     text_idea = models.CharField(max_length=255)
 
-
+class sync_lips(models.Model):
+    director = models.ForeignKey(User,on_delete=models.CASCADE)
+    video = models.FileField(upload_to='sync_lips_input/')
+    text = models.CharField(max_length=255)
+    generated_video = models.FileField(upload_to='sync_lips_output/')
+    
 
 
 

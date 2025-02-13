@@ -157,3 +157,8 @@ class TrailerSerializer(serializers.ModelSerializer):
     class Meta:
         model = trailer
         fields = ['id','director','video_url','trailer','video_duration','num_scenes','text_idea'] 
+
+class SyncLipsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = sync_lips
+        fields = ['id','director','video','text','generated_video'] 

@@ -43,6 +43,7 @@ urlpatterns = [
     path('acting_request/<int:pk>/reject',views.acting_request_reject),
     path('story_board',views.story_board),
     path('trailer',views.gettrailer),
+    path('sync_lips',views.synclips),
     path('pending-actors/', views.pending_actors, name='pending_actors'),
     path('approve-actor/<int:actor_id>/', views.approve_actor, name='approve_actor'),
     path('reject-actor/<int:actor_id>/', views.reject_actor, name='reject_actor'),
