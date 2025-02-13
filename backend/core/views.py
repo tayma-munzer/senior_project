@@ -26,6 +26,13 @@ def register(request):
         token, _ = Token.objects.get_or_create(user=user)
         role = request.data.get('role')
         if role =='actor':
+            acting_types = request.data.get('acting_types')
+            for acting_type in acting_types:
+                acting_type_serializer = actorActingTypeSerializer(data={'acting_type_id':acting_type,'actor':user.id})
+                if acting_type_serializer.is_valid():
+                    actingType = acting_type_serializer.save(actor=user) 
+                else :
+                    return Response(acting_type_serializer.errors,status=status.HTTP_404_NOT_FOUND)
             additional_info_data = request.data.get('additional_info', {})
             additional_info_serializer = AdditionalinfoSerializer(data=additional_info_data)
             if additional_info_serializer.is_valid():
@@ -929,6 +936,26 @@ def cameraLocation(request):
         outputfilename = 'video_{}.mp4'.format(os.path.basename(endpoint))
         video.generated_video.save(outputfilename, ContentFile(response.content), save=True)
         serializer = CameraLocationSerializer(video)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def Chroma(request):    
+    inputimage = request.FILES.get('file')
+    text = request.data.get('prompt')
+    endpoint = 'https://90c5-34-125-171-187.ngrok-free.app/chroma/'
+    files = {'file': inputimage}
+    data = {'prompt': text}
+    response = requests.post(endpoint, files=files,data=data)
+    if response.status_code == 200:
+        image_content = response.content
+        chroma_instance = chroma()
+        chroma_instance.prompt=text
+        chroma_instance.director=request.user
+        chroma_instance.file = inputimage
+        outputfilename = 'image_{}.png'.format(os.path.basename(endpoint))
+        chroma_instance.generated_image.save(outputfilename, ContentFile(image_content), save=True)
+        serializer = ChromaSerializer(chroma_instance)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 ## to make notifications in views 
