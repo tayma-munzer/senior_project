@@ -154,6 +154,7 @@ def filming_location_list(request):
         locations = filming_location.objects.all()
         buildingStyle = request.query_params.get('building_style')
         buildingType = request.query_params.get('building_type')
+        dates = request.query_params.getlist('date')
         search = request.query_params.get('search')
         if buildingStyle :
             locations = locations.filter(building_style__building_style = buildingStyle)
@@ -161,6 +162,8 @@ def filming_location_list(request):
             locations = locations.filter(building_type__building_type = buildingType)
         if search :
             locations = locations.filter(desc__contains = search)
+        if dates:
+            locations = locations.exclude(booking_dates__date__in=dates).distinct()
         locations_data = []
         for location in locations:
             serializer = FilmingLocationSerializer(location)
@@ -327,6 +330,26 @@ def sceneactors(request, pk):
                 serializer = SceneActorsSerializer(data=actor)
                 if serializer.is_valid():
                     serializer.save()
+                    channel_layer = get_channel_layer()
+                    scene_number = scene_instance.scene_number
+                    start_date = scene_instance.start_date
+                    end_date = scene_instance.end_date
+                    artwork_name = scene_instance.artwork.title
+                    actor_id = actor['actor_id']
+                    notification_message = '{artwork_name} في العمل {scene_number} للمشهد رقم {end_date} إلى {start_date} هل يناسبك التصوير من'.format(
+                        artwork_name=artwork_name,
+                        scene_number=scene_number,
+                        end_date=end_date,
+                        start_date=start_date
+                    )
+                    async_to_sync(channel_layer.group_send)(
+                        f'notifications_{actor_id}',
+                        {
+                            'type': 'send_notification',
+                            'notification':notification_message,
+                            'title':'scene_filming_time_request'
+                        }
+                    )
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
             return Response({'message': 'actors added successfully to scene.'}, status=status.HTTP_201_CREATED)
@@ -844,6 +867,69 @@ def gettrailer(request):
         serializer = TrailerSerializer(video)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def synclips(request):    
+    inputvideo = request.FILES.get('video')
+    text = request.data.get('text')
+    endpoint = 'https://9e01-34-106-86-187.ngrok-free.app/sync-lips/'
+    files = {'video': inputvideo}
+    data = {'text': text}
+    response = requests.post(endpoint, files=files,data=data)
+    if response.status_code == 200:
+        video_content = response.content
+        video = sync_lips()
+        video.text=text
+        video.director=request.user
+        video.video = inputvideo
+        outputfilename = 'video_{}.mp4'.format(os.path.basename(endpoint))
+        video.generated_video.save(outputfilename, ContentFile(video_content), save=True)
+        serializer = SyncLipsSerializer(video)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['POST','GET','DELETE'])
+@permission_classes([IsAuthenticated,])
+def booking_location(request,id):
+    try:
+        location = filming_location.objects.get(id=id)
+    except filming_location.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        bookingDates = booking_dates.objects.filter(location=location)
+        dates = [booking.date for booking in bookingDates]
+        serializer = FilmingLocationSerializer(location)
+        return Response({"dates": dates,"location":serializer.data}, status=status.HTTP_200_OK)
+    elif request.method == 'POST':   
+        dates = request.data.get('dates')
+        for date in dates:
+            serializer = BookingDatesSerializer(data= {'location_id':location.id,'date':date})
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        return Response(status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        dates = request.data.get('dates')
+        for date in dates :
+            booking_dates.objects.get(location=location,date=date).delete()
+        return Response(status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def cameraLocation(request):    
+    inputvideo = request.FILES.get('file')
+    endpoint = 'https://0aa9-34-126-148-53.ngrok-free.app/process-video/'
+    files = {'file': inputvideo}
+    response = requests.post(endpoint, files=files)
+    if response.status_code == 200:
+        # video_content = response.content
+        video = camera_location()
+        video.director=request.user
+        video.video = inputvideo
+        outputfilename = 'video_{}.mp4'.format(os.path.basename(endpoint))
+        video.generated_video.save(outputfilename, ContentFile(response.content), save=True)
+        serializer = CameraLocationSerializer(video)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 ## to make notifications in views 
     # channel_layer = get_channel_layer()

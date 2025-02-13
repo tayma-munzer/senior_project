@@ -47,13 +47,14 @@ class SignUpActingTypeView extends StatelessWidget {
                           : controller.selectedActingType.value,
                       hint: Text("  انواع التمثيل"),
                       items: controller.actingTypes
-                          .map<DropdownMenuItem<String>>((String value) {
+                          .map<DropdownMenuItem<String>>(
+                              (Map<String, dynamic> value) {
                         return DropdownMenuItem<String>(
-                          value: value,
+                          value: value['type'],
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              value,
+                              value['type'],
                               textDirection: TextDirection.rtl,
                             ),
                           ),
@@ -61,7 +62,10 @@ class SignUpActingTypeView extends StatelessWidget {
                       }).toList(),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          controller.saveActingType(newValue);
+                          final selectedType = controller.actingTypes
+                              .firstWhere(
+                                  (element) => element['type'] == newValue);
+                          controller.saveActingType(selectedType['id']);
                           controller.selectedActingType.value = newValue;
                         }
                       },

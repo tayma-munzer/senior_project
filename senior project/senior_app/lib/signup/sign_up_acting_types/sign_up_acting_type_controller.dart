@@ -8,8 +8,8 @@ import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_
 
 class SignUpActingTypeController extends GetxController {
   var selectedActingType = ''.obs;
-  RxList<String> actingTypes = <String>[].obs;
-  var savedActingTypes = <String>[].obs;
+  RxList<Map<String, dynamic>> actingTypes = <Map<String, dynamic>>[].obs;
+  var savedActingTypeIds = <int>[].obs;
 
   @override
   void onInit() {
@@ -28,11 +28,14 @@ class SignUpActingTypeController extends GetxController {
       'available': 'true',
       'approved': 'true',
       'date_of_birth': Get.find<SignUpLocationController>().birthDate,
-      'role_types': savedActingTypes.toList(), // Pass the selected acting types
     };
 
-    await personalInformationController.registerUser('actor',
-        additionalInfo: additionalInfo);
+    await personalInformationController.registerUser(
+      'actor',
+      additionalInfo: additionalInfo,
+      actingTypeIds: savedActingTypeIds.toList(),
+      imageBytes: Get.find<SignUpLocationController>().selectedImageBytes.value,
+    );
   }
 
   Future<void> fetchActingTypes() async {
@@ -40,11 +43,14 @@ class SignUpActingTypeController extends GetxController {
       final response =
           await http.get(Uri.parse('http://10.0.2.2:8000/acting_types'));
       if (response.statusCode == 200) {
-        //مشان الحروف تصير عربي
         final decodedBody = utf8.decode(response.bodyBytes);
         final List<dynamic> actingTypeList = json.decode(decodedBody);
-        actingTypes.value =
-            actingTypeList.map((e) => e['type'] as String).toList();
+        actingTypes.value = actingTypeList
+            .map((e) => {
+                  'id': e['id'] as int,
+                  'type': e['type'] as String,
+                })
+            .toList();
       } else {
         Get.snackbar('Error', 'Failed to load acting types');
       }
@@ -54,17 +60,13 @@ class SignUpActingTypeController extends GetxController {
     }
   }
 
-  void saveActingType(String type) {
-    if (!savedActingTypes.contains(type)) {
-      savedActingTypes.add(type);
+  void saveActingType(int id) {
+    if (!savedActingTypeIds.contains(id)) {
+      savedActingTypeIds.add(id);
     }
   }
 
-  void removeActingType(String type) {
-    savedActingTypes.remove(type);
-  }
-
-  bool isUserActor() {
-    return true;
+  void removeActingType(int id) {
+    savedActingTypeIds.remove(id);
   }
 }

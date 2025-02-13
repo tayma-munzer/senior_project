@@ -111,9 +111,10 @@ class SignUpLocationView extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       CustomButton(
-                        text: 'تأكيد',
+                        text: 'التالي',
                         onPressed: () {
-                          controller.saveLocation();
+                          controller
+                              .saveLocation(); // Save location, birthdate, and image bytes
                           if (choiceController.selectedChoice.value == 'ممثل') {
                             Get.toNamed('/signupactingtypes');
                           } else {

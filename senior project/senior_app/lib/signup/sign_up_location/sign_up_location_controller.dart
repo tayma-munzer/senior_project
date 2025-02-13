@@ -77,6 +77,7 @@ class SignUpLocationController extends GetxController {
       formKey.currentState!.save();
       print("Selected Country: ${selectedCountry.value}");
       print("Birth Date: $birthDate");
+      print("Image Bytes: ${selectedImageBytes.value}");
     }
   }
 

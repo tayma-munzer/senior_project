@@ -157,3 +157,20 @@ class TrailerSerializer(serializers.ModelSerializer):
     class Meta:
         model = trailer
         fields = ['id','director','video_url','trailer','video_duration','num_scenes','text_idea'] 
+
+class SyncLipsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = sync_lips
+        fields = ['id','director','video','text','generated_video'] 
+
+class BookingDatesSerializer(serializers.ModelSerializer):
+    location_id = serializers.IntegerField(write_only=True)
+    location = FilmingLocationSerializer(read_only=True)
+    class Meta:
+        model = booking_dates
+        fields = ['id','location','location_id','date'] 
+
+class CameraLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = camera_location
+        fields = ['id','director','video','generated_video'] 
