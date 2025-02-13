@@ -133,15 +133,10 @@ class SignUpPersonalInformationView extends StatelessWidget {
                             controller.landlineNumber.value,
                           );
 
-                          print(
-                              'Selected role: ${choiceController.selectedChoice.value}');
-
-                          String selectedRole =
-                              choiceController.selectedChoice.value;
-                          if (selectedRole == 'ممثل') {
+                          final role = choiceController.getRole();
+                          if (role == 'actor') {
                             Get.toNamed('/signuplocation');
-                          } else if (selectedRole == 'مخرج' ||
-                              selectedRole == 'صاحب موقع') {
+                          } else {
                             Get.toNamed('/signup');
                           }
                         }

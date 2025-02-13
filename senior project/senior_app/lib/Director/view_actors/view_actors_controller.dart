@@ -7,6 +7,12 @@ class ViewActorsController extends GetxController {
   var actorsList = <Map>[].obs;
   var searchQuery = ''.obs;
   var userCountry = ''.obs;
+  var actingType = ''.obs;
+  var livingCountry = ''.obs;
+  var available = ''.obs;
+  var minAge = ''.obs;
+  var maxAge = ''.obs;
+  var ordering = ''.obs;
 
   @override
   void onInit() {
@@ -14,13 +20,35 @@ class ViewActorsController extends GetxController {
     fetchActors();
   }
 
-  Future<void> fetchActors() async {
+  Future<void> fetchActors({
+    String? search,
+    String? actingType,
+    String? livingCountry,
+    String? available,
+    String? minAge,
+    String? maxAge,
+    String? ordering,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
 
     try {
+      final Uri uri = Uri.parse('http://10.0.2.2:8000/actors').replace(
+        queryParameters: {
+          if (search != null && search.isNotEmpty) 'search': search,
+          if (actingType != null && actingType.isNotEmpty)
+            'acting_type': actingType,
+          if (livingCountry != null && livingCountry.isNotEmpty)
+            'country': livingCountry,
+          if (available != null && available.isNotEmpty) 'available': available,
+          if (minAge != null && minAge.isNotEmpty) 'min_age': minAge,
+          if (maxAge != null && maxAge.isNotEmpty) 'max_age': maxAge,
+          if (ordering != null && ordering.isNotEmpty) 'ordering': ordering,
+        },
+      );
+
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000/actors'),
+        uri,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Token $token',

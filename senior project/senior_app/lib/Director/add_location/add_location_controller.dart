@@ -10,6 +10,24 @@ class AddLocationController extends GetxController {
   var selectedLocationIndex = (-1).obs;
   var sceneName = ''.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    fetchLocations(); // Fetch locations when the controller is initialized
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    refreshData(); // Refresh data when the page is entered
+  }
+
+  Future<void> refreshData() async {
+    locations.clear(); // Clear existing data
+    selectedLocationIndex.value = -1; // Reset selected location
+    await fetchLocations(); // Fetch fresh data
+  }
+
   Future<void> fetchLocations() async {
     final token = await Get.find<AuthController>().getToken();
     if (token == null) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/signup/sign_up/sign_up_controller.dart';
 import 'package:senior_app/signup/sign_up_choices/sign_up_choices_controller.dart';
 import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
 import 'package:senior_app/widgets/custom_text.dart';
@@ -34,10 +35,23 @@ class SignUpLocationView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/location.webp',
-                  width: 300,
-                ),
+                SizedBox(height: 20),
+                Obx(() {
+                  if (controller.selectedImageBytes.value != null) {
+                    return CircleAvatar(
+                      radius: 80,
+                      backgroundImage:
+                          MemoryImage(controller.selectedImageBytes.value!),
+                    );
+                  } else {
+                    return IconButton(
+                      icon: Icon(Icons.camera_alt, size: 50),
+                      onPressed: () async {
+                        await controller.pickImage();
+                      },
+                    );
+                  }
+                }),
                 SizedBox(height: 20),
                 Obx(() {
                   if (controller.countries.isEmpty) {
@@ -100,21 +114,10 @@ class SignUpLocationView extends StatelessWidget {
                         text: 'تأكيد',
                         onPressed: () {
                           controller.saveLocation();
-                          print(
-                              'Selected role: ${choiceController.selectedChoice.value}');
-                          print(
-                              'First name: ${personalInformationController.firstName.value}');
-                          print(
-                              'Last name: ${personalInformationController.lastName.value}');
-                          print(
-                              'Phone number: ${personalInformationController.phoneNumber.value}');
-                          print(
-                              'Landline number: ${personalInformationController.landlineNumber.value}');
-
                           if (choiceController.selectedChoice.value == 'ممثل') {
                             Get.toNamed('/signupactingtypes');
                           } else {
-                            Get.toNamed('/directorHome');
+                            Get.find<SignUpController>().registerUser();
                           }
                         },
                       ),

@@ -1,8 +1,14 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
+import 'package:senior_app/signup/sign_up/sign_up_controller.dart';
+import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
 
 class SignUpLocationController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -10,6 +16,9 @@ class SignUpLocationController extends GetxController {
   RxString selectedCountry = "سوريا".obs;
   RxList<String> countries = <String>[].obs;
   String birthDate = "";
+
+  // Add a variable to store the selected image as bytes
+  Rx<Uint8List?> selectedImageBytes = Rx<Uint8List?>(null);
 
   @override
   void onInit() {
@@ -35,6 +44,32 @@ class SignUpLocationController extends GetxController {
       Get.snackbar('Error', 'An error occurred while fetching countries');
       print(e);
     }
+  }
+
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      selectedImageBytes.value = bytes; // Save the image as bytes
+    }
+  }
+
+  Future<void> registerActor() async {
+    final personalInformationController =
+        Get.find<SignUpPersonalInformationController>();
+    final signUpController = Get.find<SignUpController>();
+
+    final additionalInfo = {
+      'current_country': selectedCountry.value,
+      'available': 'true',
+      'approved': 'true',
+      'date_of_birth': birthDate,
+    };
+
+    await personalInformationController.registerUser('actor',
+        additionalInfo: additionalInfo);
   }
 
   void saveLocation() {

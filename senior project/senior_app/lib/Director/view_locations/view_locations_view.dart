@@ -23,7 +23,7 @@ class ViewLocationsView extends StatelessWidget {
               children: [
                 IconButton(
                   icon: Icon(Icons.filter_list),
-                  onPressed: () {},
+                  onPressed: () => _showFilterDialog(context),
                 ),
                 SizedBox(width: 8),
                 Expanded(
@@ -56,7 +56,7 @@ class ViewLocationsView extends StatelessWidget {
           ),
           Expanded(
             child: Obx(() {
-              final locations = controller.filteredLocations();
+              final locations = controller.filteredLocation();
               if (locations.isEmpty) {
                 return Center(child: Text("No locations found."));
               }
@@ -72,6 +72,62 @@ class ViewLocationsView extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: CustomBottomNavBar(),
+    );
+  }
+
+  void _showFilterDialog(BuildContext context) {
+    final ViewLocationsController controller = Get.find();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Building Style",
+                  ),
+                  onChanged: (value) {
+                    controller.buildingStyle.value = value;
+                  },
+                  textAlign: TextAlign.right,
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Building Type",
+                  ),
+                  onChanged: (value) {
+                    controller.buildingType.value = value;
+                  },
+                  textAlign: TextAlign.right,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("الغاء"),
+            ),
+            TextButton(
+              onPressed: () {
+                controller.fetchLocations(
+                  buildingStyle: controller.buildingStyle.value,
+                  buildingType: controller.buildingType.value,
+                );
+                Navigator.pop(context);
+              },
+              child: Text("تطبيق"),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -102,9 +158,7 @@ class ViewLocationsView extends StatelessWidget {
                   ),
                 );
               }),
-              SizedBox(
-                width: 20,
-              ),
+              SizedBox(width: 20),
               Container(
                 width: 150,
                 height: 120,

@@ -16,12 +16,6 @@ class ViewLocationDetailsView extends StatelessWidget {
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/background2.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -29,69 +23,50 @@ class ViewLocationDetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Obx(() {
-                  final mediaList = controller.location['images'] ?? [];
-                  if (mediaList.isEmpty) {
-                    return Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(
-                          image: AssetImage('assets/login.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                  if (controller.photos.isEmpty) {
+                    return Center(
+                      child: Text("No photos available."),
                     );
                   }
-
-                  return Column(
-                    children: [
-                      Container(
-                        height: 200,
-                        child: PageView.builder(
-                          controller: controller.pageController,
-                          itemCount: mediaList.length,
-                          itemBuilder: (context, index) {
-                            final media = mediaList[index];
-                            if (media.endsWith('.mp4')) {
-                              return Center(
-                                child: Icon(
-                                  Icons.videocam,
-                                  size: 100,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            } else {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                    image: NetworkImage(media),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.arrow_back),
-                            onPressed: controller.previousPage,
+                  return SizedBox(
+                    height: 200,
+                    child: PageView.builder(
+                      controller: controller.pageController,
+                      itemCount: controller.photos.length,
+                      itemBuilder: (context, index) {
+                        final photo = controller.photos[index]['photo'];
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                "http://10.0.2.2:8000$photo",
+                              ),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.arrow_forward),
-                            onPressed: controller.nextPage,
-                          ),
-                        ],
-                      ),
-                    ],
+                        );
+                      },
+                    ),
                   );
                 }),
                 SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: controller.previousPage,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.arrow_forward),
+                      onPressed: controller.nextPage,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                // Location details
                 Obx(() => Align(
                       alignment: Alignment.centerRight,
                       child: CustomText(

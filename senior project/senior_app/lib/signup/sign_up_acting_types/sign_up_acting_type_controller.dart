@@ -2,6 +2,10 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:senior_app/signup/sign_up/sign_up_controller.dart';
+import 'package:senior_app/signup/sign_up_location/sign_up_location_controller.dart';
+import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
+
 class SignUpActingTypeController extends GetxController {
   var selectedActingType = ''.obs;
   RxList<String> actingTypes = <String>[].obs;
@@ -11,6 +15,24 @@ class SignUpActingTypeController extends GetxController {
   void onInit() {
     super.onInit();
     fetchActingTypes();
+  }
+
+  Future<void> registerActor() async {
+    final personalInformationController =
+        Get.find<SignUpPersonalInformationController>();
+    final signUpController = Get.find<SignUpController>();
+
+    final additionalInfo = {
+      'current_country':
+          Get.find<SignUpLocationController>().selectedCountry.value,
+      'available': 'true',
+      'approved': 'true',
+      'date_of_birth': Get.find<SignUpLocationController>().birthDate,
+      'role_types': savedActingTypes.toList(), // Pass the selected acting types
+    };
+
+    await personalInformationController.registerUser('actor',
+        additionalInfo: additionalInfo);
   }
 
   Future<void> fetchActingTypes() async {

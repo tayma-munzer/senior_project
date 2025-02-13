@@ -49,13 +49,16 @@ class _ViewActorsViewState extends State<ViewActorsView>
               children: [
                 IconButton(
                   icon: Icon(Icons.filter_list),
-                  onPressed: () {},
+                  onPressed: () {
+                    _showFilterDialog();
+                  },
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   child: TextField(
                     onChanged: (value) {
                       controller.searchQuery.value = value;
+                      controller.fetchActors(search: value);
                     },
                     textAlign: TextAlign.right,
                     decoration: InputDecoration(
@@ -164,6 +167,109 @@ class _ViewActorsViewState extends State<ViewActorsView>
           ),
         ),
       ),
+    );
+  }
+
+  void _showFilterDialog() {
+    String? selectedMinAge;
+    String? selectedMaxAge;
+    String? selectedOrdering;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Column(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(labelText: 'نوع التمثيل'),
+                    onChanged: (value) {
+                      controller.actingType.value = value;
+                    },
+                  ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'الدولة الحالية'),
+                    onChanged: (value) {
+                      controller.livingCountry.value = value;
+                    },
+                  ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'التوافر'),
+                    onChanged: (value) {
+                      controller.available.value = value;
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(labelText: 'الحد الأدنى للعمر'),
+                    value: selectedMinAge,
+                    items: List.generate(100, (index) => index + 1)
+                        .map((age) => DropdownMenuItem(
+                              value: age.toString(),
+                              child: Text(age.toString()),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      selectedMinAge = value;
+                      controller.minAge.value = value ?? '';
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(labelText: 'الحد الأقصى للعمر'),
+                    value: selectedMaxAge,
+                    items: List.generate(100, (index) => index + 1)
+                        .map((age) => DropdownMenuItem(
+                              value: age.toString(),
+                              child: Text(age.toString()),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      selectedMaxAge = value;
+                      controller.maxAge.value = value ?? '';
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(labelText: 'الترتيب حسب العمر'),
+                    value: selectedOrdering,
+                    items: [
+                      DropdownMenuItem(value: 'age', child: Text('تصاعدي')),
+                      DropdownMenuItem(value: '-age', child: Text('تنازلي')),
+                    ],
+                    onChanged: (value) {
+                      selectedOrdering = value;
+                      controller.ordering.value = value ?? '';
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('إلغاء'),
+            ),
+            TextButton(
+              onPressed: () {
+                controller.fetchActors(
+                  actingType: controller.actingType.value,
+                  livingCountry: controller.livingCountry.value,
+                  available: controller.available.value,
+                  minAge: controller.minAge.value,
+                  maxAge: controller.maxAge.value,
+                  ordering: controller.ordering.value,
+                );
+                Navigator.of(context).pop();
+              },
+              child: Text('تطبيق'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

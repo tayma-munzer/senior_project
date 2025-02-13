@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/signup/sign_up_acting_types/sign_up_acting_type_controller.dart';
+import 'package:senior_app/signup/sign_up_choices/sign_up_choices_controller.dart';
+import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
 
 class SignUpController extends GetxController {
   final emailController = TextEditingController();
@@ -17,6 +20,20 @@ class SignUpController extends GetxController {
       email = emailController.text;
       password = passwordController.text;
       print('Email: $email, Password: $password');
+    }
+  }
+
+  Future<void> registerUser() async {
+    final personalInformationController =
+        Get.find<SignUpPersonalInformationController>();
+    final choiceController = Get.find<SignUpChoicesController>();
+
+    final role = choiceController.getRole();
+
+    if (role == 'actor') {
+      await Get.find<SignUpActingTypeController>().registerActor();
+    } else {
+      await personalInformationController.registerUser(role);
     }
   }
 
