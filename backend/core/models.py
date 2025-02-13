@@ -149,7 +149,11 @@ class sync_lips(models.Model):
     generated_video = models.FileField(upload_to='sync_lips_output/')
     
 
-
+class camera_location(models.Model):
+    director = models.ForeignKey(User,on_delete=models.CASCADE)
+    video = models.FileField(upload_to='camera_location_input/')
+    generated_video = models.FileField(upload_to='camera_location_output/')
+    
 
 
 

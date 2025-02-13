@@ -330,6 +330,26 @@ def sceneactors(request, pk):
                 serializer = SceneActorsSerializer(data=actor)
                 if serializer.is_valid():
                     serializer.save()
+                    channel_layer = get_channel_layer()
+                    scene_number = scene_instance.scene_number
+                    start_date = scene_instance.start_date
+                    end_date = scene_instance.end_date
+                    artwork_name = scene_instance.artwork.title
+                    actor_id = actor['actor_id']
+                    notification_message = '{artwork_name} في العمل {scene_number} للمشهد رقم {end_date} إلى {start_date} هل يناسبك التصوير من'.format(
+                        artwork_name=artwork_name,
+                        scene_number=scene_number,
+                        end_date=end_date,
+                        start_date=start_date
+                    )
+                    async_to_sync(channel_layer.group_send)(
+                        f'notifications_{actor_id}',
+                        {
+                            'type': 'send_notification',
+                            'notification':notification_message,
+                            'title':'scene_filming_time_request'
+                        }
+                    )
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
             return Response({'message': 'actors added successfully to scene.'}, status=status.HTTP_201_CREATED)
@@ -893,6 +913,23 @@ def booking_location(request,id):
         for date in dates :
             booking_dates.objects.get(location=location,date=date).delete()
         return Response(status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def cameraLocation(request):    
+    inputvideo = request.FILES.get('file')
+    endpoint = 'https://0aa9-34-126-148-53.ngrok-free.app/process-video/'
+    files = {'file': inputvideo}
+    response = requests.post(endpoint, files=files)
+    if response.status_code == 200:
+        # video_content = response.content
+        video = camera_location()
+        video.director=request.user
+        video.video = inputvideo
+        outputfilename = 'video_{}.mp4'.format(os.path.basename(endpoint))
+        video.generated_video.save(outputfilename, ContentFile(response.content), save=True)
+        serializer = CameraLocationSerializer(video)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 ## to make notifications in views 
     # channel_layer = get_channel_layer()

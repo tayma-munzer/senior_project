@@ -169,3 +169,8 @@ class BookingDatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = booking_dates
         fields = ['id','location','location_id','date'] 
+
+class CameraLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = camera_location
+        fields = ['id','director','video','generated_video'] 
