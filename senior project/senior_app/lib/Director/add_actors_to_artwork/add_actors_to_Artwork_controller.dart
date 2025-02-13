@@ -9,6 +9,7 @@ class AddActorsToArtworkController extends GetxController {
   var userCountry = ''.obs;
   var selectedActorIds = <int>[].obs;
   var roleTypes = <Map>[].obs;
+
   var selectedRoles = <int, int>{}.obs;
 
   @override
@@ -157,9 +158,6 @@ class AddActorsToArtworkController extends GetxController {
         Get.snackbar('Error', 'Failed to add actors to artwork');
         print("Response: ${response.body}");
       }
-    } catch (e) {
-      Get.snackbar('Error', 'An error occurred while submitting actors');
-      print(e);
-    }
+    } catch (e) {}
   }
 }

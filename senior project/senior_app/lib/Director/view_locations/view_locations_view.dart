@@ -102,6 +102,21 @@ class ViewLocationsView extends StatelessWidget {
                   ),
                 );
               }),
+              SizedBox(
+                width: 20,
+              ),
+              Container(
+                width: 150,
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        "http://10.0.2.2:8000${location['photo'] ?? '/media/images/default_location.jpg'}"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -114,16 +129,16 @@ class ViewLocationsView extends StatelessWidget {
                     ),
                     Text(
                       " ${location['building_style']?['building_style'] ?? 'Unknown Style'} : نوع البناء",
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 16),
                     ),
                     Text(
                       "${location['detailed_address'] ?? 'No description'}:عنوان البناء",
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 16),
                       textAlign: TextAlign.right,
                     ),
                     Text(
                       "${location['building_owner']['first_name']} ${location['building_owner']['last_name']}: المالك",
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 16),
                     ),
                   ],
                 ),

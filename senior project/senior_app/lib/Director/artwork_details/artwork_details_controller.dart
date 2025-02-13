@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:senior_app/auth_controller.dart';
 
 class ArtworkDetailsController extends GetxController {
@@ -29,12 +28,10 @@ class ArtworkDetailsController extends GetxController {
         print("Error: User token is null");
         return;
       }
-
       var response = await http.get(
         Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/actors'),
         headers: {'Authorization': 'Token $token'},
       );
-
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         actors.value = data.map((item) {
@@ -62,16 +59,15 @@ class ArtworkDetailsController extends GetxController {
         print("Error: User token is null");
         return;
       }
-
       var response = await http.get(
         Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/scenes'),
         headers: {'Authorization': 'Token $token'},
       );
-
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         scenes.value = data.map((item) {
           return Scene(
+            id: item['id'],
             title: item['title'],
           );
         }).toList();
@@ -89,10 +85,6 @@ class ArtworkDetailsController extends GetxController {
     actors.remove(actor);
   }
 
-  void addScene(String title) {
-    scenes.add(Scene(title: title));
-  }
-
   void deleteScene(Scene scene) {
     scenes.remove(scene);
   }
@@ -102,12 +94,11 @@ class Actor {
   final int id;
   final String firstName;
   final String lastName;
-
   Actor({required this.id, required this.firstName, required this.lastName});
 }
 
 class Scene {
+  final int id; // Ensure 'id' is present
   final String title;
-
-  Scene({required this.title});
+  Scene({required this.id, required this.title});
 }

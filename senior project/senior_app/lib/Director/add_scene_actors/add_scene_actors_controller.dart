@@ -4,20 +4,18 @@ import 'dart:convert';
 import 'package:senior_app/auth_controller.dart';
 
 class AddSceneActorsController extends GetxController {
-  // This will store the list of actors fetched from the API.
   var actors = <Map<String, dynamic>>[].obs;
-  // A list to track the selection state for each actor.
   var selectedActors = <bool>[].obs;
-  // A list to store the maps of the actors that are selected.
   var selectedActorList = <Map<String, dynamic>>[].obs;
 
-  // For this example, the artwork ID is 26.
-  // In a dynamic setup, you could retrieve this via Get.arguments or another method.
-  int artworkId = 26;
+  late int artworkId;
+  late int sceneId;
 
   @override
   void onInit() {
     super.onInit();
+    artworkId = Get.arguments['artworkId'];
+    sceneId = Get.arguments['sceneId'];
     fetchActors();
   }
 
@@ -28,6 +26,11 @@ class AddSceneActorsController extends GetxController {
         Get.snackbar('Error', 'Token is missing. Please log in again.');
         return;
       }
+
+      actors.clear();
+      selectedActors.clear();
+      selectedActorList.clear();
+
       final response = await http.get(
         Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/actors'),
         headers: {
@@ -35,30 +38,38 @@ class AddSceneActorsController extends GetxController {
           'Content-Type': 'application/json',
         },
       );
+
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
-        // Transform each API actor object into a map that fits our UI.
+
+        if (jsonResponse.isEmpty) {
+          Get.snackbar('Info', 'لا يوجد ممثلين للاختيار منهم');
+          return;
+        }
+
         actors.value = jsonResponse.map<Map<String, dynamic>>((item) {
+          int actorId = item['actor']['id'];
           String firstName = item['actor']['first_name'] ?? '';
           String lastName = item['actor']['last_name'] ?? '';
           String name = "$firstName $lastName";
           String type = item['role_type']?['role_type'] ?? '';
-          // Here, we use the date_of_birth as a placeholder for "age"
           String dob = item['actor']['additional_info']?['date_of_birth'] ?? '';
-          // Get the personal image; if it starts with '/', prepend the server URL.
           String image = item['actor']['additional_info']?['personal_image'] ??
               'assets/login.png';
+
           if (image.startsWith('/')) {
-            image = "http://10.0.2.2:8000" + image;
+            image = "http://10.0.2.2:8000$image";
           }
+
           return {
+            "actor_id": actorId,
             "name": name,
             "age": dob,
             "type": type,
             "image": image,
           };
         }).toList();
-        // Initialize the selection list with a false value for each fetched actor.
+
         selectedActors.value =
             List<bool>.generate(actors.length, (index) => false);
       } else {
@@ -70,25 +81,63 @@ class AddSceneActorsController extends GetxController {
     }
   }
 
+  void resetScene() {
+    sceneId = sceneId;
+    selectedActorList.clear();
+    selectedActors.clear();
+    actors.clear();
+  }
+
   void toggleSelection(int index, bool value) {
     selectedActors[index] = value;
 
     if (value) {
       selectedActorList.add(actors[index]);
     } else {
-      selectedActorList
-          .removeWhere((actor) => actor['name'] == actors[index]['name']);
+      selectedActorList.removeWhere(
+          (actor) => actor['actor_id'] == actors[index]['actor_id']);
     }
+
+    update();
   }
 
-  void submitScene() {
-    print("Selected Actors:");
+  Future<void> submitScene() async {
     if (selectedActorList.isEmpty) {
-      print("No actors selected.");
-    } else {
-      for (var actor in selectedActorList) {
-        print(actor['name']);
+      Get.snackbar('خطأ', 'يجب اختيار ممثلين للمشهد.');
+      return;
+    }
+
+    try {
+      String? token = await AuthController().getToken();
+      if (token == null || token.isEmpty) {
+        Get.snackbar('Error', 'Token is missing. Please log in again.');
+        return;
       }
+
+      List<Map<String, int>> actorIds = selectedActorList.map((actor) {
+        return {"actor_id": actor["actor_id"] as int};
+      }).toList();
+
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8000/scene/$sceneId/actors'),
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"actors": actorIds}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var responseData = json.decode(response.body);
+        Get.snackbar('نجاح', responseData['message']);
+        print(responseData['message']);
+      } else {
+        Get.snackbar('خطأ', 'فشل في إضافة الممثلين إلى المشهد.');
+        print('Error: ${response.body}');
+      }
+    } catch (e) {
+      print("Error submitting scene actors: $e");
+      Get.snackbar('خطأ', 'حدث خطأ أثناء إرسال البيانات.');
     }
   }
 

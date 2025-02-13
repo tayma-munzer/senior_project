@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/Director/actor_details/actor_details_controller.dart';
 import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_controller.dart';
+import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_Artwork_controller.dart';
 import 'package:senior_app/colors.dart';
 import 'package:senior_app/Director/view_actors/view_actors_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
@@ -12,7 +13,7 @@ import 'package:intl/intl.dart';
 
 class ActorArtworkDetailsView extends StatelessWidget {
   final ActorArtworkDetailsController controller = Get.find();
-  final ViewActorsController actorsController = Get.find();
+  final AddActorsToArtworkController actorsController = Get.find();
 
   @override
   Widget build(BuildContext context) {

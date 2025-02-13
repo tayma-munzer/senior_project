@@ -4,6 +4,9 @@ import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details
 import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_view.dart';
 import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_binding.dart';
 import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_view.dart';
+import 'package:senior_app/Director/scene_details/edit_scene_details.dart';
+import 'package:senior_app/Director/scene_details/scene_details_binding.dart';
+import 'package:senior_app/Director/scene_details/scene_details_view.dart';
 import 'package:senior_app/Location%20Owner/add_video_to_filming_location/add_video_to_filming_location_binding.dart';
 import 'package:senior_app/Location%20Owner/add_video_to_filming_location/add_video_to_filming_location_view.dart';
 import 'package:senior_app/auth_controller.dart';
@@ -23,8 +26,8 @@ import 'package:senior_app/Director/add_days/add_days_binding.dart';
 import 'package:senior_app/Director/add_days/add_days_view.dart';
 import 'package:senior_app/Director/add_location/add_location_binding.dart';
 import 'package:senior_app/Director/add_location/add_location_view.dart';
-import 'package:senior_app/Director/add_scene/add_scene_actors_binding.dart';
-import 'package:senior_app/Director/add_scene/add_scene_actors_view.dart';
+import 'package:senior_app/Director/add_scene_actors/add_scene_actors_binding.dart';
+import 'package:senior_app/Director/add_scene_actors/add_scene_actors_view.dart';
 import 'package:senior_app/Director/artwork_details/artwork_details_bindings.dart';
 import 'package:senior_app/Director/artwork_details/artwork_details_view.dart';
 import 'package:senior_app/Director/director_home_page/director-home_binding.dart';
@@ -228,6 +231,20 @@ class MyApp extends StatelessWidget {
           name: '/addlocationtoartwork',
           page: () => AddLocationView(),
           binding: AddLocationBinding(),
+        ),
+        GetPage(
+          name: '/addsceneactors',
+          page: () => AddSceneActorsView(),
+          binding: AddSceneActorsBinding(),
+        ),
+        GetPage(
+          name: '/getscenedetails',
+          page: () => SceneDetailsView(),
+          binding: SceneDetailsBinding(),
+        ),
+        GetPage(
+          name: '/editSceneDetails',
+          page: () => EditSceneDetails(),
         ),
       ],
     );

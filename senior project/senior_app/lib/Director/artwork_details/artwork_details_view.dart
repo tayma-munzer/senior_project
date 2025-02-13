@@ -4,8 +4,6 @@ import 'package:senior_app/colors.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_text.dart';
-import 'package:senior_app/widgets/custom_textfield.dart';
-import 'package:senior_app/widgets/custom_button.dart';
 import 'artwork_details_controller.dart';
 
 class ArtworkDetailsView extends StatelessWidget {
@@ -43,7 +41,8 @@ class ArtworkDetailsView extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.add),
                     onPressed: () {
-                      Get.toNamed('/addactors');
+                      Get.toNamed('/addactorstoartwork',
+                          arguments: {'artworkId': controller.artworkId});
                     },
                   ),
                   CustomText(
@@ -98,6 +97,7 @@ class ArtworkDetailsView extends StatelessWidget {
                 );
               }),
               SizedBox(height: 20),
+              // Scenes Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -129,14 +129,20 @@ class ArtworkDetailsView extends StatelessWidget {
                 }
                 return Column(
                   children: controller.scenes.map((scene) {
-                    return Card(
-                      color: Colors.grey[300],
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomText(
-                          text: scene.title,
-                          fontSize: 16,
-                          alignment: Alignment.centerRight,
+                    return GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/getscenedetails',
+                            arguments: {'scene_id': scene.id});
+                      },
+                      child: Card(
+                        color: Colors.grey[300],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomText(
+                            text: scene.title,
+                            fontSize: 16,
+                            alignment: Alignment.centerRight,
+                          ),
                         ),
                       ),
                     );
