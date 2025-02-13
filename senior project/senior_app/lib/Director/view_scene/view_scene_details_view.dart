@@ -29,7 +29,6 @@ class ViewSceneDetailsView extends StatelessWidget {
               alignment: Alignment.topRight,
             ),
             SizedBox(height: 20),
-
             CustomText(
               text: "الممثلين المختارين:",
               fontSize: 20,
@@ -88,7 +87,6 @@ class ViewSceneDetailsView extends StatelessWidget {
               },
             ),
             SizedBox(height: 20),
-
             CustomText(
               text:
                   "الموقع المختار: ${selectedLocation['name'] ?? 'موقع غير متوفر'}",
@@ -109,8 +107,6 @@ class ViewSceneDetailsView extends StatelessWidget {
               alignment: Alignment.topRight,
             ),
             SizedBox(height: 20),
-
-            // Display Calendar
             CustomText(
               text: "التواريخ المختارة:",
               fontSize: 20,

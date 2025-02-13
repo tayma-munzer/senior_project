@@ -81,6 +81,13 @@ class AddSceneActorsController extends GetxController {
     }
   }
 
+  void resetScene() {
+    sceneId = sceneId;
+    selectedActorList.clear();
+    selectedActors.clear();
+    actors.clear();
+  }
+
   void toggleSelection(int index, bool value) {
     selectedActors[index] = value;
 

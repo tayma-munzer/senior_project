@@ -35,7 +35,7 @@ class LoginController extends GetxController {
       if (profile != null && profile.containsKey('role')) {
         final role = profile['role'];
         if (role == 'actor') {
-          Get.offNamed('/actorprofile');
+          Get.offNamed('/actorHome');
         } else if (role == 'director') {
           Get.offNamed('/directorHome');
         } else if (role == 'location_owner') {

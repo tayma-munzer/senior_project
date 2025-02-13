@@ -129,14 +129,20 @@ class ArtworkDetailsView extends StatelessWidget {
                 }
                 return Column(
                   children: controller.scenes.map((scene) {
-                    return Card(
-                      color: Colors.grey[300],
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomText(
-                          text: scene.title,
-                          fontSize: 16,
-                          alignment: Alignment.centerRight,
+                    return GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/getscenedetails',
+                            arguments: {'scene_id': scene.id});
+                      },
+                      child: Card(
+                        color: Colors.grey[300],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomText(
+                            text: scene.title,
+                            fontSize: 16,
+                            alignment: Alignment.centerRight,
+                          ),
                         ),
                       ),
                     );

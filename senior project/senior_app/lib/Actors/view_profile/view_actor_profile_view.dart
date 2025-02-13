@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_app/colors.dart';
+import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'view_actor_profile_controller.dart';
@@ -12,9 +13,7 @@ class ViewActorProfileView extends StatelessWidget {
     final controller = Get.find<ViewActorProfileController>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Actor Profile'),
-      ),
+      appBar: CustomAppBar(),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(child: CircularProgressIndicator());

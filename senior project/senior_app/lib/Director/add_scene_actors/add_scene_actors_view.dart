@@ -97,6 +97,7 @@ class AddSceneActorsView extends StatelessWidget {
               text: "التالي",
               onPressed: () {
                 controller.submitScene();
+                Get.toNamed('/directorHome');
               },
             ),
           ],

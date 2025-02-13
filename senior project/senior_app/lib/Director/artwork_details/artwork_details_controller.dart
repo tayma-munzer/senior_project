@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:senior_app/auth_controller.dart';
 
 class ArtworkDetailsController extends GetxController {
@@ -68,6 +67,7 @@ class ArtworkDetailsController extends GetxController {
         List<dynamic> data = json.decode(response.body);
         scenes.value = data.map((item) {
           return Scene(
+            id: item['id'],
             title: item['title'],
           );
         }).toList();
@@ -85,10 +85,6 @@ class ArtworkDetailsController extends GetxController {
     actors.remove(actor);
   }
 
-  void addScene(String title) {
-    scenes.add(Scene(title: title));
-  }
-
   void deleteScene(Scene scene) {
     scenes.remove(scene);
   }
@@ -102,6 +98,7 @@ class Actor {
 }
 
 class Scene {
+  final int id; // Ensure 'id' is present
   final String title;
-  Scene({required this.title});
+  Scene({required this.id, required this.title});
 }

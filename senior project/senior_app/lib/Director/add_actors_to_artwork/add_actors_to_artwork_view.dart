@@ -14,11 +14,10 @@ class AddActorsToArtworkView extends StatefulWidget {
 
 class _AddActorsToArtworkViewState extends State<AddActorsToArtworkView> {
   final AddActorsToArtworkController controller = Get.find();
-  String? errorText; // For showing error messages
+  String? errorText;
 
   @override
   Widget build(BuildContext context) {
-    // Retrieve the artwork ID passed from the previous screen.
     final artworkId = Get.arguments;
     return Scaffold(
       appBar: CustomAppBar(),
@@ -67,7 +66,6 @@ class _AddActorsToArtworkViewState extends State<AddActorsToArtworkView> {
               );
             }),
           ),
-          // Show error message if no actor has been selected
           if (errorText != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -98,7 +96,6 @@ class _AddActorsToArtworkViewState extends State<AddActorsToArtworkView> {
       String roleName = "";
 
       if (selectedRoleId != null) {
-        // Use an empty map as fallback instead of null.
         var role = controller.roleTypes.firstWhere(
           (role) => role['id'] == selectedRoleId,
           orElse: () => <String, dynamic>{},
@@ -205,7 +202,6 @@ class _AddActorsToArtworkViewState extends State<AddActorsToArtworkView> {
                   return ListTile(
                     title: Text(roleType['role_type']),
                     onTap: () {
-                      // Save the role by passing the role's id.
                       controller.selectRoleForActor(
                           actor['id'], roleType['id']);
                       Navigator.pop(context);
@@ -221,7 +217,6 @@ class _AddActorsToArtworkViewState extends State<AddActorsToArtworkView> {
   }
 
   void _submitSelectedActors(dynamic artworkId) async {
-    // If no actor (and therefore no role) is selected, show the error message.
     if (controller.selectedRoles.isEmpty) {
       setState(() {
         errorText = "يجب اختيار ممثل واحد على الاقل";

@@ -4,6 +4,7 @@ import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details
 import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_view.dart';
 import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_binding.dart';
 import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_view.dart';
+import 'package:senior_app/Director/scene_details/edit_scene_details.dart';
 import 'package:senior_app/Director/scene_details/scene_details_binding.dart';
 import 'package:senior_app/Director/scene_details/scene_details_view.dart';
 import 'package:senior_app/Location%20Owner/add_video_to_filming_location/add_video_to_filming_location_binding.dart';
@@ -240,6 +241,10 @@ class MyApp extends StatelessWidget {
           name: '/getscenedetails',
           page: () => SceneDetailsView(),
           binding: SceneDetailsBinding(),
+        ),
+        GetPage(
+          name: '/editSceneDetails',
+          page: () => EditSceneDetails(),
         ),
       ],
     );
