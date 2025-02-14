@@ -87,7 +87,9 @@ def artwork_detail(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = ArtworkSerializer(artwork_detail, data=request.data)
+        data = request.data
+        data['director_id']=request.user.id
+        serializer = ArtworkSerializer(artwork_detail, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
