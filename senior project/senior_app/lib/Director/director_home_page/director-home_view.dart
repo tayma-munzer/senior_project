@@ -145,10 +145,10 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: CustomText(
-                  text: artwork.done == 0 ? "منتهي" : "غير مكتمل",
+                  text: artwork.done == 1 ? "منتهي" : "غير مكتمل",
                   fontSize: 22,
                   alignment: Alignment.centerRight,
-                  color: artwork.done == 0 ? Colors.green : redColor,
+                  color: artwork.done == 1 ? Colors.green : redColor,
                 ),
               ),
             ),

@@ -35,23 +35,10 @@ class SignUpLocationView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 20),
-                Obx(() {
-                  if (controller.selectedImageBytes.value != null) {
-                    return CircleAvatar(
-                      radius: 80,
-                      backgroundImage:
-                          MemoryImage(controller.selectedImageBytes.value!),
-                    );
-                  } else {
-                    return IconButton(
-                      icon: Icon(Icons.camera_alt, size: 50),
-                      onPressed: () async {
-                        await controller.pickImage();
-                      },
-                    );
-                  }
-                }),
+                Image.asset(
+                  'assets/location.webp',
+                  width: 300,
+                ),
                 SizedBox(height: 20),
                 Obx(() {
                   if (controller.countries.isEmpty) {
@@ -107,14 +94,14 @@ class SignUpLocationView extends StatelessWidget {
                           ),
                         ),
                         onTap: () => controller.selectBirthDate(context),
-                        validator: controller.validateBirthDate,
+                        validator: (value) =>
+                            controller.validateBirthDate(value),
                       ),
                       SizedBox(height: 20),
                       CustomButton(
-                        text: 'التالي',
+                        text: 'تأكيد',
                         onPressed: () {
-                          controller
-                              .saveLocation(); // Save location, birthdate, and image bytes
+                          controller.saveLocation();
                           if (choiceController.selectedChoice.value == 'ممثل') {
                             Get.toNamed('/signupactingtypes');
                           } else {

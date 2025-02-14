@@ -39,8 +39,8 @@ class SignUpPersonalInformationController extends GetxController {
     };
 
     if (role == 'actor' && additionalInfo != null) {
-      body['additional_info'] = json.encode(additionalInfo);
-      ; // Correctly assign the map
+      body['additional_info'] =
+          json.encode(additionalInfo); // Encode the map as JSON
     }
 
     try {

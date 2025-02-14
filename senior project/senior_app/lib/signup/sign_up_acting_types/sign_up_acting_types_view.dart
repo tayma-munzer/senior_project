@@ -47,14 +47,13 @@ class SignUpActingTypeView extends StatelessWidget {
                           : controller.selectedActingType.value,
                       hint: Text("  انواع التمثيل"),
                       items: controller.actingTypes
-                          .map<DropdownMenuItem<String>>(
-                              (Map<String, dynamic> value) {
+                          .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
-                          value: value['type'],
+                          value: value,
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              value['type'],
+                              value,
                               textDirection: TextDirection.rtl,
                             ),
                           ),
@@ -62,10 +61,7 @@ class SignUpActingTypeView extends StatelessWidget {
                       }).toList(),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          final selectedType = controller.actingTypes
-                              .firstWhere(
-                                  (element) => element['type'] == newValue);
-                          controller.saveActingType(selectedType['id']);
+                          controller.saveActingType(newValue);
                           controller.selectedActingType.value = newValue;
                         }
                       },
@@ -111,7 +107,8 @@ class SignUpActingTypeView extends StatelessWidget {
                   text: 'تأكيد',
                   onPressed: () {
                     if (controller.savedActingTypes.isNotEmpty) {
-                      Get.find<SignUpController>().registerUser();
+                      Get.find<SignUpController>()
+                          .registerUser(); // Call registerUser
                     } else {
                       Get.snackbar(
                         "خطا",

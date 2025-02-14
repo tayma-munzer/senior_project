@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/Director/artwork_details/editartworkView.dart';
 import 'package:senior_app/colors.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
@@ -154,6 +155,63 @@ class ArtworkDetailsView extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Show the popup menu
+          showMenu(
+            context: context,
+            position: RelativeRect.fromLTRB(
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height,
+              0,
+              0,
+            ),
+            items: [
+              PopupMenuItem(
+                child: Text("حذف العمل الفني"),
+                value: "delete",
+              ),
+              PopupMenuItem(
+                child: Text("تعديل العمل الفني"),
+                value: "edit",
+              ),
+            ],
+          ).then((value) {
+            if (value == "delete") {
+              // Handle delete artwork logic
+              _deleteArtwork(controller);
+            } else if (value == "edit") {
+              // Handle edit artwork logic
+              _editArtwork(controller);
+            }
+          });
+        },
+        child: Icon(Icons.settings, color: Colors.white),
+        backgroundColor: primaryColor,
+      ),
+    );
+  }
+
+  void _deleteArtwork(ArtworkDetailsController controller) {
+    // Show confirmation dialog
+    Get.defaultDialog(
+      title: "حذف العمل الفني",
+      middleText: "هل أنت متأكد من حذف هذا العمل الفني؟",
+      textConfirm: "نعم",
+      textCancel: "لا",
+      onConfirm: () async {
+        await controller.deleteArtwork();
+      },
+    );
+  }
+
+  void _editArtwork(ArtworkDetailsController controller) {
+    Get.to(
+      () => EditArtworkView(),
+      arguments: {
+        'artworkId': controller.artworkId,
+        'artworkTitle': controller.artworkTitle.value,
+      },
     );
   }
 }
