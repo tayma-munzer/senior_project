@@ -168,8 +168,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/directorpersonalaccount',
-          page: () => DirectorPersonalProfileView(),
-          binding: DirectorPersonalProfileBinding(),
+          page: () => DirectorProfileView(),
+          binding: DirectorProfileBinding(),
         ),
         GetPage(
           name: '/locationownerprofile',

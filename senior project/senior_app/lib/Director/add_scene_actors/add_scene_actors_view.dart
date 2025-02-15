@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_button.dart';
 import 'add_scene_actors_controller.dart';
@@ -14,6 +15,7 @@ class AddSceneActorsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

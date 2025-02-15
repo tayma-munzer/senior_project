@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:senior_app/Director/artwork_details/artwork_details_controller.dart';
 import 'package:senior_app/colors.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
@@ -48,6 +49,7 @@ class _EditArtworkViewState extends State<EditArtworkView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

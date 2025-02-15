@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_button.dart';
@@ -19,6 +20,7 @@ class AddDaysView extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

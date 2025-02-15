@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
 import 'package:senior_app/widgets/custom_button.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_textfield.dart';
 import 'add_location_controller.dart';
@@ -18,6 +19,7 @@ class AddLocationView extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottomappbar_actor.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_button.dart';
 import 'package:senior_app/widgets/custom_textfield.dart';
@@ -15,6 +16,7 @@ class ChromaView extends GetView<ChromaController> {
 
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

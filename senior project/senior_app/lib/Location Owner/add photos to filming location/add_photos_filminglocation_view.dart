@@ -7,6 +7,13 @@ class AddPhotoFilmingLocationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AddPhotoFilmingLocationController>();
+    final locationId =
+        Get.arguments as int?; // Retrieve locationId from arguments
+
+    // Set the locationId in the controller
+    if (locationId != null) {
+      controller.setLocationId(locationId);
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text("إضافة صور للموقع التصويري")),
@@ -75,7 +82,8 @@ class AddPhotoFilmingLocationView extends StatelessWidget {
             SizedBox(height: 20),
             CustomButton(
               text: 'التالي',
-              onPressed: () => controller.uploadImage(1),
+              onPressed: controller
+                  .uploadImage, // Call uploadImage method without parameters
             ),
           ],
         ),

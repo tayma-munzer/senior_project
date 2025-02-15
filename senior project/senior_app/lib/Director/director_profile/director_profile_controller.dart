@@ -1,79 +1,88 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/auth_controller.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
-class DirectorPersonalProfileController extends GetxController {
-  var isLoading = true.obs;
-  var userData = {}.obs;
+class DirectorProfileController extends GetxController {
+  final AuthController authController = Get.find<AuthController>();
+
+  RxString firstName = ''.obs;
+  RxString lastName = ''.obs;
+  RxString email = ''.obs;
+  RxString phoneNumber = ''.obs;
+  RxString landlineNumber = ''.obs;
+  RxBool isLoading = true.obs;
+  RxBool isEditing = false.obs;
+
+  // Text controllers for editing
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final landlineNumberController = TextEditingController();
 
   @override
   void onInit() {
     super.onInit();
-    fetchProfile();
+    fetchUserProfile();
   }
 
-  Future<void> fetchProfile() async {
-    isLoading.value = true;
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('auth_token');
+  Future<void> fetchUserProfile() async {
+    String? token = await authController.getToken();
+    if (token != null) {
+      isLoading.value = true;
+      final userData = await authController.fetchUserProfile(token);
+      if (userData != null) {
+        firstName.value = userData['first_name'] ?? '';
+        lastName.value = userData['last_name'] ?? '';
+        email.value = userData['email'] ?? '';
+        phoneNumber.value = userData['phone_number'].toString();
+        landlineNumber.value = userData['landline_number'].toString();
 
-      if (token == null) {
-        throw Exception('No token found. Please login again.');
+        _updateTextFields();
       }
-
-      final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000/profile'),
-        headers: {'Authorization': 'Token $token'},
-      );
-
-      if (response.statusCode == 200) {
-        userData.value = json.decode(response.body);
-      } else {
-        print("Error fetching profile: ${response.body}");
-      }
-    } catch (e) {
-      print("Error: $e");
-    } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> updateProfile(String field, dynamic value) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('auth_token');
+  void _updateTextFields() {
+    firstNameController.text = firstName.value;
+    lastNameController.text = lastName.value;
+    emailController.text = email.value;
+    phoneNumberController.text = phoneNumber.value;
+    landlineNumberController.text = landlineNumber.value;
+  }
 
-      if (token == null) {
-        throw Exception('No token found. Please login again.');
-      }
+  void toggleEditing() {
+    isEditing.value = !isEditing.value;
+    if (isEditing.value) {
+      _updateTextFields(); // Ensure text fields have up-to-date data
+    }
+  }
 
-      final updatedData = Map<String, dynamic>.from(userData);
-      updatedData[field] = value;
+  Future<void> updateUserProfile() async {
+    String? token = await authController.getToken();
+    if (token == null) return;
 
-      print('Updated Data: $updatedData');
+    final response = await http.put(
+      Uri.parse("http://10.0.2.2:8000/profile"),
+      headers: {
+        "Authorization": "Token $token",
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode({
+        "first_name": firstNameController.text,
+        "last_name": lastNameController.text,
+        "email": emailController.text,
+        "phone_number": int.tryParse(phoneNumberController.text) ?? 0,
+        "landline_number": int.tryParse(landlineNumberController.text) ?? 0
+      }),
+    );
 
-      final response = await http.put(
-        Uri.parse('http://10.0.2.2:8000/profile'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token $token',
-        },
-        body: json.encode(updatedData),
-      );
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        userData.value = json.decode(response.body);
-        print('Profile updated successfully: ${userData.value}');
-      } else {
-        print("Error updating profile: ${response.body}");
-      }
-    } catch (e) {
-      print("Error: $e");
+    if (response.statusCode == 200) {
+      fetchUserProfile();
+      toggleEditing();
     }
   }
 }

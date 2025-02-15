@@ -56,7 +56,8 @@ class ViewActorsController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        String utf8ResponseBody = utf8.decode(response.bodyBytes);
+        final List<dynamic> data = jsonDecode(utf8ResponseBody);
 
         actorsList.assignAll(data.map((actor) {
           final country = actor['additional_info']['current_country']

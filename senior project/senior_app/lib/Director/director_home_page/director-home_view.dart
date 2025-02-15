@@ -5,6 +5,7 @@ import 'package:senior_app/colors.dart';
 import 'package:senior_app/Director/director_home_page/artwork.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 
 class DirectorHomeView extends StatefulWidget {
@@ -45,6 +46,7 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Obx(() {
         if (controller.artworks.isEmpty) {
           return Center(child: CircularProgressIndicator());

@@ -40,6 +40,9 @@ class DirectorHomeController extends GetxController {
 
       if (response.statusCode == 200) {
         print('Response Body: ${response.body}');
+        String utf8ResponseBody = utf8.decode(response.bodyBytes);
+        final List<dynamic> data = jsonDecode(utf8ResponseBody);
+
         List jsonResponse = json.decode(response.body);
         artworks.value =
             jsonResponse.map((artwork) => Artwork.fromJson(artwork)).toList();

@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:senior_app/Director/director_profile/director_profile_controller.dart';
 
-class DirectorPersonalProfileBinding extends Bindings {
+class DirectorProfileBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => DirectorPersonalProfileController());
+    Get.lazyPut<DirectorProfileController>(() => DirectorProfileController());
   }
 }

@@ -4,6 +4,7 @@ import 'package:senior_app/Director/artwork_details/editartworkView.dart';
 import 'package:senior_app/colors.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'artwork_details_controller.dart';
 
@@ -22,6 +23,7 @@ class ArtworkDetailsView extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

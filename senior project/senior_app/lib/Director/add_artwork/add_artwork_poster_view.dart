@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:senior_app/Director/add_artwork/add_artwork_poster_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottomappbar_actor.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_button.dart';
 import 'package:senior_app/widgets/custom_textfield.dart';
@@ -14,6 +15,7 @@ class AddArtworkPosterView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

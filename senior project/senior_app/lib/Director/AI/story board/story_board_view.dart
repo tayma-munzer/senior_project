@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:senior_app/Director/AI/story%20board/story_board_controller.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottomappbar_actor.dart';
+import 'package:senior_app/widgets/custom_drawer.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_button.dart';
 import 'package:senior_app/widgets/custom_textfield.dart';
@@ -15,6 +16,7 @@ class StoryBoardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(

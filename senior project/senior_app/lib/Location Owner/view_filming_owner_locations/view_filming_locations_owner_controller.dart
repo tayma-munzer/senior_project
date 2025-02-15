@@ -19,7 +19,11 @@ class ViewOwnerFilmingLocationController extends GetxController {
 
     if (response.statusCode == 200) {
       try {
-        final decodedData = json.decode(response.body);
+        // Decode the response body using UTF-8 to handle Arabic characters
+        String utf8ResponseBody = utf8.decode(response.bodyBytes);
+        // Parse the decoded JSON string
+        final decodedData = json.decode(utf8ResponseBody);
+
         if (decodedData is List) {
           locations.value = decodedData;
         } else if (decodedData is Map && decodedData.containsKey('data')) {
@@ -29,6 +33,7 @@ class ViewOwnerFilmingLocationController extends GetxController {
         }
       } catch (e) {
         print('Error decoding JSON: $e');
+        Get.snackbar('Error', 'Failed to decode response');
       }
     } else {
       Get.snackbar('Error', 'Failed to load locations');

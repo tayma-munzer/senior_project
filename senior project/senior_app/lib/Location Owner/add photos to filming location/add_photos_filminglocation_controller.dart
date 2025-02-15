@@ -11,6 +11,12 @@ class AddPhotoFilmingLocationController extends GetxController {
   Rx<File?> selectedImage = Rx<File?>(null);
   final ImagePicker _picker = ImagePicker();
   var isLoading = false.obs;
+  late final int locationId;
+
+  // Initialize the controller with locationId
+  void setLocationId(int id) {
+    locationId = id;
+  }
 
   Future<void> pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -19,7 +25,7 @@ class AddPhotoFilmingLocationController extends GetxController {
     }
   }
 
-  Future<void> uploadImage(int locationId) async {
+  Future<void> uploadImage() async {
     if (selectedImage.value == null) {
       Get.snackbar('Error', 'يرجى ادخال صورة واحدة على الاقل');
       return;
