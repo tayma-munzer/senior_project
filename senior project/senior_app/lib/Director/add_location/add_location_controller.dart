@@ -13,19 +13,19 @@ class AddLocationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchLocations(); // Fetch locations when the controller is initialized
+    fetchLocations();
   }
 
   @override
   void onReady() {
     super.onReady();
-    refreshData(); // Refresh data when the page is entered
+    refreshData();
   }
 
   Future<void> refreshData() async {
-    locations.clear(); // Clear existing data
-    selectedLocationIndex.value = -1; // Reset selected location
-    await fetchLocations(); // Fetch fresh data
+    locations.clear();
+    selectedLocationIndex.value = -1;
+    await fetchLocations();
   }
 
   Future<void> fetchLocations() async {

@@ -155,45 +155,103 @@ class ArtworkDetailsView extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Show the popup menu
-          showMenu(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height,
-              0,
-              0,
-            ),
-            items: [
-              PopupMenuItem(
-                child: Text("حذف العمل الفني"),
-                value: "delete",
-              ),
-              PopupMenuItem(
-                child: Text("تعديل العمل الفني"),
-                value: "edit",
-              ),
-            ],
-          ).then((value) {
-            if (value == "delete") {
-              // Handle delete artwork logic
-              _deleteArtwork(controller);
-            } else if (value == "edit") {
-              // Handle edit artwork logic
-              _editArtwork(controller);
-            }
-          });
-        },
-        child: Icon(Icons.settings, color: Colors.white),
-        backgroundColor: primaryColor,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              showMenu(
+                context: context,
+                position: RelativeRect.fromLTRB(
+                  MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height,
+                  0,
+                  0,
+                ),
+                items: [
+                  PopupMenuItem(
+                    child: Text("حذف العمل الفني"),
+                    value: "delete",
+                  ),
+                  PopupMenuItem(
+                    child: Text("تعديل العمل الفني"),
+                    value: "edit",
+                  ),
+                  PopupMenuItem(
+                    child: Text("انهاء العمل"),
+                    value: "finish",
+                  ),
+                ],
+              ).then((value) {
+                if (value == "delete") {
+                  _deleteArtwork(controller);
+                } else if (value == "edit") {
+                  _editArtwork(controller);
+                } else if (value == "finish") {
+                  _finishArtwork(controller);
+                }
+              });
+            },
+            child: Icon(Icons.settings, color: Colors.white),
+            backgroundColor: primaryColor,
+          ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () {
+              showMenu(
+                context: context,
+                position: RelativeRect.fromLTRB(
+                  MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height,
+                  0,
+                  0,
+                ),
+                items: [
+                  PopupMenuItem(
+                    child: Text("اضافة كروما"),
+                    value: "chroma",
+                  ),
+                  PopupMenuItem(
+                    child: Text("محاكاة الكلام"),
+                    value: "speech",
+                  ),
+                  PopupMenuItem(
+                    child: Text("توليد اعلان"),
+                    value: "ad",
+                  ),
+                  PopupMenuItem(
+                    child: Text("ستوري بورد"),
+                    value: "storyboard",
+                  ),
+                  PopupMenuItem(
+                    child: Text("موقع الكميرا"),
+                    value: "camera",
+                  ),
+                ],
+              ).then((value) {
+                if (value == "chroma") {
+                  Get.toNamed('/chroma');
+                } else if (value == "speech") {
+                  Get.toNamed('/lipsync');
+                } else if (value == "ad") {
+                  Get.toNamed('/trailergenerator');
+                } else if (value == "storyboard") {
+                  Get.toNamed('/storyboard');
+                } else if (value == "camera") {
+                  Get.toNamed('/camera');
+                }
+              });
+            },
+            child: Icon(Icons.android, color: Colors.white),
+            backgroundColor: Colors.blue,
+          ),
+        ],
       ),
     );
   }
 
   void _deleteArtwork(ArtworkDetailsController controller) {
-    // Show confirmation dialog
     Get.defaultDialog(
       title: "حذف العمل الفني",
       middleText: "هل أنت متأكد من حذف هذا العمل الفني؟",
@@ -211,6 +269,18 @@ class ArtworkDetailsView extends StatelessWidget {
       arguments: {
         'artworkId': controller.artworkId,
         'artworkTitle': controller.artworkTitle.value,
+      },
+    );
+  }
+
+  void _finishArtwork(ArtworkDetailsController controller) {
+    Get.defaultDialog(
+      title: "انهاء العمل",
+      middleText: "هل أنت متأكد من انهاء هذا العمل؟",
+      textConfirm: "نعم",
+      textCancel: "لا",
+      onConfirm: () async {
+        await controller.finishArtwork();
       },
     );
   }

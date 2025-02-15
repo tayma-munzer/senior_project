@@ -60,7 +60,7 @@ class SignUpActingTypeController extends GetxController {
       'available': 'true',
       'approved': 'true',
       'date_of_birth': Get.find<SignUpLocationController>().birthDate,
-      'role_types': savedActingTypes.toList(), // Pass the selected acting types
+      'acting_types': savedActingTypes.toList(),
     };
 
     await personalInformationController.registerUser('actor',

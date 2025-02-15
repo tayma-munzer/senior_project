@@ -26,30 +26,6 @@ class _AddActorsToArtworkViewState extends State<AddActorsToArtworkView> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.filter_list),
-                  onPressed: () {},
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) {
-                      controller.searchQuery.value = value;
-                    },
-                    textAlign: TextAlign.right,
-                    decoration: InputDecoration(
-                      hintText: "ابحث",
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
           Expanded(
             child: Obx(() {

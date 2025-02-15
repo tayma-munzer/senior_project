@@ -23,40 +23,7 @@ class AddLocationView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    print("filter icon tapped");
-                  },
-                  child: Icon(
-                    Icons.filter_list,
-                    size: 32,
-                    color: Colors.blue,
-                  ),
-                ),
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) {
-                      controller.searchQuery.value = value;
-                    },
-                    textAlign: TextAlign.right,
-                    decoration: InputDecoration(
-                      hintText: "ابحث",
-                      prefixIcon: Icon(Icons.search),
-                      hintStyle: TextStyle(
-                        textBaseline: TextBaseline.alphabetic,
-                        color: Colors.grey,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            Row(),
             SizedBox(height: 20),
             CustomText(
               text: "اسم المشهد",

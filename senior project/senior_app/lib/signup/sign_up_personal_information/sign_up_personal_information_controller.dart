@@ -39,8 +39,7 @@ class SignUpPersonalInformationController extends GetxController {
     };
 
     if (role == 'actor' && additionalInfo != null) {
-      body['additional_info'] =
-          json.encode(additionalInfo); // Encode the map as JSON
+      body['additional_info'] = json.encode(additionalInfo);
     }
 
     try {
@@ -49,9 +48,8 @@ class SignUpPersonalInformationController extends GetxController {
       if (response.statusCode == 201) {
         final responseData = json.decode(response.body);
         final token = responseData['token'];
-        // Save the token (e.g., in shared preferences or GetX storage)
         print('Token: $token');
-        Get.offNamed('/directorHome'); // Navigate to the home page
+        Get.offNamed('/directorHome');
       } else {
         Get.snackbar('Error', 'Failed to register: ${response.body}');
       }

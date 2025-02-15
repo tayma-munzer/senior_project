@@ -70,10 +70,8 @@ class SignUpController extends GetxController {
     final role = choiceController.getRole();
 
     if (role == 'actor') {
-      // If the user is an actor, call the registerActor method
       await Get.find<SignUpActingTypeController>().registerActor();
     } else {
-      // For other roles, call the registerUser method in SignUpPersonalInformationController
       await personalInformationController.registerUser(role);
     }
   }

@@ -6,17 +6,26 @@ import 'package:senior_app/colors.dart';
 import 'package:senior_app/widgets/custom_text.dart';
 import 'package:senior_app/widgets/custom_appbar.dart';
 import 'package:senior_app/widgets/custom_bottombar.dart';
+import 'package:senior_app/widgets/custom_button.dart';
 import 'dart:io';
 
-class EditArtworkView extends StatelessWidget {
+class EditArtworkView extends StatefulWidget {
+  EditArtworkView({Key? key}) : super(key: key);
+
+  @override
+  _EditArtworkViewState createState() => _EditArtworkViewState();
+}
+
+class _EditArtworkViewState extends State<EditArtworkView> {
   final ArtworkDetailsController controller =
       Get.find<ArtworkDetailsController>();
 
   final TextEditingController titleController = TextEditingController();
   File? _imageFile;
 
-  EditArtworkView({Key? key}) : super(key: key) {
-    // Retrieve arguments
+  @override
+  void initState() {
+    super.initState();
     final Map<String, dynamic> args = Get.arguments;
     if (args != null) {
       controller.artworkId = args['artworkId'];
@@ -29,7 +38,9 @@ class EditArtworkView extends StatelessWidget {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      _imageFile = File(pickedFile.path);
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
     }
   }
 
@@ -76,12 +87,13 @@ class EditArtworkView extends StatelessWidget {
                             color: Colors.grey,
                           ),
                         )
-                      : Image.file(_imageFile!, fit: BoxFit.cover),
+                      : Image.file(_imageFile!, fit: BoxFit.contain),
                 ),
               ),
               SizedBox(height: 20),
               Center(
-                child: ElevatedButton(
+                child: CustomButton(
+                  text: "حفظ التعديلات",
                   onPressed: () async {
                     if (titleController.text.isEmpty) {
                       Get.snackbar("خطأ", "الرجاء إدخال عنوان العمل الفني");
@@ -95,16 +107,8 @@ class EditArtworkView extends StatelessWidget {
                       title: titleController.text,
                       poster: _imageFile!,
                     );
+                    Get.offNamed('/directorHome');
                   },
-                  child: CustomText(
-                    text: "حفظ التعديلات",
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  ),
                 ),
               ),
             ],

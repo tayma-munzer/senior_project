@@ -162,6 +162,35 @@ class ArtworkDetailsController extends GetxController {
   void deleteScene(Scene scene) {
     scenes.remove(scene);
   }
+
+  Future<void> finishArtwork() async {
+    try {
+      isLoading(true);
+      String? token = await AuthController().getToken();
+      if (token == null) {
+        print("Error: User token is null");
+        return;
+      }
+
+      var response = await http.patch(
+        Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/done'),
+        headers: {'Authorization': 'Token $token'},
+      );
+
+      if (response.statusCode == 200) {
+        Get.snackbar("تم انهاء العمل", "تم انهاء العمل الفني بنجاح");
+        Get.offAllNamed('/directorHome');
+      } else {
+        print("Error finishing artwork: ${response.body}");
+        Get.snackbar("خطأ", "فشل في انهاء العمل الفني");
+      }
+    } catch (e) {
+      print("Exception while finishing artwork: $e");
+      Get.snackbar("خطأ", "حدث خطأ أثناء انهاء العمل الفني");
+    } finally {
+      isLoading(false);
+    }
+  }
 }
 
 class Actor {
