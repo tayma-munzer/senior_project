@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/signup/sign_up/sign_up_controller.dart';
 import 'package:senior_app/signup/sign_up_choices/sign_up_choices_controller.dart';
 import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
 import 'package:senior_app/widgets/custom_text.dart';
@@ -93,28 +94,18 @@ class SignUpLocationView extends StatelessWidget {
                           ),
                         ),
                         onTap: () => controller.selectBirthDate(context),
-                        validator: controller.validateBirthDate,
+                        validator: (value) =>
+                            controller.validateBirthDate(value),
                       ),
                       SizedBox(height: 20),
                       CustomButton(
                         text: 'تأكيد',
                         onPressed: () {
                           controller.saveLocation();
-                          print(
-                              'Selected role: ${choiceController.selectedChoice.value}');
-                          print(
-                              'First name: ${personalInformationController.firstName.value}');
-                          print(
-                              'Last name: ${personalInformationController.lastName.value}');
-                          print(
-                              'Phone number: ${personalInformationController.phoneNumber.value}');
-                          print(
-                              'Landline number: ${personalInformationController.landlineNumber.value}');
-
                           if (choiceController.selectedChoice.value == 'ممثل') {
                             Get.toNamed('/signupactingtypes');
                           } else {
-                            Get.toNamed('/directorHome');
+                            Get.find<SignUpController>().registerUser();
                           }
                         },
                       ),

@@ -14,9 +14,27 @@ class AddSceneActorsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    resetState();
     artworkId = Get.arguments['artworkId'];
     sceneId = Get.arguments['sceneId'];
     fetchActors();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    refreshData();
+  }
+
+  void resetState() {
+    actors.clear();
+    selectedActors.clear();
+    selectedActorList.clear();
+  }
+
+  Future<void> refreshData() async {
+    resetState();
+    await fetchActors();
   }
 
   Future<void> fetchActors() async {
@@ -26,10 +44,6 @@ class AddSceneActorsController extends GetxController {
         Get.snackbar('Error', 'Token is missing. Please log in again.');
         return;
       }
-
-      actors.clear();
-      selectedActors.clear();
-      selectedActorList.clear();
 
       final response = await http.get(
         Uri.parse('http://10.0.2.2:8000/artwork/$artworkId/actors'),
@@ -47,7 +61,7 @@ class AddSceneActorsController extends GetxController {
           return;
         }
 
-        actors.value = jsonResponse.map<Map<String, dynamic>>((item) {
+        actors.assignAll(jsonResponse.map<Map<String, dynamic>>((item) {
           int actorId = item['actor']['id'];
           String firstName = item['actor']['first_name'] ?? '';
           String lastName = item['actor']['last_name'] ?? '';
@@ -68,10 +82,10 @@ class AddSceneActorsController extends GetxController {
             "type": type,
             "image": image,
           };
-        }).toList();
+        }).toList());
 
-        selectedActors.value =
-            List<bool>.generate(actors.length, (index) => false);
+        selectedActors
+            .assignAll(List<bool>.generate(actors.length, (index) => false));
       } else {
         Get.snackbar('Error', 'Failed to load actors: ${response.statusCode}');
       }
@@ -79,13 +93,6 @@ class AddSceneActorsController extends GetxController {
       print("Error fetching actors: $e");
       Get.snackbar('Error', 'An error occurred while fetching actors.');
     }
-  }
-
-  void resetScene() {
-    sceneId = sceneId;
-    selectedActorList.clear();
-    selectedActors.clear();
-    actors.clear();
   }
 
   void toggleSelection(int index, bool value) {

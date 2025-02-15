@@ -14,6 +14,12 @@ class DirectorHomeController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onReady() {
+    fetchArtworks();
+    super.onReady();
+  }
+
   Future<void> fetchArtworks() async {
     try {
       String? token = await AuthController().getToken();

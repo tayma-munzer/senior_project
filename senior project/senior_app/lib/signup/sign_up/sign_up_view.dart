@@ -79,8 +79,10 @@ class SignUpView extends StatelessWidget {
                       CustomButton(
                         text: 'التالي',
                         onPressed: () {
-                          controller.saveSignUp();
-                          Get.toNamed('/directorHome');
+                          if (controller.formKey.currentState!.validate()) {
+                            controller.saveSignUp();
+                            Get.find<SignUpController>().registerUser();
+                          }
                         },
                       ),
                     ],

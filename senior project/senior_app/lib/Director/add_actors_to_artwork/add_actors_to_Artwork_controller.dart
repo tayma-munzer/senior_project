@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_app/Director/director_home_page/director-home_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddActorsToArtworkController extends GetxController {
@@ -153,7 +154,9 @@ class AddActorsToArtworkController extends GetxController {
           body: json.encode(payload));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.toNamed('/nextStep');
+        final DirectorHomeController homeController = Get.find();
+        homeController.fetchArtworks();
+        Get.toNamed('/directorHome');
       } else {
         Get.snackbar('Error', 'Failed to add actors to artwork');
         print("Response: ${response.body}");

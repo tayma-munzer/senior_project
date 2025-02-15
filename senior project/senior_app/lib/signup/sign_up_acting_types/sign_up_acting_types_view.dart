@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:senior_app/colors.dart';
+import 'package:senior_app/signup/sign_up/sign_up_controller.dart';
 import 'sign_up_acting_type_controller.dart';
 import 'package:senior_app/widgets/custom_button.dart';
 import 'package:senior_app/widgets/custom_text.dart';
@@ -106,7 +107,8 @@ class SignUpActingTypeView extends StatelessWidget {
                   text: 'تأكيد',
                   onPressed: () {
                     if (controller.savedActingTypes.isNotEmpty) {
-                      Get.toNamed('/signup');
+                      Get.find<SignUpController>()
+                          .registerUser(); // Call registerUser
                     } else {
                       Get.snackbar(
                         "خطا",

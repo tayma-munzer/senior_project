@@ -1,6 +1,10 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_app/signup/sign_up/sign_up_controller.dart';
+import 'package:senior_app/signup/sign_up_location/sign_up_location_controller.dart';
 import 'dart:convert';
+
+import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
 
 class SignUpActingTypeController extends GetxController {
   var selectedActingType = ''.obs;
@@ -18,7 +22,6 @@ class SignUpActingTypeController extends GetxController {
       final response =
           await http.get(Uri.parse('http://10.0.2.2:8000/acting_types'));
       if (response.statusCode == 200) {
-        //مشان الحروف تصير عربي
         final decodedBody = utf8.decode(response.bodyBytes);
         final List<dynamic> actingTypeList = json.decode(decodedBody);
         actingTypes.value =
@@ -44,5 +47,23 @@ class SignUpActingTypeController extends GetxController {
 
   bool isUserActor() {
     return true;
+  }
+
+  Future<void> registerActor() async {
+    final personalInformationController =
+        Get.find<SignUpPersonalInformationController>();
+    final signUpController = Get.find<SignUpController>();
+
+    final additionalInfo = {
+      'current_country':
+          Get.find<SignUpLocationController>().selectedCountry.value,
+      'available': 'true',
+      'approved': 'true',
+      'date_of_birth': Get.find<SignUpLocationController>().birthDate,
+      'acting_types': savedActingTypes.toList(),
+    };
+
+    await personalInformationController.registerUser('actor',
+        additionalInfo: additionalInfo);
   }
 }

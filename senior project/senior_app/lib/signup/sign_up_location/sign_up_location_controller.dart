@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
+import 'package:senior_app/signup/sign_up/sign_up_controller.dart';
+import 'package:senior_app/signup/sign_up_personal_information/sign_up_personal_information_controller.dart';
+
 class SignUpLocationController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final TextEditingController birthDateController = TextEditingController();
@@ -54,7 +57,7 @@ class SignUpLocationController extends GetxController {
     );
 
     if (pickedDate != null) {
-      birthDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      birthDate = DateFormat('yyyy-MM-dd').format(pickedDate);
       birthDateController.text = birthDate;
       update();
     }
@@ -85,5 +88,21 @@ class SignUpLocationController extends GetxController {
     }
 
     return null;
+  }
+
+  Future<void> registerActor() async {
+    final personalInformationController =
+        Get.find<SignUpPersonalInformationController>();
+    final signUpController = Get.find<SignUpController>();
+
+    final additionalInfo = {
+      'current_country': selectedCountry.value,
+      'available': 'true',
+      'approved': 'true',
+      'date_of_birth': birthDate,
+    };
+
+    await personalInformationController.registerUser('actor',
+        additionalInfo: additionalInfo);
   }
 }

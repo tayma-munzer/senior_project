@@ -216,17 +216,6 @@ class SceneDetailsView extends StatelessWidget {
             ),
             ListTile(
               title: CustomText(
-                text: "تعديل الموقع",
-                fontSize: 18,
-                alignment: Alignment.center,
-              ),
-              onTap: () {
-                controller.editLocation();
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: CustomText(
                 text: "حذف المشهد",
                 fontSize: 18,
                 alignment: Alignment.center,

@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:senior_app/Director/AI/camera/camera_binding.dart';
+import 'package:senior_app/Director/AI/camera/camera_view.dart';
+import 'package:senior_app/Director/AI/chroma/chroma_binding.dart';
+import 'package:senior_app/Director/AI/chroma/chroma_view.dart';
+import 'package:senior_app/Director/AI/lip%20sync/lip_sync_binding.dart';
+import 'package:senior_app/Director/AI/lip%20sync/lip_sync_view.dart';
+import 'package:senior_app/Director/AI/story%20board/story_board_binding.dart';
+import 'package:senior_app/Director/AI/story%20board/story_board_view.dart';
+import 'package:senior_app/Director/AI/trailer%20generate/trailergenerate_binding.dart';
+import 'package:senior_app/Director/AI/trailer%20generate/trailergenerate_view.dart';
 import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_binding.dart';
 import 'package:senior_app/Director/actors_artwork_details/actor_artwork_details_view.dart';
 import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_binding.dart';
 import 'package:senior_app/Director/add_actors_to_artwork/add_actors_to_artwork_view.dart';
-import 'package:senior_app/Director/scene_details/edit_scene_details.dart';
+import 'package:senior_app/Director/artwork_details/editartworkView.dart';
 import 'package:senior_app/Director/scene_details/scene_details_binding.dart';
 import 'package:senior_app/Director/scene_details/scene_details_view.dart';
 import 'package:senior_app/Location%20Owner/add_video_to_filming_location/add_video_to_filming_location_binding.dart';
@@ -242,9 +252,31 @@ class MyApp extends StatelessWidget {
           page: () => SceneDetailsView(),
           binding: SceneDetailsBinding(),
         ),
+
         GetPage(
-          name: '/editSceneDetails',
-          page: () => EditSceneDetails(),
+          name: '/chroma',
+          page: () => ChromaView(),
+          binding: ChromaBinding(),
+        ),
+        GetPage(
+          name: '/trailergenerator',
+          page: () => TrailergeneraterView(),
+          binding: TrailergeneraterBinding(),
+        ),
+        GetPage(
+          name: '/camera',
+          page: () => CameraView(),
+          binding: CameraBinding(),
+        ),
+        GetPage(
+          name: '/lipsync',
+          page: () => LipSyncView(),
+          binding: LipSyncBinding(),
+        ),
+        GetPage(
+          name: '/storyboard',
+          page: () => StoryBoardView(),
+          binding: StoryBoardBinding(),
         ),
       ],
     );

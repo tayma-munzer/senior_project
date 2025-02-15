@@ -6,4 +6,17 @@ class SignUpChoicesController extends GetxController {
   void setChoice(String choice) {
     selectedChoice.value = choice;
   }
+
+  String getRole() {
+    switch (selectedChoice.value) {
+      case 'ممثل':
+        return 'actor';
+      case 'مخرج':
+        return 'director';
+      case 'صاحب موقع':
+        return 'location_owner';
+      default:
+        return '';
+    }
+  }
 }

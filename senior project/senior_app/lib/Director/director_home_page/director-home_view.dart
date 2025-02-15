@@ -49,30 +49,35 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
         if (controller.artworks.isEmpty) {
           return Center(child: CircularProgressIndicator());
         }
-        return SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(0, _animation.value),
-                    child: child,
-                  );
-                },
-                child: Image.asset('assets/directorhome.webp', width: 300),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: controller.artworks.map((artwork) {
-                    return _buildCard(artwork);
-                  }).toList(),
+        return RefreshIndicator(
+          onRefresh: () async {
+            await controller.fetchArtworks();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(0, _animation.value),
+                      child: child,
+                    );
+                  },
+                  child: Image.asset('assets/directorhome.webp', width: 300),
                 ),
-              ),
-            ],
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: controller.artworks.map((artwork) {
+                      return _buildCard(artwork);
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }),
@@ -111,7 +116,7 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
                       image: DecorationImage(
                         image: NetworkImage(
                             "http://10.0.2.2:8000" + artwork.poster),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -145,10 +150,10 @@ class _DirectorHomeViewState extends State<DirectorHomeView>
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: CustomText(
-                  text: artwork.done == 0 ? "منتهي" : "غير مكتمل",
+                  text: artwork.done == 1 ? "منتهي" : "غير مكتمل",
                   fontSize: 22,
                   alignment: Alignment.centerRight,
-                  color: artwork.done == 0 ? Colors.green : redColor,
+                  color: artwork.done == 1 ? Colors.green : redColor,
                 ),
               ),
             ),
